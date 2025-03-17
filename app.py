@@ -14,7 +14,7 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsAdd_clicked(self):
         addroi = AddRoi(self)
-        addroi.setWindowTitle("Add Regions od Interest (ROIs) Hello")
+        addroi.setWindowTitle("Add Regions od Interest (ROIs)")
         addroi.exec()
 
 class StitchWindow(QtWidgets.QWidget):
