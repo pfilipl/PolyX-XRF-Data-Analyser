@@ -27,7 +27,7 @@
        <enum>QTabWidget::TabPosition::South</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -67,19 +67,19 @@
   <customwidget>
    <class>StitchWindow</class>
    <extends>QWidget</extends>
-   <header>app</header>
+   <header>stitch</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>SingleWindow</class>
    <extends>QWidget</extends>
-   <header>app</header>
+   <header>single</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>BatchWindow</class>
    <extends>QWidget</extends>
-   <header>app</header>
+   <header>batch</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
