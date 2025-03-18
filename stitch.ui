@@ -31,6 +31,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
      </property>
@@ -51,6 +54,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -60,6 +66,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -76,6 +85,9 @@
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Top map</string>
@@ -101,6 +113,9 @@
            <height>0</height>
           </size>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="layoutDirection">
           <enum>Qt::LayoutDirection::LeftToRight</enum>
          </property>
@@ -122,6 +137,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="suffix">
           <string> px</string>
@@ -146,6 +164,9 @@
          <width>350</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus risus at porttitor sodales. Duis aliquet malesuada nisl in consequat. Ut tellus nibh, tempor eu nibh sed, lacinia dignissim augue. Vivamus id elit blandit, ultrices nulla vitae, ultricies sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam at nisi lacus. Phasellus rutrum augue non odio vehicula rhoncus. Quisque feugiat pulvinar velit eu cursus. Vestibulum mollis commodo felis quis suscipit.</string>
@@ -172,6 +193,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>Folder path...</string>
        </property>
@@ -186,6 +210,9 @@
         <font>
          <bold>false</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Help:</string>
@@ -202,6 +229,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Result map</string>
        </property>
@@ -212,6 +242,9 @@
      </item>
      <item row="9" column="1">
       <widget class="QToolButton" name="toolButton_ResultMapPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -219,6 +252,9 @@
      </item>
      <item row="5" column="1">
       <widget class="QToolButton" name="toolButton_BottomMapPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -226,6 +262,9 @@
      </item>
      <item row="1" column="1">
       <widget class="QToolButton" name="toolButton_TopMapPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -246,6 +285,9 @@
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="autoFillBackground">
         <bool>false</bool>
@@ -281,6 +323,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>Folder path...</string>
        </property>
@@ -288,6 +333,9 @@
      </item>
      <item row="11" column="0" colspan="2">
       <spacer name="verticalSpacer_9">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
        </property>
@@ -315,6 +363,9 @@
            <height>0</height>
           </size>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Bottom offset:</string>
          </property>
@@ -333,6 +384,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="suffix">
           <string> px</string>
@@ -355,6 +409,9 @@
          <height>0</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>Folder path...</string>
        </property>
@@ -366,6 +423,9 @@
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Bottom map</string>

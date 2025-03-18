@@ -36,6 +36,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>11</string>
        </property>
@@ -52,6 +55,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>4</string>
        </property>
@@ -67,6 +73,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>1</string>
@@ -90,6 +99,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Dy</string>
        </property>
@@ -109,6 +121,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>6</string>
        </property>
@@ -124,6 +139,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>7</string>
@@ -146,6 +164,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Zr</string>
@@ -172,6 +193,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Yb</string>
        </property>
@@ -196,6 +220,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Hf</string>
@@ -222,6 +249,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Na</string>
        </property>
@@ -246,6 +276,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Lu</string>
@@ -272,6 +305,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Rh</string>
        </property>
@@ -290,6 +326,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>18</string>
@@ -313,6 +352,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Bh</string>
        </property>
@@ -331,6 +373,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>5</string>
@@ -353,6 +398,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>He</string>
@@ -379,6 +427,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Mg</string>
        </property>
@@ -403,6 +454,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Lv</string>
@@ -429,6 +483,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Mn</string>
        </property>
@@ -453,6 +510,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ts</string>
@@ -479,6 +539,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Kr</string>
        </property>
@@ -498,6 +561,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -516,6 +582,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Pt</string>
@@ -542,6 +611,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cm</string>
        </property>
@@ -566,6 +638,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Zn</string>
@@ -592,6 +667,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>P</string>
        </property>
@@ -616,6 +694,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Fe</string>
@@ -642,6 +723,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ca</string>
        </property>
@@ -666,6 +750,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Er</string>
@@ -692,6 +779,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Gd</string>
        </property>
@@ -716,6 +806,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ne</string>
@@ -742,6 +835,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cr</string>
        </property>
@@ -766,6 +862,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Nb</string>
@@ -792,6 +891,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Eu</string>
        </property>
@@ -816,6 +918,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Sr</string>
@@ -842,6 +947,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Tb</string>
        </property>
@@ -860,6 +968,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>9</string>
@@ -882,6 +993,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Nd</string>
@@ -908,6 +1022,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Pr</string>
        </property>
@@ -926,6 +1043,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>6</string>
@@ -949,6 +1069,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Rb</string>
        </property>
@@ -967,6 +1090,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>10</string>
@@ -989,6 +1115,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>C</string>
@@ -1015,6 +1144,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Og</string>
        </property>
@@ -1033,6 +1165,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>13</string>
@@ -1056,6 +1191,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Po</string>
        </property>
@@ -1075,6 +1213,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>7</string>
        </property>
@@ -1093,6 +1234,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ir</string>
@@ -1119,6 +1263,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Se</string>
        </property>
@@ -1143,6 +1290,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Hg</string>
@@ -1169,6 +1319,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ba</string>
        </property>
@@ -1187,6 +1340,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>12</string>
@@ -1209,6 +1365,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>H</string>
@@ -1235,6 +1394,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Pm</string>
        </property>
@@ -1253,6 +1415,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>16</string>
@@ -1275,6 +1440,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Md</string>
@@ -1301,6 +1469,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cn</string>
        </property>
@@ -1325,6 +1496,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Sn</string>
@@ -1351,6 +1525,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Db</string>
        </property>
@@ -1375,6 +1552,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Tl</string>
@@ -1401,6 +1581,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ni</string>
        </property>
@@ -1425,6 +1608,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ho</string>
@@ -1451,6 +1637,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ga</string>
        </property>
@@ -1475,6 +1664,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Sb</string>
@@ -1501,6 +1693,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cs</string>
        </property>
@@ -1525,6 +1720,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Mt</string>
@@ -1551,6 +1749,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ce</string>
        </property>
@@ -1575,6 +1776,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Fr</string>
@@ -1601,6 +1805,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>F</string>
        </property>
@@ -1625,6 +1832,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Si</string>
@@ -1651,6 +1861,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Xe</string>
        </property>
@@ -1675,6 +1888,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Am</string>
@@ -1701,6 +1917,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Fm</string>
        </property>
@@ -1725,6 +1944,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Sg</string>
@@ -1751,6 +1973,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Np</string>
        </property>
@@ -1776,6 +2001,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Th</string>
        </property>
@@ -1794,6 +2022,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>17</string>
@@ -1816,6 +2047,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ds</string>
@@ -1842,6 +2076,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Rf</string>
        </property>
@@ -1866,6 +2103,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>No</string>
@@ -1892,6 +2132,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>O</string>
        </property>
@@ -1910,6 +2153,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>8</string>
@@ -1932,6 +2178,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>S</string>
@@ -1958,6 +2207,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ag</string>
        </property>
@@ -1983,6 +2235,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Co</string>
        </property>
@@ -2002,6 +2257,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>6</string>
        </property>
@@ -2020,6 +2278,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Hs</string>
@@ -2046,6 +2307,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Li</string>
        </property>
@@ -2070,6 +2334,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Pd</string>
@@ -2096,6 +2363,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Au</string>
        </property>
@@ -2120,6 +2390,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Al</string>
@@ -2146,6 +2419,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ar</string>
        </property>
@@ -2170,6 +2446,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>W</string>
@@ -2196,6 +2475,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Re</string>
        </property>
@@ -2220,6 +2502,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>V</string>
@@ -2246,6 +2531,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ac</string>
        </property>
@@ -2271,6 +2559,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Pb</string>
        </property>
@@ -2289,6 +2580,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>7</string>
@@ -2311,6 +2605,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>B</string>
@@ -2337,6 +2634,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cf</string>
        </property>
@@ -2361,6 +2661,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Pa</string>
@@ -2387,6 +2690,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Cl</string>
        </property>
@@ -2411,6 +2717,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ti</string>
@@ -2437,6 +2746,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Os</string>
        </property>
@@ -2462,6 +2774,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Sm</string>
        </property>
@@ -2480,6 +2795,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>3</string>
@@ -2502,6 +2820,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>U</string>
@@ -2528,6 +2849,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Mo</string>
        </property>
@@ -2552,6 +2876,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Y</string>
@@ -2578,6 +2905,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Mc</string>
        </property>
@@ -2602,6 +2932,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Bk</string>
@@ -2628,6 +2961,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>At</string>
        </property>
@@ -2653,6 +2989,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Be</string>
        </property>
@@ -2671,6 +3010,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>3</string>
@@ -2693,6 +3035,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Bi</string>
@@ -2719,6 +3064,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>I</string>
        </property>
@@ -2743,6 +3091,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Ra</string>
@@ -2769,6 +3120,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ru</string>
        </property>
@@ -2787,6 +3141,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>5</string>
@@ -2809,6 +3166,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>K</string>
@@ -2835,6 +3195,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ta</string>
        </property>
@@ -2860,6 +3223,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Es</string>
        </property>
@@ -2878,6 +3244,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>2</string>
@@ -2901,6 +3270,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Nh</string>
        </property>
@@ -2919,6 +3291,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>15</string>
@@ -2941,6 +3316,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Fl</string>
@@ -2967,6 +3345,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Br</string>
        </property>
@@ -2985,6 +3366,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>4</string>
@@ -3007,6 +3391,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Cu</string>
@@ -3033,6 +3420,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>In</string>
        </property>
@@ -3057,6 +3447,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Cd</string>
@@ -3083,6 +3476,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Ge</string>
        </property>
@@ -3107,6 +3503,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Lr</string>
@@ -3133,6 +3532,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Sc</string>
        </property>
@@ -3157,6 +3559,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>N</string>
@@ -3183,6 +3588,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Tc</string>
        </property>
@@ -3207,6 +3615,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Tm</string>
@@ -3233,6 +3644,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>As</string>
        </property>
@@ -3258,6 +3672,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Rn</string>
        </property>
@@ -3276,6 +3693,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>2</string>
@@ -3299,6 +3719,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Rg</string>
        </property>
@@ -3317,6 +3740,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>1</string>
@@ -3339,6 +3765,9 @@
          <width>26</width>
          <height>26</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>La</string>
@@ -3365,6 +3794,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Pu</string>
        </property>
@@ -3390,6 +3822,9 @@
          <height>26</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Te</string>
        </property>
@@ -3409,6 +3844,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>14</string>
        </property>
@@ -3424,6 +3862,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>keV</string>
          </property>
@@ -3431,6 +3872,9 @@
        </item>
        <item row="2" column="4">
         <widget class="QLabel" name="label_ElementKbeta">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3444,6 +3888,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>keV</string>
          </property>
@@ -3453,6 +3900,9 @@
         <widget class="QLabel" name="label_212">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>keV</string>
@@ -3464,6 +3914,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Lβ:</string>
          </property>
@@ -3474,6 +3927,9 @@
        </item>
        <item row="2" column="7">
         <widget class="QLabel" name="label_ElementLbeta">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3492,6 +3948,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>Kα:</string>
@@ -3512,6 +3971,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Kβ:</string>
          </property>
@@ -3522,6 +3984,9 @@
        </item>
        <item row="1" column="4">
         <widget class="QLabel" name="label_ElementKalpha">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3535,6 +4000,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>keV</string>
          </property>
@@ -3542,6 +4010,9 @@
        </item>
        <item row="3" column="4">
         <widget class="QLabel" name="label_ElementMedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3561,6 +4032,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>M edge:</string>
          </property>
@@ -3571,6 +4045,9 @@
        </item>
        <item row="1" column="7">
         <widget class="QLabel" name="label_ElementLalpha">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3584,6 +4061,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Lα:</string>
          </property>
@@ -3596,6 +4076,9 @@
         <widget class="QLabel" name="label_211">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>keV</string>
@@ -3612,6 +4095,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>K edge:</string>
@@ -3632,6 +4118,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>L edge:</string>
          </property>
@@ -3642,6 +4131,9 @@
        </item>
        <item row="0" column="4">
         <widget class="QLabel" name="label_ElementKedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3655,6 +4147,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>keV</string>
          </property>
@@ -3662,6 +4157,9 @@
        </item>
        <item row="0" column="7">
         <widget class="QLabel" name="label_ElementLedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3674,6 +4172,9 @@
         <widget class="QLabel" name="label_226">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>keV</string>
@@ -3690,6 +4191,9 @@
              <bold>false</bold>
             </font>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -3700,6 +4204,9 @@
          </item>
          <item>
           <widget class="QLabel" name="label_ElementName">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -3715,6 +4222,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>M:</string>
          </property>
@@ -3725,6 +4235,9 @@
        </item>
        <item row="3" column="7">
         <widget class="QLabel" name="label_ElementM">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -3737,6 +4250,9 @@
         <widget class="QLabel" name="label_229">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>keV</string>

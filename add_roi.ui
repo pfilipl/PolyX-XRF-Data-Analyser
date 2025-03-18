@@ -25,11 +25,14 @@
      <property name="enabled">
       <bool>true</bool>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::TabPosition::West</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_Custom">
       <attribute name="title">
@@ -49,6 +52,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>around</string>
            </property>
@@ -61,6 +67,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> ch</string>
@@ -84,6 +93,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Range by energy:</string>
            </property>
@@ -99,6 +111,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Range by channels:</string>
@@ -118,6 +133,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> keV</string>
@@ -141,6 +159,9 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Energy calibration needed!</string>
            </property>
@@ -149,6 +170,9 @@
          <item row="2" column="3">
           <widget class="QLabel" name="label_8">
            <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="mouseTracking">
             <bool>true</bool>
            </property>
            <property name="text">
@@ -161,6 +185,9 @@
          </item>
          <item row="3" column="1">
           <widget class="QLabel" name="label_9">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Channel</string>
            </property>
@@ -180,6 +207,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>and</string>
            </property>
@@ -191,6 +221,9 @@
          <item row="2" column="1">
           <widget class="QLabel" name="label_7">
            <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="mouseTracking">
             <bool>true</bool>
            </property>
            <property name="text">
@@ -208,6 +241,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> ch</string>
@@ -228,6 +264,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>and</string>
            </property>
@@ -246,6 +285,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> keV</string>
@@ -278,6 +320,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string> keV</string>
            </property>
@@ -297,6 +342,9 @@
          </item>
          <item row="4" column="1">
           <widget class="QLabel" name="label_15">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>or from</string>
            </property>
@@ -313,6 +361,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>around</string>
            </property>
@@ -324,6 +375,9 @@
          <item row="1" column="1">
           <widget class="QLabel" name="label_6">
            <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="mouseTracking">
             <bool>true</bool>
            </property>
            <property name="text">
@@ -345,6 +399,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string> ch</string>
            </property>
@@ -364,6 +421,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string> ch</string>
            </property>
@@ -377,6 +437,9 @@
          </item>
          <item row="4" column="3">
           <widget class="QLabel" name="label_16">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>to</string>
            </property>
@@ -396,6 +459,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>or</string>
            </property>
@@ -414,6 +480,9 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
            </property>
            <property name="suffix">
             <string> keV</string>
@@ -443,6 +512,9 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="suffix">
             <string> ch</string>
            </property>
@@ -458,6 +530,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QPushButton" name="pushButton_CustomAdd">
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>Add</string>
              </property>
@@ -465,6 +540,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_CustomDelete">
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>Delete</string>
              </property>
@@ -472,6 +550,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_CustomDeleteAll">
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>Delete all</string>
              </property>
@@ -481,6 +562,9 @@
          </item>
          <item row="0" column="0" colspan="8">
           <widget class="QLineEdit" name="lineEdit_CustomName">
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
            <property name="placeholderText">
             <string>Name...</string>
            </property>
@@ -491,6 +575,9 @@
        <item>
         <widget class="QTableView" name="tableView_CustomROIs">
          <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="mouseTracking">
           <bool>true</bool>
          </property>
         </widget>
@@ -636,6 +723,9 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="orientation">
       <enum>Qt::Orientation::Horizontal</enum>
      </property>

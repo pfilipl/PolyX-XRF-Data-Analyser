@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1104</width>
     <height>720</height>
    </rect>
   </property>
@@ -15,6 +15,9 @@
     <width>1080</width>
     <height>720</height>
    </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -27,6 +30,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
      </property>
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
@@ -52,6 +58,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Detectors</string>
             </property>
@@ -64,6 +73,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Be</string>
@@ -84,6 +96,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>ML3.3</string>
             </property>
@@ -102,6 +117,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Sum</string>
@@ -125,6 +143,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="suffix">
              <string> eV</string>
@@ -160,6 +181,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Zero:</string>
             </property>
@@ -175,6 +199,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="suffix">
              <string> eV/ch</string>
@@ -207,6 +234,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Noise:</string>
             </property>
@@ -229,6 +259,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Gain:</string>
             </property>
@@ -244,6 +277,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="decimals">
              <number>6</number>
@@ -273,6 +309,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Fano:</string>
             </property>
@@ -288,6 +327,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="suffix">
              <string> eV</string>
@@ -319,6 +361,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Energy calibration</string>
             </property>
@@ -348,6 +393,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Values range:</string>
             </property>
@@ -365,6 +413,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Auto</string>
@@ -385,6 +436,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>or</string>
               </property>
@@ -392,6 +446,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsCalibrationValuesStart">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="showGroupSeparator" stdset="0">
                <bool>true</bool>
               </property>
@@ -414,6 +471,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>-</string>
               </property>
@@ -421,6 +481,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigurationValuesStop">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="showGroupSeparator" stdset="0">
                <bool>true</bool>
               </property>
@@ -460,6 +523,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Energy range:</string>
             </property>
@@ -488,6 +554,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Aspect ratio:</string>
             </property>
@@ -508,6 +577,9 @@
              <font>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="layoutDirection">
              <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -540,6 +612,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Aspect ratio:</string>
             </property>
@@ -557,6 +632,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Auto</string>
@@ -577,6 +655,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>or</string>
               </property>
@@ -584,6 +665,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationAspectValue">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="maximum">
                <double>10.000000000000000</double>
               </property>
@@ -620,6 +704,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Colormap:</string>
             </property>
@@ -637,6 +724,9 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>Auto</string>
@@ -657,6 +747,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>or</string>
               </property>
@@ -664,6 +757,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigurationAspectValue">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="maximum">
                <double>10.000000000000000</double>
               </property>
@@ -693,6 +789,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="layoutDirection">
              <enum>Qt::LayoutDirection::LeftToRight</enum>
             </property>
@@ -714,6 +813,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Auto</string>
               </property>
@@ -733,6 +835,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>or</string>
               </property>
@@ -743,6 +848,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationEnergyStart">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="suffix">
                <string> keV</string>
               </property>
@@ -768,6 +876,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>-</string>
               </property>
@@ -775,6 +886,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationEnergyStop">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="suffix">
                <string> keV</string>
               </property>
@@ -807,6 +921,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Default</string>
               </property>
@@ -826,6 +943,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>or</string>
               </property>
@@ -833,6 +953,9 @@
             </item>
             <item>
              <widget class="QLineEdit" name="lineEdit_MapsConfigurationColormapValue">
+              <property name="mouseTracking">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>viridis</string>
               </property>
@@ -842,6 +965,9 @@
              <widget class="QToolButton" name="toolButton_MapsConfigurationColormapSearch">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="mouseTracking">
+               <bool>true</bool>
               </property>
               <property name="text">
                <string>...</string>
@@ -869,6 +995,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
           <property name="text">
            <string>Regions of interest (ROIs)</string>
           </property>
@@ -883,6 +1012,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -906,6 +1038,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -921,6 +1056,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -938,6 +1076,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -954,6 +1095,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="autoFillBackground">
              <bool>false</bool>
             </property>
@@ -969,6 +1113,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
             </property>
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -991,6 +1138,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -1006,6 +1156,9 @@
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Experiment / Load</string>
@@ -1028,6 +1181,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Results</string>
        </property>
@@ -1035,6 +1191,9 @@
      </item>
      <item row="6" column="0">
       <widget class="QCheckBox" name="checkBox_ResultsNested">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Nested in maps folders</string>
        </property>
@@ -1050,6 +1209,9 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>Help:</string>
        </property>
@@ -1060,6 +1222,9 @@
      </item>
      <item row="10" column="0">
       <spacer name="verticalSpacer">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="orientation">
         <enum>Qt::Orientation::Vertical</enum>
        </property>
@@ -1073,6 +1238,9 @@
      </item>
      <item row="2" column="1">
       <widget class="QToolButton" name="toolButton_ExceptionsPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -1080,6 +1248,9 @@
      </item>
      <item row="1" column="1">
       <widget class="QToolButton" name="toolButton_ExperimentPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -1098,6 +1269,9 @@
          <width>350</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>Folder path...</string>
@@ -1118,6 +1292,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="placeholderText">
         <string>Exceptions...</string>
        </property>
@@ -1125,6 +1302,9 @@
      </item>
      <item row="5" column="1">
       <widget class="QToolButton" name="toolButton_ResultsPathSearch">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -1143,6 +1323,9 @@
          <width>350</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="placeholderText">
         <string>Folder path...</string>
@@ -1172,6 +1355,9 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="7" column="0" colspan="2">
@@ -1181,6 +1367,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="textVisible">
         <bool>false</bool>
@@ -1200,6 +1389,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Import config</string>
          </property>
@@ -1212,6 +1404,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
           <string>Save config</string>
@@ -1235,6 +1430,9 @@
         <font>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="autoFillBackground">
         <bool>false</bool>
@@ -1272,6 +1470,9 @@
          <width>350</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
        </property>
        <property name="text">
         <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus risus at porttitor sodales. Duis aliquet malesuada nisl in consequat. Ut tellus nibh, tempor eu nibh sed, lacinia dignissim augue. Vivamus id elit blandit, ultrices nulla vitae, ultricies sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam at nisi lacus. Phasellus rutrum augue non odio vehicula rhoncus. Quisque feugiat pulvinar velit eu cursus. Vestibulum mollis commodo felis quis suscipit.</string>
