@@ -154,7 +154,7 @@
         <bool>true</bool>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -241,7 +241,7 @@
       </widget>
      </item>
      <item row="9" column="1">
-      <widget class="QToolButton" name="toolButton_ResultMapPathSearch">
+      <widget class="QToolButton" name="toolButton_ResultPathSearch">
        <property name="mouseTracking">
         <bool>true</bool>
        </property>
@@ -310,7 +310,7 @@
       </widget>
      </item>
      <item row="9" column="0">
-      <widget class="QLineEdit" name="lineEdit_ResultMapPath">
+      <widget class="QLineEdit" name="lineEdit_ResultPath">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -444,8 +444,8 @@
   <tabstop>toolButton_TopMapPathSearch</tabstop>
   <tabstop>lineEdit_BottomMapPath</tabstop>
   <tabstop>toolButton_BottomMapPathSearch</tabstop>
-  <tabstop>lineEdit_ResultMapPath</tabstop>
-  <tabstop>toolButton_ResultMapPathSearch</tabstop>
+  <tabstop>lineEdit_ResultPath</tabstop>
+  <tabstop>toolButton_ResultPathSearch</tabstop>
   <tabstop>pushButton_StitchMaps</tabstop>
  </tabstops>
  <resources/>
