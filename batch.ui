@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1104</width>
-    <height>720</height>
+    <width>1106</width>
+    <height>725</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -22,7 +22,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_11">
+  <layout class="QHBoxLayout" name="horizontalLayout_8">
    <item>
     <widget class="QFrame" name="frame">
      <property name="sizePolicy">
@@ -67,28 +67,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_DetectorsBe">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="mouseTracking">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Be</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QPushButton" name="pushButton_DetectorsML">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -101,6 +79,28 @@
             </property>
             <property name="text">
              <string>ML3.3</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_DetectorsBe">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Be</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -407,7 +407,7 @@
           <item row="2" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton_MapsCalibrationValuesAuto">
+             <widget class="QPushButton" name="pushButton_MapsConfigValuesAuto">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -445,7 +445,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsCalibrationValuesStart">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigValuesStart">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -480,7 +480,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigurationValuesStop">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigValuesStop">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -626,7 +626,7 @@
           <item row="7" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
-             <widget class="QPushButton" name="pushButton_HistogramsConfigurationAspectAuto">
+             <widget class="QPushButton" name="pushButton_SpectraConfigAspectAuto">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -664,7 +664,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationAspectValue">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_SpectraConfigAspectValue">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -718,7 +718,7 @@
           <item row="3" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
-             <widget class="QPushButton" name="pushButton_MapsConfigurationAspectAuto">
+             <widget class="QPushButton" name="pushButton_MapsConfigAspectAuto">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -756,7 +756,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigurationAspectValue">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_MapsConfigAspectValue">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -806,7 +806,7 @@
           <item row="6" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QPushButton" name="pushButton_HistogramsConfigurationEnergyAuto">
+             <widget class="QPushButton" name="pushButton_SpectraConfigEnergyAuto">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -847,7 +847,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationEnergyStart">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_SpectraConfigEnergyStart">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -885,7 +885,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_HistogramsConfigurationEnergyStop">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_SpectraConfigEnergyStop">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -914,7 +914,7 @@
           <item row="4" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QPushButton" name="pushButton_MapsConfigurationColormapDefault">
+             <widget class="QPushButton" name="pushButton_MapsConfigColormapDefault">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -952,7 +952,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_MapsConfigurationColormapValue">
+             <widget class="QLineEdit" name="lineEdit_MapsConfigColormapValue">
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -962,7 +962,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="toolButton_MapsConfigurationColormapSearch">
+             <widget class="QToolButton" name="toolButton_MapsConfigColormapSearch">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1069,7 +1069,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_ROIsSace">
+           <widget class="QPushButton" name="pushButton_ROIsSave">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1361,7 +1361,7 @@
       </widget>
      </item>
      <item row="7" column="0" colspan="2">
-      <widget class="QProgressBar" name="progressBar_Analysis">
+      <widget class="QProgressBar" name="progressBar_Progress">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1460,7 +1460,7 @@
         <bool>true</bool>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -1494,25 +1494,24 @@
   <tabstop>listWidget_Paths</tabstop>
   <tabstop>checkBox_ResultsNested</tabstop>
   <tabstop>pushButton_DetectorsBe</tabstop>
-  <tabstop>pushButton_DetectorsML</tabstop>
   <tabstop>pushButton_DetectorsSum</tabstop>
-  <tabstop>pushButton_MapsCalibrationValuesAuto</tabstop>
-  <tabstop>doubleSpinBox_MapsCalibrationValuesStart</tabstop>
-  <tabstop>doubleSpinBox_MapsConfigurationValuesStop</tabstop>
-  <tabstop>pushButton_MapsConfigurationAspectAuto</tabstop>
-  <tabstop>doubleSpinBox_MapsConfigurationAspectValue</tabstop>
-  <tabstop>pushButton_MapsConfigurationColormapDefault</tabstop>
-  <tabstop>lineEdit_MapsConfigurationColormapValue</tabstop>
-  <tabstop>toolButton_MapsConfigurationColormapSearch</tabstop>
-  <tabstop>pushButton_HistogramsConfigurationEnergyAuto</tabstop>
-  <tabstop>doubleSpinBox_HistogramsConfigurationEnergyStart</tabstop>
-  <tabstop>doubleSpinBox_HistogramsConfigurationEnergyStop</tabstop>
-  <tabstop>pushButton_HistogramsConfigurationAspectAuto</tabstop>
-  <tabstop>doubleSpinBox_HistogramsConfigurationAspectValue</tabstop>
+  <tabstop>pushButton_MapsConfigValuesAuto</tabstop>
+  <tabstop>doubleSpinBox_MapsConfigValuesStart</tabstop>
+  <tabstop>doubleSpinBox_MapsConfigValuesStop</tabstop>
+  <tabstop>pushButton_MapsConfigAspectAuto</tabstop>
+  <tabstop>doubleSpinBox_MapsConfigAspectValue</tabstop>
+  <tabstop>pushButton_MapsConfigColormapDefault</tabstop>
+  <tabstop>lineEdit_MapsConfigColormapValue</tabstop>
+  <tabstop>toolButton_MapsConfigColormapSearch</tabstop>
+  <tabstop>pushButton_SpectraConfigEnergyAuto</tabstop>
+  <tabstop>doubleSpinBox_SpectraConfigEnergyStart</tabstop>
+  <tabstop>doubleSpinBox_SpectraConfigEnergyStop</tabstop>
+  <tabstop>pushButton_SpectraConfigAspectAuto</tabstop>
+  <tabstop>doubleSpinBox_SpectraConfigAspectValue</tabstop>
   <tabstop>pushButton_ROIsDefault</tabstop>
   <tabstop>pushButton_ROIsImport</tabstop>
   <tabstop>pushButton_ROIsAdd</tabstop>
-  <tabstop>pushButton_ROIsSace</tabstop>
+  <tabstop>pushButton_ROIsSave</tabstop>
   <tabstop>pushButton_ROIsDelete</tabstop>
   <tabstop>pushButton_ROIsDeleteAll</tabstop>
   <tabstop>pushButton_SaveConfig</tabstop>
