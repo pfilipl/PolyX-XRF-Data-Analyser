@@ -264,12 +264,12 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             for i in range(len(ROI)):
                 fig = plt.figure(layout = 'compressed')
                 ax1 = fig.add_subplot()
-                X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-                if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-                    X[-1] -= 1
-                Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-                if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-                    Z[-1] -= 1
+                # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+                # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
+                #     X[-1] -= 1
+                # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+                # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
+                #     Z[-1] -= 1
                 sum_signal = np.sum(data[:, :, ROI[i][1]:ROI[i][2]], axis=2)
                 if normalize is not None:
                     sum_signal = sum_signal / I0 / (LT[d] * 1e-6)
@@ -297,10 +297,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                     ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}, normalized")
                 else:
                     ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}")
-                ax1.set_xticks(X)
-                ax1.set_yticks(Z)
-                ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-                ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
+                # ax1.set_xticks(X)
+                # ax1.set_yticks(Z)
+                # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
+                # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
                 if pos is not None:
                     if pos.shape[0] == 1:
                         ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 3, 3, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
@@ -315,12 +315,12 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
         else:
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
-            X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-                X[-1] -= 1
-            Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-                Z[-1] -= 1
+            # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+            # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
+            #     X[-1] -= 1
+            # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+            # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
+            #     Z[-1] -= 1
             max_signal = np.max(data, axis=2)
             if normalize is not None:
                 max_signal = max_signal / I0 / (LT[d] * 1e-6)
@@ -344,10 +344,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_title(f"{title}\n SDD {det}, normalized")
             else:
                 ax1.set_title(f"{title}\n SDD {det}")
-            ax1.set_xticks(X)
-            ax1.set_yticks(Z)
-            ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-            ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
+            # ax1.set_xticks(X)
+            # ax1.set_yticks(Z)
+            # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
+            # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
@@ -361,17 +361,17 @@ def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto'):
     ax1 = fig.add_subplot()
     if isinstance(data, list):
         data = np.array(data)
-    Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-    if data.shape[0] % 6 == 0 or data.shape[0] == Z[-1]:
-        Z[-1] -= 1
+    # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+    # if data.shape[0] % 6 == 0 or data.shape[0] == Z[-1]:
+        # Z[-1] -= 1
     # Y = range(min(data), max(data), (max(data) - min(data))/6)
     img = ax1.plot(data)
     if ylabel:
         ax1.set_ylabel(ylabel)
     ax1.set_xlabel("Z [mm]")
     ax1.set_title(f"{title}")
-    ax1.set_xticks(Z)
-    ax1.set_xticklabels(np.round(head["Zpositions"][0, Z], 2))
+    # ax1.set_xticks(Z)
+    # ax1.set_xticklabels(np.round(head["Zpositions"][0, Z], 2))
     # ax1.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
     ax1.set_aspect(Aspect)
     Fig.append(fig)
@@ -385,12 +385,12 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             data = Data[d].copy()
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
-            X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-                X[-1] -= 1
-            Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-                Z[-1] -= 1
+            # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+            # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
+            #     X[-1] -= 1
+            # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+            # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
+            #     Z[-1] -= 1
             img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
             cb = fig.colorbar(img)
@@ -407,10 +407,10 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             else:
                 det = "unknown"
             ax1.set_title(f"{title}, SDD {det}")
-            ax1.set_xticks(X)
-            ax1.set_yticks(Z)
-            ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-            ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
+            # ax1.set_xticks(X)
+            # ax1.set_yticks(Z)
+            # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
+            # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
             ax1.set_aspect(Aspect)
             Map.append(data)
             Fig.append(fig)
@@ -418,12 +418,12 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         data = Data
         fig = plt.figure(layout = 'compressed')
         ax1 = fig.add_subplot()
-        X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-        if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-            X[-1] -= 1
-        Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-        if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-            Z[-1] -= 1
+        # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+        # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
+        #     X[-1] -= 1
+        # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
+        # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
+        #     Z[-1] -= 1
         img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
         # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin vmax = Vmax)
         cb = fig.colorbar(img)
@@ -432,10 +432,10 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         ax1.set_xlabel("X [mm]")
         ax1.set_ylabel("Z [mm]")
         ax1.set_title(f"{title}")
-        ax1.set_xticks(X)
-        ax1.set_yticks(Z)
-        ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-        ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
+        # ax1.set_xticks(X)
+        # ax1.set_yticks(Z)
+        # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
+        # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
         ax1.set_aspect(Aspect)
         Map.append(data)
         Fig.append(fig)
