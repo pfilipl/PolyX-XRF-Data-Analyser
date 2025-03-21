@@ -1,12 +1,7 @@
 from PyQt6 import QtWidgets, uic
 import sys
 
-import main
-
-class PeriodicTable(QtWidgets.QWidget):
-    def __init__(self, parent = None):
-        super(PeriodicTable, self).__init__(parent)
-        uic.loadUi("periodic_table.ui", self)
+import main, periodic_table
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None):
@@ -38,6 +33,28 @@ class AddRoi(QtWidgets.QDialog):
         self.pushButton_CustomDelete.clicked.connect(self.CustomDelete_clicked)
         self.pushButton_CustomDeleteAll.clicked.connect(self.CustomDeletaALl_clicked)
 
+        # XRF lines
+        self.XRFLines                   = self.tab_XRFLines
+        self.XRFWarning                 = self.label_XRFWarning
+        self.XRFSigmaWidth              = self.doubleSpinBox_XRFSigmaWidth.value()
+        self.XRFWidth                   = self.spinBox_XRFWidth.value()
+
+        # self.XRFLines.setEnabled(True)
+
+        # - Periodic tables
+        self.Kalpha                     = self.tab_Kalpha
+        self.Kbeta                      = self.tab_Kbeta
+        self.Lalpha                     = self.tab_Lalpha
+        self.Lbeta                      = self.tab_Lbeta
+        self.M                          = self.tab_M
+
+        # self.Kalpha.setRange(20, 40)
+
+        # Button box
+        self.ButtonBox                  = self.buttonBox
+
+        self.ButtonBox.clicked.connect(self.ButtonBox_clicked)
+
     def CustomAdd_clicked(self):
         return
 
@@ -46,6 +63,16 @@ class AddRoi(QtWidgets.QDialog):
 
     def CustomDeletaALl_clicked(self):
         return
+    
+    def ButtonBox_clicked(self, button):
+        if button.text() == "Reset":
+            print("Reset")
+        elif button.text() == "Discard":
+            print("Discard")
+            self.close()
+        else:
+            print("Apply")
+            self.close()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

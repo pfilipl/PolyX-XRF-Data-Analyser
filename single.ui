@@ -927,28 +927,6 @@
      <item row="5" column="0" rowspan="4">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPushButton" name="pushButton_DetectorsML">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>ML3.3</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="pushButton_DetectorsBe">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -961,6 +939,28 @@
          </property>
          <property name="text">
           <string>Be</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_DetectorsML">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>ML3.3</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1185,7 +1185,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>pushButton_DetectorsBe</tabstop>
   <tabstop>pushButton_DetectorsSum</tabstop>
   <tabstop>doubleSpinBox_CalibrationGain</tabstop>
   <tabstop>doubleSpinBox_CalibrationZero</tabstop>

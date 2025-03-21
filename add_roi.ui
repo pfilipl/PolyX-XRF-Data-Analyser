@@ -599,9 +599,6 @@
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QLabel" name="label_XRFWarning">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
            <property name="text">
             <string>Energy calibration needed!</string>
            </property>
@@ -681,9 +678,6 @@
        </item>
        <item>
         <widget class="QTabWidget" name="tabWidget">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -740,7 +734,7 @@
   <customwidget>
    <class>PeriodicTable</class>
    <extends>QWidget</extends>
-   <header>add_roi</header>
+   <header>periodic_table</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
