@@ -48,7 +48,7 @@ class AddRoi(QtWidgets.QDialog):
         self.Lbeta                      = self.tab_Lbeta
         self.M                          = self.tab_M
 
-        # self.Kalpha.setRange(20, 40)
+        # self.Kalpha.setRange(20, 100)
 
         # Button box
         self.ButtonBox                  = self.buttonBox

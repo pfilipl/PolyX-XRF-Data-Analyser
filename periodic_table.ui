@@ -86,7 +86,7 @@
       </widget>
      </item>
      <item row="9" column="13">
-      <widget class="QPushButton" name="pushButton_Element66">
+      <widget class="HoverableButton" name="pushButton_Element66">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -155,7 +155,7 @@
       </widget>
      </item>
      <item row="5" column="4">
-      <widget class="QPushButton" name="pushButton_Element40">
+      <widget class="HoverableButton" name="pushButton_Element40">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -186,7 +186,7 @@
       </widget>
      </item>
      <item row="9" column="17">
-      <widget class="QPushButton" name="pushButton_Element70">
+      <widget class="HoverableButton" name="pushButton_Element70">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -217,7 +217,7 @@
       </widget>
      </item>
      <item row="6" column="4">
-      <widget class="QPushButton" name="pushButton_Element72">
+      <widget class="HoverableButton" name="pushButton_Element72">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -248,7 +248,7 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QPushButton" name="pushButton_Element11">
+      <widget class="HoverableButton" name="pushButton_Element11">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -279,7 +279,7 @@
       </widget>
      </item>
      <item row="9" column="18">
-      <widget class="QPushButton" name="pushButton_Element71">
+      <widget class="HoverableButton" name="pushButton_Element71">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -310,7 +310,7 @@
       </widget>
      </item>
      <item row="5" column="9">
-      <widget class="QPushButton" name="pushButton_Element45">
+      <widget class="HoverableButton" name="pushButton_Element45">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -360,7 +360,7 @@
       </widget>
      </item>
      <item row="7" column="7">
-      <widget class="QPushButton" name="pushButton_Element107">
+      <widget class="HoverableButton" name="pushButton_Element107">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -410,7 +410,7 @@
       </widget>
      </item>
      <item row="1" column="18">
-      <widget class="QPushButton" name="pushButton_Element2">
+      <widget class="HoverableButton" name="pushButton_Element2">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -441,7 +441,7 @@
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QPushButton" name="pushButton_Element12">
+      <widget class="HoverableButton" name="pushButton_Element12">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -472,7 +472,7 @@
       </widget>
      </item>
      <item row="7" column="16">
-      <widget class="QPushButton" name="pushButton_Element116">
+      <widget class="HoverableButton" name="pushButton_Element116">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -503,7 +503,7 @@
       </widget>
      </item>
      <item row="4" column="7">
-      <widget class="QPushButton" name="pushButton_Element25">
+      <widget class="HoverableButton" name="pushButton_Element25">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -534,7 +534,7 @@
       </widget>
      </item>
      <item row="7" column="17">
-      <widget class="QPushButton" name="pushButton_Element117">
+      <widget class="HoverableButton" name="pushButton_Element117">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -565,7 +565,7 @@
       </widget>
      </item>
      <item row="4" column="18">
-      <widget class="QPushButton" name="pushButton_Element36">
+      <widget class="HoverableButton" name="pushButton_Element36">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -612,7 +612,7 @@
       </widget>
      </item>
      <item row="6" column="10">
-      <widget class="QPushButton" name="pushButton_Element78">
+      <widget class="HoverableButton" name="pushButton_Element78">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -643,7 +643,7 @@
       </widget>
      </item>
      <item row="10" column="11">
-      <widget class="QPushButton" name="pushButton_Element96">
+      <widget class="HoverableButton" name="pushButton_Element96">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -674,7 +674,7 @@
       </widget>
      </item>
      <item row="4" column="12">
-      <widget class="QPushButton" name="pushButton_Element30">
+      <widget class="HoverableButton" name="pushButton_Element30">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -705,7 +705,7 @@
       </widget>
      </item>
      <item row="3" column="15">
-      <widget class="QPushButton" name="pushButton_Element15">
+      <widget class="HoverableButton" name="pushButton_Element15">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -736,7 +736,7 @@
       </widget>
      </item>
      <item row="4" column="8">
-      <widget class="QPushButton" name="pushButton_Element26">
+      <widget class="HoverableButton" name="pushButton_Element26">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -767,7 +767,7 @@
       </widget>
      </item>
      <item row="4" column="2">
-      <widget class="QPushButton" name="pushButton_Element20">
+      <widget class="HoverableButton" name="pushButton_Element20">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -798,7 +798,7 @@
       </widget>
      </item>
      <item row="9" column="15">
-      <widget class="QPushButton" name="pushButton_Element68">
+      <widget class="HoverableButton" name="pushButton_Element68">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -829,7 +829,7 @@
       </widget>
      </item>
      <item row="9" column="11">
-      <widget class="QPushButton" name="pushButton_Element64">
+      <widget class="HoverableButton" name="pushButton_Element64">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -860,7 +860,7 @@
       </widget>
      </item>
      <item row="2" column="18">
-      <widget class="QPushButton" name="pushButton_Element10">
+      <widget class="HoverableButton" name="pushButton_Element10">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -891,7 +891,7 @@
       </widget>
      </item>
      <item row="4" column="6">
-      <widget class="QPushButton" name="pushButton_Element24">
+      <widget class="HoverableButton" name="pushButton_Element24">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -922,7 +922,7 @@
       </widget>
      </item>
      <item row="5" column="5">
-      <widget class="QPushButton" name="pushButton_Element41">
+      <widget class="HoverableButton" name="pushButton_Element41">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -953,7 +953,7 @@
       </widget>
      </item>
      <item row="9" column="10">
-      <widget class="QPushButton" name="pushButton_Element63">
+      <widget class="HoverableButton" name="pushButton_Element63">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -984,7 +984,7 @@
       </widget>
      </item>
      <item row="5" column="2">
-      <widget class="QPushButton" name="pushButton_Element38">
+      <widget class="HoverableButton" name="pushButton_Element38">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1015,7 +1015,7 @@
       </widget>
      </item>
      <item row="9" column="12">
-      <widget class="QPushButton" name="pushButton_Element65">
+      <widget class="HoverableButton" name="pushButton_Element65">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1065,7 +1065,7 @@
       </widget>
      </item>
      <item row="9" column="7">
-      <widget class="QPushButton" name="pushButton_Element60">
+      <widget class="HoverableButton" name="pushButton_Element60">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1096,7 +1096,7 @@
       </widget>
      </item>
      <item row="9" column="6">
-      <widget class="QPushButton" name="pushButton_Element59">
+      <widget class="HoverableButton" name="pushButton_Element59">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1146,7 +1146,7 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QPushButton" name="pushButton_Element37">
+      <widget class="HoverableButton" name="pushButton_Element37">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1196,7 +1196,7 @@
       </widget>
      </item>
      <item row="2" column="14">
-      <widget class="QPushButton" name="pushButton_Element6">
+      <widget class="HoverableButton" name="pushButton_Element6">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1227,7 +1227,7 @@
       </widget>
      </item>
      <item row="7" column="18">
-      <widget class="QPushButton" name="pushButton_Element118">
+      <widget class="HoverableButton" name="pushButton_Element118">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1277,7 +1277,7 @@
       </widget>
      </item>
      <item row="6" column="16">
-      <widget class="QPushButton" name="pushButton_Element84">
+      <widget class="HoverableButton" name="pushButton_Element84">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1324,7 +1324,7 @@
       </widget>
      </item>
      <item row="6" column="9">
-      <widget class="QPushButton" name="pushButton_Element77">
+      <widget class="HoverableButton" name="pushButton_Element77">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1355,7 +1355,7 @@
       </widget>
      </item>
      <item row="4" column="16">
-      <widget class="QPushButton" name="pushButton_Element34">
+      <widget class="HoverableButton" name="pushButton_Element34">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1386,7 +1386,7 @@
       </widget>
      </item>
      <item row="6" column="12">
-      <widget class="QPushButton" name="pushButton_Element80">
+      <widget class="HoverableButton" name="pushButton_Element80">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1417,7 +1417,7 @@
       </widget>
      </item>
      <item row="6" column="2">
-      <widget class="QPushButton" name="pushButton_Element56">
+      <widget class="HoverableButton" name="pushButton_Element56">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1467,7 +1467,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton_Element1">
+      <widget class="HoverableButton" name="pushButton_Element1">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1498,7 +1498,7 @@
       </widget>
      </item>
      <item row="9" column="8">
-      <widget class="QPushButton" name="pushButton_Element61">
+      <widget class="HoverableButton" name="pushButton_Element61">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1548,7 +1548,7 @@
       </widget>
      </item>
      <item row="10" column="16">
-      <widget class="QPushButton" name="pushButton_Element101">
+      <widget class="HoverableButton" name="pushButton_Element101">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1579,7 +1579,7 @@
       </widget>
      </item>
      <item row="7" column="12">
-      <widget class="QPushButton" name="pushButton_Element112">
+      <widget class="HoverableButton" name="pushButton_Element112">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1610,7 +1610,7 @@
       </widget>
      </item>
      <item row="5" column="14">
-      <widget class="QPushButton" name="pushButton_Element50">
+      <widget class="HoverableButton" name="pushButton_Element50">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1641,7 +1641,7 @@
       </widget>
      </item>
      <item row="7" column="5">
-      <widget class="QPushButton" name="pushButton_Element105">
+      <widget class="HoverableButton" name="pushButton_Element105">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1672,7 +1672,7 @@
       </widget>
      </item>
      <item row="6" column="13">
-      <widget class="QPushButton" name="pushButton_Element81">
+      <widget class="HoverableButton" name="pushButton_Element81">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1703,7 +1703,7 @@
       </widget>
      </item>
      <item row="4" column="10">
-      <widget class="QPushButton" name="pushButton_Element28">
+      <widget class="HoverableButton" name="pushButton_Element28">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1734,7 +1734,7 @@
       </widget>
      </item>
      <item row="9" column="14">
-      <widget class="QPushButton" name="pushButton_Element67">
+      <widget class="HoverableButton" name="pushButton_Element67">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1765,7 +1765,7 @@
       </widget>
      </item>
      <item row="4" column="13">
-      <widget class="QPushButton" name="pushButton_Element31">
+      <widget class="HoverableButton" name="pushButton_Element31">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1796,7 +1796,7 @@
       </widget>
      </item>
      <item row="5" column="15">
-      <widget class="QPushButton" name="pushButton_Element51">
+      <widget class="HoverableButton" name="pushButton_Element51">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1827,7 +1827,7 @@
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QPushButton" name="pushButton_Element55">
+      <widget class="HoverableButton" name="pushButton_Element55">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1858,7 +1858,7 @@
       </widget>
      </item>
      <item row="7" column="9">
-      <widget class="QPushButton" name="pushButton_Element109">
+      <widget class="HoverableButton" name="pushButton_Element109">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1889,7 +1889,7 @@
       </widget>
      </item>
      <item row="9" column="5">
-      <widget class="QPushButton" name="pushButton_Element58">
+      <widget class="HoverableButton" name="pushButton_Element58">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1920,7 +1920,7 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QPushButton" name="pushButton_Element87">
+      <widget class="HoverableButton" name="pushButton_Element87">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1951,7 +1951,7 @@
       </widget>
      </item>
      <item row="2" column="17">
-      <widget class="QPushButton" name="pushButton_Element9">
+      <widget class="HoverableButton" name="pushButton_Element9">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1982,7 +1982,7 @@
       </widget>
      </item>
      <item row="3" column="14">
-      <widget class="QPushButton" name="pushButton_Element14">
+      <widget class="HoverableButton" name="pushButton_Element14">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2013,7 +2013,7 @@
       </widget>
      </item>
      <item row="5" column="18">
-      <widget class="QPushButton" name="pushButton_Element54">
+      <widget class="HoverableButton" name="pushButton_Element54">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2044,7 +2044,7 @@
       </widget>
      </item>
      <item row="10" column="10">
-      <widget class="QPushButton" name="pushButton_Element95">
+      <widget class="HoverableButton" name="pushButton_Element95">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2075,7 +2075,7 @@
       </widget>
      </item>
      <item row="10" column="15">
-      <widget class="QPushButton" name="pushButton_Element100">
+      <widget class="HoverableButton" name="pushButton_Element100">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2106,7 +2106,7 @@
       </widget>
      </item>
      <item row="7" column="6">
-      <widget class="QPushButton" name="pushButton_Element106">
+      <widget class="HoverableButton" name="pushButton_Element106">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2137,7 +2137,7 @@
       </widget>
      </item>
      <item row="10" column="8">
-      <widget class="QPushButton" name="pushButton_Element93">
+      <widget class="HoverableButton" name="pushButton_Element93">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2168,7 +2168,7 @@
       </widget>
      </item>
      <item row="10" column="5">
-      <widget class="QPushButton" name="pushButton_Element90">
+      <widget class="HoverableButton" name="pushButton_Element90">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2218,7 +2218,7 @@
       </widget>
      </item>
      <item row="7" column="10">
-      <widget class="QPushButton" name="pushButton_Element110">
+      <widget class="HoverableButton" name="pushButton_Element110">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2249,7 +2249,7 @@
       </widget>
      </item>
      <item row="7" column="4">
-      <widget class="QPushButton" name="pushButton_Element104">
+      <widget class="HoverableButton" name="pushButton_Element104">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2280,7 +2280,7 @@
       </widget>
      </item>
      <item row="10" column="17">
-      <widget class="QPushButton" name="pushButton_Element102">
+      <widget class="HoverableButton" name="pushButton_Element102">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2311,7 +2311,7 @@
       </widget>
      </item>
      <item row="2" column="16">
-      <widget class="QPushButton" name="pushButton_Element8">
+      <widget class="HoverableButton" name="pushButton_Element8">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2361,7 +2361,7 @@
       </widget>
      </item>
      <item row="3" column="16">
-      <widget class="QPushButton" name="pushButton_Element16">
+      <widget class="HoverableButton" name="pushButton_Element16">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2392,7 +2392,7 @@
       </widget>
      </item>
      <item row="5" column="11">
-      <widget class="QPushButton" name="pushButton_Element47">
+      <widget class="HoverableButton" name="pushButton_Element47">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2423,7 +2423,7 @@
       </widget>
      </item>
      <item row="4" column="9">
-      <widget class="QPushButton" name="pushButton_Element27">
+      <widget class="HoverableButton" name="pushButton_Element27">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2470,7 +2470,7 @@
       </widget>
      </item>
      <item row="7" column="8">
-      <widget class="QPushButton" name="pushButton_Element108">
+      <widget class="HoverableButton" name="pushButton_Element108">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2501,7 +2501,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QPushButton" name="pushButton_Element3">
+      <widget class="HoverableButton" name="pushButton_Element3">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2532,7 +2532,7 @@
       </widget>
      </item>
      <item row="5" column="10">
-      <widget class="QPushButton" name="pushButton_Element46">
+      <widget class="HoverableButton" name="pushButton_Element46">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2563,7 +2563,7 @@
       </widget>
      </item>
      <item row="6" column="11">
-      <widget class="QPushButton" name="pushButton_Element79">
+      <widget class="HoverableButton" name="pushButton_Element79">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2594,7 +2594,7 @@
       </widget>
      </item>
      <item row="3" column="13">
-      <widget class="QPushButton" name="pushButton_Element13">
+      <widget class="HoverableButton" name="pushButton_Element13">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2625,7 +2625,7 @@
       </widget>
      </item>
      <item row="3" column="18">
-      <widget class="QPushButton" name="pushButton_Element18">
+      <widget class="HoverableButton" name="pushButton_Element18">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2656,7 +2656,7 @@
       </widget>
      </item>
      <item row="6" column="6">
-      <widget class="QPushButton" name="pushButton_Element74">
+      <widget class="HoverableButton" name="pushButton_Element74">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2687,7 +2687,7 @@
       </widget>
      </item>
      <item row="6" column="7">
-      <widget class="QPushButton" name="pushButton_Element75">
+      <widget class="HoverableButton" name="pushButton_Element75">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2718,7 +2718,7 @@
       </widget>
      </item>
      <item row="4" column="5">
-      <widget class="QPushButton" name="pushButton_Element23">
+      <widget class="HoverableButton" name="pushButton_Element23">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2749,7 +2749,7 @@
       </widget>
      </item>
      <item row="10" column="4">
-      <widget class="QPushButton" name="pushButton_Element89">
+      <widget class="HoverableButton" name="pushButton_Element89">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2780,7 +2780,7 @@
       </widget>
      </item>
      <item row="6" column="14">
-      <widget class="QPushButton" name="pushButton_Element82">
+      <widget class="HoverableButton" name="pushButton_Element82">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2830,7 +2830,7 @@
       </widget>
      </item>
      <item row="2" column="13">
-      <widget class="QPushButton" name="pushButton_Element5">
+      <widget class="HoverableButton" name="pushButton_Element5">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2861,7 +2861,7 @@
       </widget>
      </item>
      <item row="10" column="13">
-      <widget class="QPushButton" name="pushButton_Element98">
+      <widget class="HoverableButton" name="pushButton_Element98">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2892,7 +2892,7 @@
       </widget>
      </item>
      <item row="10" column="6">
-      <widget class="QPushButton" name="pushButton_Element91">
+      <widget class="HoverableButton" name="pushButton_Element91">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2923,7 +2923,7 @@
       </widget>
      </item>
      <item row="3" column="17">
-      <widget class="QPushButton" name="pushButton_Element17">
+      <widget class="HoverableButton" name="pushButton_Element17">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2954,7 +2954,7 @@
       </widget>
      </item>
      <item row="4" column="4">
-      <widget class="QPushButton" name="pushButton_Element22">
+      <widget class="HoverableButton" name="pushButton_Element22">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -2985,7 +2985,7 @@
       </widget>
      </item>
      <item row="6" column="8">
-      <widget class="QPushButton" name="pushButton_Element76">
+      <widget class="HoverableButton" name="pushButton_Element76">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3016,7 +3016,7 @@
       </widget>
      </item>
      <item row="9" column="9">
-      <widget class="QPushButton" name="pushButton_Element62">
+      <widget class="HoverableButton" name="pushButton_Element62">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3066,7 +3066,7 @@
       </widget>
      </item>
      <item row="10" column="7">
-      <widget class="QPushButton" name="pushButton_Element92">
+      <widget class="HoverableButton" name="pushButton_Element92">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3097,7 +3097,7 @@
       </widget>
      </item>
      <item row="5" column="6">
-      <widget class="QPushButton" name="pushButton_Element42">
+      <widget class="HoverableButton" name="pushButton_Element42">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3128,7 +3128,7 @@
       </widget>
      </item>
      <item row="5" column="3">
-      <widget class="QPushButton" name="pushButton_Element39">
+      <widget class="HoverableButton" name="pushButton_Element39">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3159,7 +3159,7 @@
       </widget>
      </item>
      <item row="7" column="15">
-      <widget class="QPushButton" name="pushButton_Element115">
+      <widget class="HoverableButton" name="pushButton_Element115">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3190,7 +3190,7 @@
       </widget>
      </item>
      <item row="10" column="12">
-      <widget class="QPushButton" name="pushButton_Element97">
+      <widget class="HoverableButton" name="pushButton_Element97">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3221,7 +3221,7 @@
       </widget>
      </item>
      <item row="6" column="17">
-      <widget class="QPushButton" name="pushButton_Element85">
+      <widget class="HoverableButton" name="pushButton_Element85">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3252,7 +3252,7 @@
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QPushButton" name="pushButton_Element4">
+      <widget class="HoverableButton" name="pushButton_Element4">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3302,7 +3302,7 @@
       </widget>
      </item>
      <item row="6" column="15">
-      <widget class="QPushButton" name="pushButton_Element83">
+      <widget class="HoverableButton" name="pushButton_Element83">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3333,7 +3333,7 @@
       </widget>
      </item>
      <item row="5" column="17">
-      <widget class="QPushButton" name="pushButton_Element53">
+      <widget class="HoverableButton" name="pushButton_Element53">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3364,7 +3364,7 @@
       </widget>
      </item>
      <item row="7" column="2">
-      <widget class="QPushButton" name="pushButton_Element88">
+      <widget class="HoverableButton" name="pushButton_Element88">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3395,7 +3395,7 @@
       </widget>
      </item>
      <item row="5" column="8">
-      <widget class="QPushButton" name="pushButton_Element44">
+      <widget class="HoverableButton" name="pushButton_Element44">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3445,7 +3445,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QPushButton" name="pushButton_Element19">
+      <widget class="HoverableButton" name="pushButton_Element19">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3476,7 +3476,7 @@
       </widget>
      </item>
      <item row="6" column="5">
-      <widget class="QPushButton" name="pushButton_Element73">
+      <widget class="HoverableButton" name="pushButton_Element73">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3507,7 +3507,7 @@
       </widget>
      </item>
      <item row="10" column="14">
-      <widget class="QPushButton" name="pushButton_Element99">
+      <widget class="HoverableButton" name="pushButton_Element99">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3557,7 +3557,7 @@
       </widget>
      </item>
      <item row="7" column="13">
-      <widget class="QPushButton" name="pushButton_Element113">
+      <widget class="HoverableButton" name="pushButton_Element113">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3607,7 +3607,7 @@
       </widget>
      </item>
      <item row="7" column="14">
-      <widget class="QPushButton" name="pushButton_Element114">
+      <widget class="HoverableButton" name="pushButton_Element114">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3638,7 +3638,7 @@
       </widget>
      </item>
      <item row="4" column="17">
-      <widget class="QPushButton" name="pushButton_Element35">
+      <widget class="HoverableButton" name="pushButton_Element35">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3688,7 +3688,7 @@
       </widget>
      </item>
      <item row="4" column="11">
-      <widget class="QPushButton" name="pushButton_Element29">
+      <widget class="HoverableButton" name="pushButton_Element29">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3719,7 +3719,7 @@
       </widget>
      </item>
      <item row="5" column="13">
-      <widget class="QPushButton" name="pushButton_Element49">
+      <widget class="HoverableButton" name="pushButton_Element49">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3750,7 +3750,7 @@
       </widget>
      </item>
      <item row="5" column="12">
-      <widget class="QPushButton" name="pushButton_Element48">
+      <widget class="HoverableButton" name="pushButton_Element48">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3781,7 +3781,7 @@
       </widget>
      </item>
      <item row="4" column="14">
-      <widget class="QPushButton" name="pushButton_Element32">
+      <widget class="HoverableButton" name="pushButton_Element32">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3812,7 +3812,7 @@
       </widget>
      </item>
      <item row="10" column="18">
-      <widget class="QPushButton" name="pushButton_Element103">
+      <widget class="HoverableButton" name="pushButton_Element103">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3843,7 +3843,7 @@
       </widget>
      </item>
      <item row="4" column="3">
-      <widget class="QPushButton" name="pushButton_Element21">
+      <widget class="HoverableButton" name="pushButton_Element21">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3874,7 +3874,7 @@
       </widget>
      </item>
      <item row="2" column="15">
-      <widget class="QPushButton" name="pushButton_Element7">
+      <widget class="HoverableButton" name="pushButton_Element7">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3905,7 +3905,7 @@
       </widget>
      </item>
      <item row="5" column="7">
-      <widget class="QPushButton" name="pushButton_Element43">
+      <widget class="HoverableButton" name="pushButton_Element43">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3936,7 +3936,7 @@
       </widget>
      </item>
      <item row="9" column="16">
-      <widget class="QPushButton" name="pushButton_Element69">
+      <widget class="HoverableButton" name="pushButton_Element69">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3967,7 +3967,7 @@
       </widget>
      </item>
      <item row="4" column="15">
-      <widget class="QPushButton" name="pushButton_Element33">
+      <widget class="HoverableButton" name="pushButton_Element33">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -3998,7 +3998,7 @@
       </widget>
      </item>
      <item row="6" column="18">
-      <widget class="QPushButton" name="pushButton_Element86">
+      <widget class="HoverableButton" name="pushButton_Element86">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -4048,7 +4048,7 @@
       </widget>
      </item>
      <item row="7" column="11">
-      <widget class="QPushButton" name="pushButton_Element111">
+      <widget class="HoverableButton" name="pushButton_Element111">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -4098,7 +4098,7 @@
       </widget>
      </item>
      <item row="9" column="4">
-      <widget class="QPushButton" name="pushButton_Element57">
+      <widget class="HoverableButton" name="pushButton_Element57">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -4129,7 +4129,7 @@
       </widget>
      </item>
      <item row="10" column="9">
-      <widget class="QPushButton" name="pushButton_Element94">
+      <widget class="HoverableButton" name="pushButton_Element94">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -4160,7 +4160,7 @@
       </widget>
      </item>
      <item row="5" column="16">
-      <widget class="QPushButton" name="pushButton_Element52">
+      <widget class="HoverableButton" name="pushButton_Element52">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -4209,237 +4209,9 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="4" rowspan="3" colspan="8">
+     <item row="1" column="3" rowspan="3" colspan="10">
       <layout class="QGridLayout" name="gridLayout_9">
-       <item row="2" column="8">
-        <widget class="QLabel" name="label_213">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="QLabel" name="label_ElementKbeta">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="5">
-        <widget class="QLabel" name="label_214">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="8">
-        <widget class="QLabel" name="label_212">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="6">
-        <widget class="QLabel" name="label_208">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Lβ:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="7">
-        <widget class="QLabel" name="label_ElementLbeta">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
-        <widget class="QLabel" name="label_205">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Kα:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QLabel" name="label_206">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Kβ:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QLabel" name="label_ElementKalpha">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="5">
-        <widget class="QLabel" name="label_210">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="4">
-        <widget class="QLabel" name="label_ElementMedge">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QLabel" name="label_215">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>M edge:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="7">
-        <widget class="QLabel" name="label_ElementLalpha">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="6">
-        <widget class="QLabel" name="label_207">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Lα:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="5">
-        <widget class="QLabel" name="label_211">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
+       <item row="0" column="4">
         <widget class="QLabel" name="label_209">
          <property name="enabled">
           <bool>false</bool>
@@ -4461,7 +4233,241 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="6">
+       <item row="0" column="1" rowspan="4" colspan="3">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label_ElementSymbol">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>50</pointsize>
+            </font>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_ElementName">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="7">
+        <widget class="QLabel" name="label_207">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Lα:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="6">
+        <widget class="QLabel" name="label_210">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="7">
+        <widget class="QLabel" name="label_227">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>M:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="8">
+        <widget class="QLabel" name="label_ElementLalpha">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="8">
+        <widget class="QLabel" name="label_ElementLedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QLabel" name="label_215">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>M edge:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="9">
+        <widget class="QLabel" name="label_229">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="5">
+        <widget class="QLabel" name="label_ElementMedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="6">
+        <widget class="QLabel" name="label_214">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="7">
+        <widget class="QLabel" name="label_208">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Lβ:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="9">
+        <widget class="QLabel" name="label_226">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="9">
+        <widget class="QLabel" name="label_212">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QLabel" name="label_ElementKedge">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
         <widget class="QLabel" name="label_216">
          <property name="enabled">
           <bool>false</bool>
@@ -4483,20 +4489,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="4">
-        <widget class="QLabel" name="label_ElementKedge">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="5">
+       <item row="0" column="6">
         <widget class="QLabel" name="label_224">
          <property name="enabled">
           <bool>false</bool>
@@ -4509,85 +4502,36 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="7">
-        <widget class="QLabel" name="label_ElementLedge">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_26">
          <property name="text">
           <string/>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
         </widget>
        </item>
-       <item row="0" column="8">
-        <widget class="QLabel" name="label_226">
+       <item row="1" column="4">
+        <widget class="QLabel" name="label_205">
          <property name="enabled">
           <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>keV</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" rowspan="4" colspan="3">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="label_ElementSymbol">
-           <property name="font">
-            <font>
-             <pointsize>40</pointsize>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_ElementName">
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="3" column="6">
-        <widget class="QLabel" name="label_227">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>M:</string>
+          <string>Kα:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item row="3" column="7">
+       <item row="3" column="8">
         <widget class="QLabel" name="label_ElementM">
          <property name="mouseTracking">
           <bool>true</bool>
@@ -4600,8 +4544,8 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="8">
-        <widget class="QLabel" name="label_229">
+       <item row="2" column="9">
+        <widget class="QLabel" name="label_213">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -4613,12 +4557,100 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="5">
+        <widget class="QLabel" name="label_ElementKalpha">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4">
+        <widget class="QLabel" name="label_206">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Kβ:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="8">
+        <widget class="QLabel" name="label_ElementLbeta">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="5">
+        <widget class="QLabel" name="label_ElementKbeta">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="6">
+        <widget class="QLabel" name="label_211">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>keV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="10">
+        <widget class="QLabel" name="label_27">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HoverableButton</class>
+   <extends>QPushButton</extends>
+   <header>periodic_table</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pushButton_Element1</tabstop>
   <tabstop>pushButton_Element2</tabstop>
