@@ -12,6 +12,12 @@ import matplotlib.scale as scale
 import xraylib as xrl
 import os
 
+detectors = {
+    0 : "Be",
+    1 : "ML3",
+    2 : "Be+ML3"
+}
+
 # ZAŁADOWANIE FUNKCJI
 
 # dzielenie spektrów prez siebie
@@ -284,18 +290,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
                 ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
                 ax1.set_ylabel("Z [mm]")
-                if d + 1 == 1:
-                    det = "Be"
-                elif d + 1 == 2:
-                    det = "ML3"
-                elif d + 1 == 3:
-                    det = "Be+ML3"
-                else:
-                    det = "unknown"
                 if normalize is not None:
-                    ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}, normalized")
+                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}, normalized")
                 else:
-                    ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}")
+                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
                 if pos is not None:
                     if pos.shape[0] == 1:
                         ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 3, 3, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
@@ -326,18 +324,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
             ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
-            if d + 1 == 1:
-                det = "Be"
-            elif d + 1 == 2:
-                det = "ML3"
-            elif d + 1 == 3:
-                det = "Be+ML3"
-            else:
-                det = "unknown"
             if normalize is not None:
-                ax1.set_title(f"{title}\n SDD {det}, normalized")
+                ax1.set_title(f"{title}\n SDD {detectors[d]}, normalized")
             else:
-                ax1.set_title(f"{title}\n SDD {det}")
+                ax1.set_title(f"{title}\n SDD {detectors[d]}")
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
@@ -383,15 +373,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
             ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
-            if d + 1 == 1:
-                det = "Be"
-            elif d + 1 == 2:
-                det = "ML3"
-            elif d + 1 == 3:
-                det = "Be+ML3"
-            else:
-                det = "unknown"
-            ax1.set_title(f"{title}, SDD {det}")
+            ax1.set_title(f"{title}, SDD {detectors[d]}")
             ax1.set_aspect(Aspect)
             Map.append(data)
             Fig.append(fig)
@@ -429,14 +411,6 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
         Fig = []
         for d in (range(len(Data)) if detector is None else detector):
             data = Data[d].copy()       # [x, z, c]
-            if d + 1 == 1:
-                det = "Be"
-            elif d + 1 == 2:
-                det = "ML3"
-            elif d + 1 == 3:
-                det = "Be+ML3"
-            else:
-                det = "unknown"
             if calib is not None:
                 cEmin = (np.abs(calib - Emin * 1000)).argmin() - 1
                 if Emax is None:
@@ -468,9 +442,9 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
                 x0r = np.round(head["Xpositions"][0, x0], 2)
                 z0r = np.round(head["Zpositions"][0, z0], 2)
                 if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {det}, normalized")
+                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
                 else:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {det}")
+                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
                 hist = data[x0, z0, :]
                 if ROI is not None:
                     for i in range(len(ROI)):
@@ -589,9 +563,9 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
                 x1r = np.round(head["Xpositions"][0, x1], 2)
                 z1r = np.round(head["Zpositions"][0, z1], 2)
                 if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {det}, normalized")
+                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
                 else:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {det}")
+                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
                 hist = sum_data
                 if ROI is not None:
                     for i in range(len(ROI)):
@@ -686,14 +660,6 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
     Fig = []
     for d in (range(len(Data)) if detector is None else detector):
         data = Data[d].copy()       # [x, z, c]
-        if d + 1 == 1:
-            det = "Be"
-        elif d + 1 == 2:
-            det = "ML3"
-        elif d + 1 == 3:
-            det = "Be+ML3"
-        else:
-            det = "unknown"
         if calib is not None:
             cEmin = (np.abs(calib - Emin * 1000)).argmin() - 1
             if Emax is None:
@@ -713,7 +679,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
         else:
             # ax1.set_ylim([1/np.max(sum_data) if log else 0, 1])
             ax1.set_ylim([1 if log else 0, np.max(max_data) * 1.5 if log else np.max(max_data) * 1.05])
-        ax1.set_title(f"{title}, SDD {det}")
+        ax1.set_title(f"{title}, SDD {detectors[d]}")
         hist = max_data
         if ROI is not None:
             for i in range(len(ROI)):
@@ -783,16 +749,8 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
     fig = plt.figure(layout = 'compressed')
     ax1 = fig.add_subplot()
     for d in (range(len(Data)) if detector is None else detector):
-        if d + 1 == 1:
-            det = "Be"
-        elif d + 1 == 2:
-            det = "ML3"
-        elif d + 1 == 3:
-            det = "Be+ML3"
-        else:
-            det = "unknown"
         data = func(func(Data[d], axis = 0), axis = 0)
-        ax1.plot(data, label = f"SDD {det}")
+        ax1.plot(data, label = f"SDD {detectors[d]}")
         ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
         Hist.append(data)
     ax1.legend()
