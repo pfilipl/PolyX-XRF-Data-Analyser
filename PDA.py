@@ -18,6 +18,27 @@ detectors = {
     2 : "Be+ML3"
 }
 
+Energies = []
+for i in range(1, 107):
+    try: 
+        ka = xrl.LineEnergy(i, xrl.KA_LINE) 
+    except: 
+        ka = 0
+    try: 
+        kb = xrl.LineEnergy(i, xrl.KB_LINE)
+    except: 
+        kb = 0
+    try: 
+        la = xrl.LineEnergy(i, xrl.LA_LINE)
+    except: 
+        la = 0
+    try: 
+        lb = xrl.LineEnergy(i, xrl.LB_LINE)
+    except: 
+        lb = 0
+    Energies.append((xrl.AtomicNumberToSymbol(i), ka, kb, la, lb))
+Energies = np.array(Energies, dtype = [('symbol', 'U2'), ('Ka', 'f8'), ('Kb', 'f8'), ('La', 'f8'), ('Lb', 'f8')])
+
 # ZAŁADOWANIE FUNKCJI
 
 # dzielenie spektrów prez siebie
