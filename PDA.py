@@ -264,12 +264,6 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             for i in range(len(ROI)):
                 fig = plt.figure(layout = 'compressed')
                 ax1 = fig.add_subplot()
-                # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-                # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-                #     X[-1] -= 1
-                # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-                # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-                #     Z[-1] -= 1
                 sum_signal = np.sum(data[:, :, ROI[i][1]:ROI[i][2]], axis=2)
                 if normalize is not None:
                     sum_signal = sum_signal / I0 / (LT[d] * 1e-6)
@@ -281,9 +275,14 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 img = ax1.imshow(sum_signal.transpose(), origin = Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
                 # img = ax1.imshow(sum_signal.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
                 cb = fig.colorbar(img)
+                cb.set_ticks(np.linspace(max(np.min(sum_signal), Vmin) if Vmin is not None else np.min(sum_signal), min(np.max(sum_signal), Vmax) if Vmax is not None else np.max(sum_signal), len(cb.get_ticks()) - 2))
                 if clabel:
                     cb.set_label(clabel)
+                ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+                ax1.set_xticklabels(np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
                 ax1.set_xlabel("X [mm]")
+                ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
+                ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
                 ax1.set_ylabel("Z [mm]")
                 if d + 1 == 1:
                     det = "Be"
@@ -297,10 +296,6 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                     ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}, normalized")
                 else:
                     ax1.set_title(f"{title}\n SDD {det}, ROI = {ROI[i][0]}")
-                # ax1.set_xticks(X)
-                # ax1.set_yticks(Z)
-                # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-                # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
                 if pos is not None:
                     if pos.shape[0] == 1:
                         ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 3, 3, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
@@ -315,12 +310,6 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
         else:
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
-            # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-            #     X[-1] -= 1
-            # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-            #     Z[-1] -= 1
             max_signal = np.max(data, axis=2)
             if normalize is not None:
                 max_signal = max_signal / I0 / (LT[d] * 1e-6)
@@ -328,9 +317,14 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             img = ax1.imshow(max_signal.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(max_signal.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
             cb = fig.colorbar(img)
+            cb.set_ticks(np.linspace(max(np.min(max_signal), Vmin) if Vmin is not None else np.min(max_signal), min(np.max(max_signal), Vmax) if Vmax is not None else np.max(max_signal), len(cb.get_ticks()) - 2))
             if clabel:
                 cb.set_label(clabel)
+            ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+            ax1.set_xticklabels(np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
             ax1.set_xlabel("X [mm]")
+            ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
+            ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
             if d + 1 == 1:
                 det = "Be"
@@ -344,10 +338,6 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_title(f"{title}\n SDD {det}, normalized")
             else:
                 ax1.set_title(f"{title}\n SDD {det}")
-            # ax1.set_xticks(X)
-            # ax1.set_yticks(Z)
-            # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-            # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
@@ -384,6 +374,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
             cb = fig.colorbar(img)
+            cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
             if clabel:
                 cb.set_label(clabel)
             ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
@@ -411,6 +402,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
         # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin vmax = Vmax)
         cb = fig.colorbar(img)
+        cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
         if clabel:
             cb.set_label(clabel)
         ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
