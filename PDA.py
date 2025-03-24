@@ -361,17 +361,13 @@ def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto'):
     ax1 = fig.add_subplot()
     if isinstance(data, list):
         data = np.array(data)
-    # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-    # if data.shape[0] % 6 == 0 or data.shape[0] == Z[-1]:
-        # Z[-1] -= 1
-    # Y = range(min(data), max(data), (max(data) - min(data))/6)
-    img = ax1.plot(data)
+    img = ax1.plot(data, ".-")
     if ylabel:
         ax1.set_ylabel(ylabel)
-    ax1.set_xlabel("Z [mm]")
     ax1.set_title(f"{title}")
-    # ax1.set_xticks(Z)
-    # ax1.set_xticklabels(np.round(head["Zpositions"][0, Z], 2))
+    ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+    ax1.set_xticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_xticks())))
+    ax1.set_xlabel("Z [mm]")
     # ax1.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
     ax1.set_aspect(Aspect)
     Fig.append(fig)
