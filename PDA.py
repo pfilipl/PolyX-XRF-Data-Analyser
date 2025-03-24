@@ -865,3 +865,16 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "lower
     ax1.set_aspect(Aspect)
     Fig.append(fig)
     return Fig
+
+def print_stack_Map(Map, head, ROI, filename):
+    file = open(filename + ".csv", 'w')
+    file.write("X,Z,real_X,real_Z")
+    for k in range(len(ROI)):
+        file.write(f",{ROI[k][0]}")
+    for i in range(Map[0].shape[0]):
+        for j in range(Map[0].shape[1]):
+            file.write("\n")
+            file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+            for k in range(len(ROI)):
+                file.write(f",{Map[k][i, j]}")
+    file.close()
