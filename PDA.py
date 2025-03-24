@@ -381,18 +381,16 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             data = Data[d].copy()
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
-            # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-            #     X[-1] -= 1
-            # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-            # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-            #     Z[-1] -= 1
             img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
             cb = fig.colorbar(img)
             if clabel:
                 cb.set_label(clabel)
+            ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+            ax1.set_xticklabels(np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
             ax1.set_xlabel("X [mm]")
+            ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
+            ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
             if d + 1 == 1:
                 det = "Be"
@@ -403,10 +401,6 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             else:
                 det = "unknown"
             ax1.set_title(f"{title}, SDD {det}")
-            # ax1.set_xticks(X)
-            # ax1.set_yticks(Z)
-            # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-            # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
             ax1.set_aspect(Aspect)
             Map.append(data)
             Fig.append(fig)
@@ -414,24 +408,18 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         data = Data
         fig = plt.figure(layout = 'compressed')
         ax1 = fig.add_subplot()
-        # X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-        # if data.shape[0] % 6 == 0 or data.shape[0] == X[-1]:
-        #     X[-1] -= 1
-        # Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-        # if data.shape[1] % 6 == 0 or data.shape[1] == Z[-1]:
-        #     Z[-1] -= 1
         img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
         # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin vmax = Vmax)
         cb = fig.colorbar(img)
         if clabel:
             cb.set_label(clabel)
+        ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+        ax1.set_xticklabels(np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
         ax1.set_xlabel("X [mm]")
+        ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
+        ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
         ax1.set_ylabel("Z [mm]")
         ax1.set_title(f"{title}")
-        # ax1.set_xticks(X)
-        # ax1.set_yticks(Z)
-        # ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-        # ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
         ax1.set_aspect(Aspect)
         Map.append(data)
         Fig.append(fig)
