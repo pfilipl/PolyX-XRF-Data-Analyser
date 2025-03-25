@@ -66,6 +66,18 @@ class AddRoi(QtWidgets.QDialog):
         self.Lbeta.setRange(20, 100)
         self.M.setRange(20, 100)
 
+        CALIB_NBINS = 4096      # [ch]
+        CALIB_A     = 0.007016  # [keV/ch]
+        CALIB_B     = -0.71138  # [keV]
+        CALIB_NOISE = 142.61    # [eV]
+        CALIB_FANO  = 0.06269   # [-]
+
+        self.Kalpha.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+        self.Kbeta.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+        self.Lalpha.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+        self.Lbeta.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+        self.M.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+
         # Button box
         self.ButtonBox                  = self.buttonBox
 
@@ -82,7 +94,6 @@ class AddRoi(QtWidgets.QDialog):
         rows.sort(reverse = True)
         for row in rows:
             name = self.CustomROIs.item(row, 0).text().split("-")
-            print(name)
             if name[1] == "Ka": self.Kalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
             elif name[1] == "Kb": self.Kbeta.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
             elif name[1] == "La": self.Lalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
@@ -91,7 +102,7 @@ class AddRoi(QtWidgets.QDialog):
             self.CustomROIs.removeRow(row)
 
     def CustomDeletaAll_clicked(self):
-        self.CustomROIs.setCurrentCell(1, 1)
+        self.CustomROIs.setCurrentCell(0, 0)
         while self.CustomROIs.rowCount() > 0:
             self.CustomROIs.removeRow(self.CustomROIs.currentRow())
         self.Kalpha.resetElementsChecked()
