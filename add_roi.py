@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, uic
-import sys, numpy
+import sys, numpy, xraylib
 
-import main, periodic_table
+import main
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None):
@@ -75,7 +75,20 @@ class AddRoi(QtWidgets.QDialog):
         return
 
     def CustomDelete_clicked(self):
-        self.CustomROIs.removeRow(self.CustomROIs.currentRow())
+        rows = []
+        for item in self.CustomROIs.selectedItems():
+            rows.append(item.row())
+        rows = list(set(rows))
+        rows.sort(reverse = True)
+        for row in rows:
+            name = self.CustomROIs.item(row, 0).text().split("-")
+            print(name)
+            if name[1] == "Ka": self.Kalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
+            elif name[1] == "Kb": self.Kbeta.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
+            elif name[1] == "La": self.Lalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
+            elif name[1] == "Lb": self.Lbeta.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
+            elif name[1] == "M": self.M.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), False)
+            self.CustomROIs.removeRow(row)
 
     def CustomDeletaAll_clicked(self):
         self.CustomROIs.setCurrentCell(1, 1)
@@ -94,7 +107,7 @@ class AddRoi(QtWidgets.QDialog):
         elif button.text() == "Discard":
             print("Discard")
             self.close()
-            
+
         else:
             print("Apply")
             self.close()

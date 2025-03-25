@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, uic
+from PyQt6 import QtCore, QtWidgets, uic
 import sys, xraylib, numpy
 
 import main
@@ -112,9 +112,13 @@ class PeriodicTable(QtWidgets.QWidget):
     def setLine(self, line):
         self.line = line
 
+    def setElementChecked(self, Z, state):
+        self.Elements[Z - 1].setChecked(state)
+        self.ElementsChecked[Z - 1] = state
+
     def getElementsChecked(self):
         return self.ElementsChecked
-    
+
     def setElementsChecked(self, elementsChecked):
         self.ElementsChecked = elementsChecked
         for Z in range(1, 119):
@@ -132,15 +136,16 @@ class PeriodicTable(QtWidgets.QWidget):
 
     def Element_clicked(self, checked, Z):
         self.ElementsChecked[Z - 1] = self.Elements[Z - 1].isChecked()
+        ROIs = self.parent().parent().parent().parent().findChild(QtWidgets.QTableWidget, "tableWidget_CustomROIs")
         if checked:
-            ROIs = self.parent().parent().parent().parent().findChild(QtWidgets.QTableWidget, "tableWidget_CustomROIs")
             ROIs.insertRow(ROIs.currentRow() + 1)
             ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.Elements[Z - 1].text()}-{self.line}"))
             ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(1000)))
             ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(1500)))
             ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.23)))
         else:
-            print("BEEEEEEE")
+            for item in ROIs.findItems(f"{self.Elements[Z - 1].text()}-{self.line}", QtCore.Qt.MatchFlag.MatchExactly):
+                ROIs.removeRow(item.row())
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
