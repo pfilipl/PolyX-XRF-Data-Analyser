@@ -54,6 +54,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.CalibrationNoise   = self.doubleSpinBox_CalibrationNoise.value()
         self.CalibrationFano    = self.doubleSpinBox_CalibrationFano.value()
 
+        self.setCalibration()
+
         # Process
         self.Progress           = self.progressBar_Progress
         self.ReloadMap          = self.pushButton_ReloadMap
@@ -70,6 +72,15 @@ class SingleWindow(QtWidgets.QWidget):
         
         self.Help.hide()
         self.HelpDescription.hide()
+
+    def setCalibration(self):
+        calibration = self.parent().findChild(QtWidgets.QMainWindow, "MainWindow").getCalibration()
+        self.CalibrationGain = calibration[0]
+        self.CalibrationZero = calibration[1]
+        self.CalibrationNoise = calibration[2]
+        self.CalibrationFano = calibration[3]
+        self.calib = calibration[4]
+        self.sigma = calibration[5]
 
     def MarkPoint_clicked(self):
         return

@@ -1,10 +1,10 @@
 from PyQt6 import QtWidgets, uic
 import sys, numpy, xraylib
 
-import main
+import main, PDA
 
 class AddRoi(QtWidgets.QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, calib = None, sigma = None):
         super(AddRoi, self).__init__(parent)
         uic.loadUi("add_roi.ui", self)
         self.setWindowTitle('Add Regions of Interest (ROIs)')
@@ -39,44 +39,43 @@ class AddRoi(QtWidgets.QDialog):
         self.XRFSigmaWidth              = self.doubleSpinBox_XRFSigmaWidth.value()
         self.XRFWidth                   = self.spinBox_XRFWidth.value()
 
-        self.XRFLines.setEnabled(True)
+        self.calib                      = calib
+        self.sigma                      = sigma
 
-        # - Periodic tables
-        self.Kalpha                     = self.tab_Kalpha
-        self.Kbeta                      = self.tab_Kbeta
-        self.Lalpha                     = self.tab_Lalpha
-        self.Lbeta                      = self.tab_Lbeta
-        self.M                          = self.tab_M
+        if self.calib is not None and self.sigma is not None:
 
-        self.KalphaChecked              = numpy.ones(119, numpy.bool_) * False
-        self.KbetaChecked               = numpy.ones(119, numpy.bool_) * False
-        self.LalphaChecked              = numpy.ones(119, numpy.bool_) * False
-        self.LbetaChecked               = numpy.ones(119, numpy.bool_) * False
-        self.MChecked                   = numpy.ones(119, numpy.bool_) * False
+            self.XRFLines.setEnabled(True)
 
-        self.Kalpha.setLine("Ka")
-        self.Kbeta.setLine("Kb")
-        self.Lalpha.setLine("La")
-        self.Lbeta.setLine("Lb")
-        self.M.setLine("M")
+            # - Periodic tables
+            self.Kalpha                     = self.tab_Kalpha
+            self.Kbeta                      = self.tab_Kbeta
+            self.Lalpha                     = self.tab_Lalpha
+            self.Lbeta                      = self.tab_Lbeta
+            self.M                          = self.tab_M
 
-        self.Kalpha.setRange(20, 100)
-        self.Kbeta.setRange(20, 100)
-        self.Lalpha.setRange(20, 100)
-        self.Lbeta.setRange(20, 100)
-        self.M.setRange(20, 100)
+            self.KalphaChecked              = numpy.ones(119, numpy.bool_) * False
+            self.KbetaChecked               = numpy.ones(119, numpy.bool_) * False
+            self.LalphaChecked              = numpy.ones(119, numpy.bool_) * False
+            self.LbetaChecked               = numpy.ones(119, numpy.bool_) * False
+            self.MChecked                   = numpy.ones(119, numpy.bool_) * False
 
-        CALIB_NBINS = 4096      # [ch]
-        CALIB_A     = 0.007016  # [keV/ch]
-        CALIB_B     = -0.71138  # [keV]
-        CALIB_NOISE = 142.61    # [eV]
-        CALIB_FANO  = 0.06269   # [-]
+            self.Kalpha.setLine("Ka")
+            self.Kbeta.setLine("Kb")
+            self.Lalpha.setLine("La")
+            self.Lbeta.setLine("Lb")
+            self.M.setLine("M")
 
-        self.Kalpha.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
-        self.Kbeta.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
-        self.Lalpha.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
-        self.Lbeta.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
-        self.M.setCalibration(CALIB_NBINS, CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+            self.Kalpha.setRange(20, 100)
+            self.Kbeta.setRange(20, 100)
+            self.Lalpha.setRange(20, 100)
+            self.Lbeta.setRange(20, 100)
+            self.M.setRange(20, 100)
+
+            self.Kalpha.setCalibration(self.calib, self.sigma)
+            self.Kbeta.setCalibration(self.calib, self.sigma)
+            self.Lalpha.setCalibration(self.calib, self.sigma)
+            self.Lbeta.setCalibration(self.calib, self.sigma)
+            self.M.setCalibration(self.calib, self.sigma)
 
         # Button box
         self.ButtonBox                  = self.buttonBox
