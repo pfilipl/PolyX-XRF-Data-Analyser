@@ -89,14 +89,12 @@ class AddRoi(QtWidgets.QDialog):
     
     def ButtonBox_clicked(self, button):
         if button.text() == "Reset":
-            self.Kalpha.resetElementsChecked()
-            self.Kbeta.resetElementsChecked()
-            self.Lalpha.resetElementsChecked()
-            self.Lbeta.resetElementsChecked()
-            self.M.resetElementsChecked()
+            self.CustomDeletaAll_clicked()
+
         elif button.text() == "Discard":
             print("Discard")
             self.close()
+            
         else:
             print("Apply")
             self.close()

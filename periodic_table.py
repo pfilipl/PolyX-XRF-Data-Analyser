@@ -3,45 +3,80 @@ import sys, xraylib, numpy
 
 import main
 
-# I wish I could make it like this (XRF parameters when button is hover)
+ElementNames = {
+    "H" : "Hydrogen", "He" : "Helium", "Li" : "Lithium", "Be" : "Beryllium", "B" : "Boron", 
+    "C" : "Carbon", "N" : "Nitrogen", "O" : "Oxygen", "F" : "Fluorine", "Ne" : "Neon", 
+    "Na" : "Sodium", "Mg" : "Magnesium", "Al" : "Aluminium", "Si" : "Silicon", "P" : "Phosphorus", 
+    "S" : "Sulfur", "Cl" : "Chlorine", "Ar" : "Argon", "K" : "Potassium", "Ca" : "Calcium", 
+    "Sc" : "Scandium", "Ti" : "Titanium", "V" : "Vanadium", "Cr" : "Chromium", "Mn" : "Manganese", 
+    "Fe" : "Iron", "Co" : "Cobalt", "Ni" : "Nickel", "Cu" : "Copper", "Zn" : "Zinc", "Ga" : "Gallium", 
+    "Ge" : "Germanium", "As" : "Arsenic", "Se" : "Selenium", "Br" : "Bromine", "Kr" : "Krypton", 
+    "Rb" : "Rubidium", "Sr" : "Strontium", "Y" : "Yttrium", "Zr" : "Zirconium", "Nb" : "Niobium", 
+    "Mo" : "Molybdenum", "Tc" : "Technetium", "Ru" : "Ruthenium", "Rh" : "Rhodium", "Pd" : "Palladium", 
+    "Ag" : "Silver", "Cd" : "Cadmium", "In" : "Indium", "Sn" : "Tin", "Sb" : "Antimony", 
+    "Te" : "Tellurium", "I" : "Iodine", "Xe" : "Xenon", "Cs" : "Caesium", "Ba" : "Barium", 
+    "La" : "Lanthanum", "Ce" : "Cerium", "Pr" : "Praseodymium", "Nd" : "Neodymium", "Pm" : "Promethium", 
+    "Sm" : "Samarium", "Eu" : "Europium", "Gd" : "Gadolinium", "Tb" : "Terbium", "Dy" : "Dysprosium", 
+    "Ho" : "Holmium", "Er" : "Erbium", "Tm" : "Thulium", "Yb" : "Ytterbium", "Lu" : "Lutetium", 
+    "Hf" : "Hafnium", "Ta" : "Tantalum", "W" : "Tungsten", "Re" : "Rhenium", "Os" : "Osmium", 
+    "Ir" : "Iridium", "Pt" : "Platinum", "Au" : "Gold", "Hg" : "Mercury", "Tl" : "Thallium", 
+    "Pb" : "Lead", "Bi" : "Bismuth", "Po" : "Polonium", "At" : "Astatine", "Rn" : "Radon", 
+    "Fr" : "Francium", "Ra" : "Radium", "Ac" : "Actinium", "Th" : "Thorium", "Pa" : "Protactinium", 
+    "U" : "Uranium", "Np" : "Neptunium", "Pu" : "Plutonium", "Am" : "Americium", "Cm" : "Curium", 
+    "Bk" : "Berkelium", "Cf" : "Californium", "Es" : "Einsteinium", "Fm" : "Fermium", 
+    "Md" : "Mendelevium", "No" : "Nobelium", "Lr" : "Lawrencium", "Rf" : "Rutherfordium", 
+    "Db" : "Dubnium", "Sg" : "Seaborgium", "Bh" : "Bohrium", "Hs" : "Hassium", "Mt" : "Meitnerium", 
+    "Ds" : "Darmstadtium", "Rg" : "Roentgenium", "Cn" : "Copernicium", "Nh" : "Nihonium", 
+    "Fl" : "Flerovium", "Mc" : "Moscovium", "Lv" : "Livermorium", "Ts" : "Tennessine", "Og" : "Oganesson"
+}
+
 class HoverableButton(QtWidgets.QPushButton):
     def __init__(self, parent = None):
         super(HoverableButton, self).__init__(parent)
 
     def enterEvent(self, event):
         self.parent().findChild(QtWidgets.QLabel, "label_ElementSymbol").setText(self.text())
-
-        # self.ElementSymbol.setText(xraylib.AtomicNumberToSymbol(Z))
-        # # self.ElementName    .setText(xraylib.(Z))
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementName").setText(ElementNames[self.text()])
         
-        # try: Ke = xraylib.EdgeEnergy(Z, xraylib.K_SHELL)
-        # except: Ke = float("NaN")
-        # self.ElementKedge.setText(f"{Ke:.3f}")
-        # try: Le = xraylib.EdgeEnergy(Z, xraylib.L1_SHELL)
-        # except: Le = float("NaN")
-        # self.ElementLedge.setText(f"{Le:.3f}")
-        # try: Me = xraylib.EdgeEnergy(Z, xraylib.M1_SHELL)
-        # except: Me = float("NaN")
-        # self.ElementMedge.setText(f"{Me:.3f}")
+        try: Ke = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.K_SHELL)
+        except: Ke = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKedge").setText(f"{Ke:.3f}")
+        try: Le = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L1_SHELL)
+        except: Le = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLedge").setText(f"{Le:.3f}")
+        try: Me = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.M1_SHELL)
+        except: Me = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementMedge").setText(f"{Me:.3f}")
 
-        # try: Ka = xraylib.LineEnergy(Z, xraylib.KA_LINE)
-        # except: Ka = float("NaN")
-        # self.ElementKalpha.setText(f"{Ka:.3f}")
-        # try: Kb = xraylib.LineEnergy(Z, xraylib.KB_LINE)
-        # except: Kb = float("NaN")
-        # self.ElementKbeta.setText(f"{Kb:.3f}")
-        # try: La = xraylib.LineEnergy(Z, xraylib.LA_LINE)
-        # except: La = float("NaN")
-        # self.ElementLalpha.setText(f"{La:.3f}")
-        # try: Lb = xraylib.LineEnergy(Z, xraylib.LB_LINE)
-        # except: Lb = float("NaN")
-        # self.ElementLbeta.setText(f"{Lb:.3f}")
-        # try: Ma = xraylib.LineEnergy(Z, xraylib.MA1_LINE)
-        # except: Ma = float("NaN")
-        # self.ElementM.setText(f"{Ma:.3f}")
+        try: Ka = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.KA_LINE)
+        except: Ka = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKalpha").setText(f"{Ka:.3f}")
+        try: Kb = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.KB_LINE)
+        except: Kb = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKbeta").setText(f"{Kb:.3f}")
+        try: La = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.LA_LINE)
+        except: La = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLalpha").setText(f"{La:.3f}")
+        try: Lb = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.LB_LINE)
+        except: Lb = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLbeta").setText(f"{Lb:.3f}")
+        try: Ma = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.MA1_LINE)
+        except: Ma = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementM").setText(f"{Ma:.3f}")
 
     def leaveEvent(self, event):
-        return
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementSymbol").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementName").setText("")
+
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKedge").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLedge").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementMedge").setText("")
+
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKalpha").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementKbeta").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLalpha").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementLbeta").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementM").setText("")
 
 class PeriodicTable(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -67,8 +102,6 @@ class PeriodicTable(QtWidgets.QWidget):
         for Z in range(1, 119):
             exec(f"self.Elements.append(self.pushButton_Element{Z})")
             self.Elements[Z - 1].clicked.connect(lambda checked, Z = Z: self.Element_clicked(checked, Z))
-            self.Elements[Z - 1].pressed.connect(lambda Z = Z: self.Element_pressed(Z))
-            self.Elements[Z - 1].released.connect(lambda Z = Z: self.Element_released(Z))
 
         # Other
         self.line               = None
@@ -108,49 +141,6 @@ class PeriodicTable(QtWidgets.QWidget):
             ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.23)))
         else:
             print("BEEEEEEE")
-
-    # def Element_pressed(self, Z):
-    #     self.ElementSymbol.setText(xraylib.AtomicNumberToSymbol(Z))
-    #     # self.ElementName    .setText(xraylib.(Z))
-        
-    #     try: Ke = xraylib.EdgeEnergy(Z, xraylib.K_SHELL)
-    #     except: Ke = float("NaN")
-    #     self.ElementKedge.setText(f"{Ke:.3f}")
-    #     try: Le = xraylib.EdgeEnergy(Z, xraylib.L1_SHELL)
-    #     except: Le = float("NaN")
-    #     self.ElementLedge.setText(f"{Le:.3f}")
-    #     try: Me = xraylib.EdgeEnergy(Z, xraylib.M1_SHELL)
-    #     except: Me = float("NaN")
-    #     self.ElementMedge.setText(f"{Me:.3f}")
-
-    #     try: Ka = xraylib.LineEnergy(Z, xraylib.KA_LINE)
-    #     except: Ka = float("NaN")
-    #     self.ElementKalpha.setText(f"{Ka:.3f}")
-    #     try: Kb = xraylib.LineEnergy(Z, xraylib.KB_LINE)
-    #     except: Kb = float("NaN")
-    #     self.ElementKbeta.setText(f"{Kb:.3f}")
-    #     try: La = xraylib.LineEnergy(Z, xraylib.LA_LINE)
-    #     except: La = float("NaN")
-    #     self.ElementLalpha.setText(f"{La:.3f}")
-    #     try: Lb = xraylib.LineEnergy(Z, xraylib.LB_LINE)
-    #     except: Lb = float("NaN")
-    #     self.ElementLbeta.setText(f"{Lb:.3f}")
-    #     try: Ma = xraylib.LineEnergy(Z, xraylib.MA1_LINE)
-    #     except: Ma = float("NaN")
-    #     self.ElementM.setText(f"{Ma:.3f}")
-
-    # def Element_released(self, Z):
-    #     self.ElementSymbol.setText("")
-
-    #     self.ElementKedge.setText("")
-    #     self.ElementLedge.setText("")
-    #     self.ElementMedge.setText("")
-        
-    #     self.ElementKalpha.setText("")
-    #     self.ElementKbeta.setText("")
-    #     self.ElementLalpha.setText("")
-    #     self.ElementLbeta.setText("")
-    #     self.ElementM.setText("")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
