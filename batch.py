@@ -14,10 +14,8 @@ class BatchWindow(QtWidgets.QWidget):
         self.DetectorsSum               = self.pushButton_DetectorsSum.isChecked()
 
         # Energy calibration
-        self.CalibrationGain            = self.doubleSpinBox_CalibrationGain.value()
-        self.CalibrationZero            = self.doubleSpinBox_CalibrationZero.value()
-        self.CalibrationNoise           = self.doubleSpinBox_CalibrationNoise.value()
-        self.CalibrationFano            = self.doubleSpinBox_CalibrationFano.value()
+        self.Calib                      = None
+        self.Sigma                      = None
 
         # Maps configuration
         self.MapConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto.isChecked()
@@ -76,6 +74,10 @@ class BatchWindow(QtWidgets.QWidget):
         self.Help.hide()
         self.HelpDescription.hide()
 
+    def setCalibration(self, calib, sigma):
+        self.Calib = calib
+        self.Sigma = sigma
+
     def MapsConfigColormapSearch_clicked(self):
         return
     
@@ -83,7 +85,7 @@ class BatchWindow(QtWidgets.QWidget):
         return
 
     def ROIsAdd_clicked(self):
-        addroi = add_roi.AddRoi(self)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma)
         addroi.exec()
         
     def ROIsSave_clicked(self):

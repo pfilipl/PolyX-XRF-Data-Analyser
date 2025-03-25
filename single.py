@@ -49,12 +49,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.DetectorsSum       = self.pushButton_DetectorsSum.isChecked()
 
         # Energy calibration
-        self.CalibrationGain    = self.doubleSpinBox_CalibrationGain.value()
-        self.CalibrationZero    = self.doubleSpinBox_CalibrationZero.value()
-        self.CalibrationNoise   = self.doubleSpinBox_CalibrationNoise.value()
-        self.CalibrationFano    = self.doubleSpinBox_CalibrationFano.value()
-
-        self.setCalibration()
+        self.Calib              = None
+        self.Sigma              = None
 
         # Process
         self.Progress           = self.progressBar_Progress
@@ -73,14 +69,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.Help.hide()
         self.HelpDescription.hide()
 
-    def setCalibration(self):
-        calibration = self.parent().findChild(QtWidgets.QMainWindow, "MainWindow").getCalibration()
-        self.CalibrationGain = calibration[0]
-        self.CalibrationZero = calibration[1]
-        self.CalibrationNoise = calibration[2]
-        self.CalibrationFano = calibration[3]
-        self.calib = calibration[4]
-        self.sigma = calibration[5]
+    def setCalibration(self, calib, sigma):
+        self.Calib = calib
+        self.Sigma = sigma
 
     def MarkPoint_clicked(self):
         return
@@ -92,7 +83,7 @@ class SingleWindow(QtWidgets.QWidget):
         return
 
     def ROIsAdd_clicked(self):
-        addroi = add_roi.AddRoi(self)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma)
         addroi.exec()
         
     def ROIsSave_clicked(self):

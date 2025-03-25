@@ -11,33 +11,77 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi("main.ui", self)
         self.setWindowTitle('PolyX Data Analyser')
 
-        self.Single             = self.tab_Single
-        self.Batch              = self.tab_Batch
-        self.Stitch             = self.tab_Stitch
-
-        self.CalibrationGain    = None
-        self.CalibrationZero    = None
-        self.CalibrationNoise   = None
-        self.CalibrationFano    = None
         self.Calib              = None
         self.Sigma              = None
 
-        CALIB_A     = 0.007016  # [keV/ch]
-        CALIB_B     = -0.71138  # [keV]
-        CALIB_NOISE = 142.61    # [eV]
-        CALIB_FANO  = 0.06269   # [-]
+        # Single
+        self.Single             = self.tab_Single
 
-        self.setCalibration(CALIB_A, CALIB_B, CALIB_NOISE, CALIB_FANO)
+        self.Single.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationSingle)
+        self.Single.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationSingle)
+        self.Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(self.setCalibrationSingle)
+        self.Single.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationSingle)
 
-    def setCalibration(self, gain, zero, noise, fano):
-        self.CalibrationGain    = gain
-        self.CalibrationZero    = zero
-        self.CalibrationNoise   = noise
-        self.CalibrationFano    = fano
+        # Batch
+        self.Batch              = self.tab_Batch
+
+        self.Batch.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationBatch)
+        self.Batch.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationBatch)
+        self.Batch.doubleSpinBox_CalibrationNoise.valueChanged.connect(self.setCalibrationBatch)
+        self.Batch.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationBatch)
+
+        # Stitch
+        self.Stitch             = self.tab_Stitch
+
+    def setCalibrationSingle(self):
+        gain = self.Single.doubleSpinBox_CalibrationGain.value()
+        zero = self.Single.doubleSpinBox_CalibrationZero.value()
+        noise = self.Single.doubleSpinBox_CalibrationNoise.value()
+        fano = self.Single.doubleSpinBox_CalibrationFano.value()
         self.Calib, self.Sigma  = PDA.gen_calib(CALIB_NBINS, gain, zero, noise, fano)
 
-    def getCalibration(self):
-        return self.CalibrationGain, self.CalibrationZero, self.CalibrationNoise, self.CalibrationFano, self.Calib, self.Sigma
+        self.Single.setCalibration(self.Calib, self.Sigma)
+        self.Batch.setCalibration(self.Calib, self.Sigma)
+
+        self.Batch.doubleSpinBox_CalibrationGain.blockSignals(True)
+        self.Batch.doubleSpinBox_CalibrationZero.blockSignals(True)
+        self.Batch.doubleSpinBox_CalibrationNoise.blockSignals(True)
+        self.Batch.doubleSpinBox_CalibrationFano.blockSignals(True)
+
+        self.Batch.doubleSpinBox_CalibrationGain.setValue(gain)
+        self.Batch.doubleSpinBox_CalibrationZero.setValue(zero)
+        self.Batch.doubleSpinBox_CalibrationNoise.setValue(noise)
+        self.Batch.doubleSpinBox_CalibrationFano.setValue(fano)
+
+        self.Batch.doubleSpinBox_CalibrationGain.blockSignals(False)
+        self.Batch.doubleSpinBox_CalibrationZero.blockSignals(False)
+        self.Batch.doubleSpinBox_CalibrationNoise.blockSignals(False)
+        self.Batch.doubleSpinBox_CalibrationFano.blockSignals(False)
+
+    def setCalibrationBatch(self):
+        gain = self.Batch.doubleSpinBox_CalibrationGain.value()
+        zero = self.Batch.doubleSpinBox_CalibrationZero.value()
+        noise = self.Batch.doubleSpinBox_CalibrationNoise.value()
+        fano = self.Batch.doubleSpinBox_CalibrationFano.value()
+        self.Calib, self.Sigma  = PDA.gen_calib(CALIB_NBINS, gain, zero, noise, fano)
+
+        self.Batch.setCalibration(self.Calib, self.Sigma)
+        self.Single.setCalibration(self.Calib, self.Sigma)
+
+        self.Single.doubleSpinBox_CalibrationGain.blockSignals(True)
+        self.Single.doubleSpinBox_CalibrationZero.blockSignals(True)
+        self.Single.doubleSpinBox_CalibrationNoise.blockSignals(True)
+        self.Single.doubleSpinBox_CalibrationFano.blockSignals(True)
+
+        self.Single.doubleSpinBox_CalibrationGain.setValue(gain)
+        self.Single.doubleSpinBox_CalibrationZero.setValue(zero)
+        self.Single.doubleSpinBox_CalibrationNoise.setValue(noise)
+        self.Single.doubleSpinBox_CalibrationFano.setValue(fano)
+
+        self.Single.doubleSpinBox_CalibrationGain.blockSignals(False)
+        self.Single.doubleSpinBox_CalibrationZero.blockSignals(False)
+        self.Single.doubleSpinBox_CalibrationNoise.blockSignals(False)
+        self.Single.doubleSpinBox_CalibrationFano.blockSignals(False)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

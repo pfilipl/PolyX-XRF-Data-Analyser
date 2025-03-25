@@ -34,17 +34,22 @@ class AddRoi(QtWidgets.QDialog):
         self.pushButton_CustomDeleteAll.clicked.connect(self.CustomDeletaAll_clicked)
 
         # XRF lines
-        self.XRFLines                   = self.tab_XRFLines
-        self.XRFWarning                 = self.label_XRFWarning
         self.XRFSigmaWidth              = self.doubleSpinBox_XRFSigmaWidth.value()
         self.XRFWidth                   = self.spinBox_XRFWidth.value()
 
-        self.calib                      = calib
-        self.sigma                      = sigma
+        self.Calib                      = calib
+        self.Sigma                      = sigma
 
-        if self.calib is not None and self.sigma is not None:
-
-            self.XRFLines.setEnabled(True)
+        if self.Calib is not None and self.Sigma is not None:
+            self.doubleSpinBox_CustomEnergyLine.setEnabled(True)
+            self.doubleSpinBox_CustomEnergyWidth.setEnabled(True)
+            self.spinBox_CustomEnergyChannelWidth.setEnabled(True)
+            self.doubleSpinBox_CustomEnergyStart.setEnabled(True)
+            self.doubleSpinBox_CustomEnergyStop.setEnabled(True)
+            self.label_CustomWarning.hide()
+            
+            self.tab_XRFLines.setEnabled(True)
+            self.label_XRFWarning.hide()
 
             # - Periodic tables
             self.Kalpha                     = self.tab_Kalpha
@@ -71,11 +76,11 @@ class AddRoi(QtWidgets.QDialog):
             self.Lbeta.setRange(20, 100)
             self.M.setRange(20, 100)
 
-            self.Kalpha.setCalibration(self.calib, self.sigma)
-            self.Kbeta.setCalibration(self.calib, self.sigma)
-            self.Lalpha.setCalibration(self.calib, self.sigma)
-            self.Lbeta.setCalibration(self.calib, self.sigma)
-            self.M.setCalibration(self.calib, self.sigma)
+            self.Kalpha.setCalibration(self.Calib, self.Sigma)
+            self.Kbeta.setCalibration(self.Calib, self.Sigma)
+            self.Lalpha.setCalibration(self.Calib, self.Sigma)
+            self.Lbeta.setCalibration(self.Calib, self.Sigma)
+            self.M.setCalibration(self.Calib, self.Sigma)
 
         # Button box
         self.ButtonBox                  = self.buttonBox
