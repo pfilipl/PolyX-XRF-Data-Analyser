@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, QtCore, uic
 import sys, numpy, xraylib, math
 
-import main, periodic_table
+import main
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0):
@@ -93,6 +93,7 @@ class AddRoi(QtWidgets.QDialog):
             self.Lbeta.setRoiCount(self.RoiCount)
             self.M.setRoiCount(self.RoiCount)
 
+            # (xraylib limitations)
             self.Kalpha.setRange(xraylib.SymbolToAtomicNumber("B"), xraylib.SymbolToAtomicNumber("Rf"))
             self.Kbeta.setRange(xraylib.SymbolToAtomicNumber("Al"), xraylib.SymbolToAtomicNumber("Rf"))
             self.Lalpha.setRange(xraylib.SymbolToAtomicNumber("Sc"), xraylib.SymbolToAtomicNumber("Rf"))
