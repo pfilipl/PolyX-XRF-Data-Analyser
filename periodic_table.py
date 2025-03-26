@@ -115,11 +115,15 @@ class PeriodicTable(QtWidgets.QWidget):
             self.Elements[Z - 1].clicked.connect(lambda checked, Z = Z: self.Element_clicked(checked, Z))
 
         # Other
+        self.RoiCount           = 0
         self.line               = None
         self.calib              = None
         self.sigma              = None
         
     # Setters
+    def setRoiCount(self, roiCount):
+        self.RoiCount = roiCount
+
     def setLine(self, line):
         self.line = line
         if self.line == "Ka":
@@ -173,15 +177,20 @@ class PeriodicTable(QtWidgets.QWidget):
 
     # Slots
     def Element_clicked(self, checked, Z):
-        self.ElementsChecked[Z - 1] = self.Elements[Z - 1].isChecked()
         ROIs = self.parent().parent().parent().parent().findChild(QtWidgets.QTableWidget, "tableWidget_CustomROIs")
+        self.ElementsChecked[Z - 1] = self.Elements[Z - 1].isChecked()
+        self.RoiCount += 1
+        name = f"{self.Elements[Z - 1].text()}-{self.line}"
+        if len(ROIs.findItems(name, QtCore.Qt.MatchFlag.MatchExactly)) > 0:
+            name = f"{name}_{self.RoiCount}"
+
         if checked:
             roi = []
             sigmaWidth = self.parent().parent().parent().findChild(QtWidgets.QDoubleSpinBox, "doubleSpinBox_XRFSigmaWidth").value()
             Width = self.parent().parent().parent().findChild(QtWidgets.QSpinBox, "spinBox_XRFWidth").value()
             PDA.add_ROI(roi, f"{self.Elements[Z - 1].text()}-{self.line}", self.calib, self.sigma, sigmaWidth, Width)
             ROIs.insertRow(ROIs.currentRow() + 1)
-            ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[-1][0]}"))
+            ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{name}"))
             ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(max(roi[-1][1], 1))))
             ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(min(roi[-1][2], 4096))))
             ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.00)))

@@ -10,20 +10,20 @@ class StitchWindow(QtWidgets.QWidget):
 
         # Top map
         self.TopMap             = self.widget_TopMap
-        self.TopMapPath         = self.lineEdit_TopMapPath.text
-        self.TopMapOffset       = self.spinBox_TopMapOffset.value()
+        self.TopMapPath         = self.lineEdit_TopMapPath
+        self.TopMapOffset       = self.spinBox_TopMapOffset
 
         self.toolButton_TopMapPathSearch.clicked.connect(self.TopMapPathSearch_clicked)
         
         # Bottom map
         self.BottomMap          = self.widget_BottomMap
-        self.BottomMapPath      = self.lineEdit_BottomMapPath.text
-        self.BottomMapOffset    = self.spinBox_BottomMapOffset.value()
+        self.BottomMapPath      = self.lineEdit_BottomMapPath
+        self.BottomMapOffset    = self.spinBox_BottomMapOffset
 
         self.toolButton_BottomMapPathSearch.clicked.connect(self.BottomMapPathSearch_clicked)
 
         # Results
-        self.ResultPath         = self.lineEdit_ResultPath.text
+        self.ResultPath         = self.lineEdit_ResultPath
 
         self.toolButton_ResultPathSearch.clicked.connect(self.ResultPathSearch_clicked)
 

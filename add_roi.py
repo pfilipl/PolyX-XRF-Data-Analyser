@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, QtCore, uic
 import sys, numpy, xraylib, math
 
-import main, PDA
+import main, periodic_table
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0):
@@ -46,6 +46,7 @@ class AddRoi(QtWidgets.QDialog):
         self.RoiCountStart              = roiCount
         self.RoiCount                   = roiCount
 
+        self.CustomROIs.itemSelectionChanged.connect(self.SelectionChanged)
         self.pushButton_CustomAdd.clicked.connect(self.CustomAdd_clicked)
         self.pushButton_CustomDelete.clicked.connect(self.CustomDelete_clicked)
         self.pushButton_CustomDeleteAll.clicked.connect(self.CustomDeletaAll_clicked)
@@ -62,12 +63,6 @@ class AddRoi(QtWidgets.QDialog):
         self.Lbeta                      = self.tab_Lbeta
         self.M                          = self.tab_M
 
-        self.Kalpha.setLine("Ka")
-        self.Kbeta.setLine("Kb")
-        self.Lalpha.setLine("La")
-        self.Lbeta.setLine("Lb")
-        self.M.setLine("M")
-
         if self.Calib is not None and self.Sigma is not None:
             self.CustomEnergyLine.setEnabled(True)
             self.CustomEnergyWidth.setEnabled(True)
@@ -80,13 +75,24 @@ class AddRoi(QtWidgets.QDialog):
             self.XRFWarning.hide()
 
             # Periodic tables
-            self.KalphaChecked          = numpy.ones(119, numpy.bool_) * False
-            self.KbetaChecked           = numpy.ones(119, numpy.bool_) * False
-            self.LalphaChecked          = numpy.ones(119, numpy.bool_) * False
-            self.LbetaChecked           = numpy.ones(119, numpy.bool_) * False
-            self.MChecked               = numpy.ones(119, numpy.bool_) * False
+            # self.KalphaChecked          = numpy.ones(119, numpy.bool_) * False
+            # self.KbetaChecked           = numpy.ones(119, numpy.bool_) * False
+            # self.LalphaChecked          = numpy.ones(119, numpy.bool_) * False
+            # self.LbetaChecked           = numpy.ones(119, numpy.bool_) * False
+            # self.MChecked               = numpy.ones(119, numpy.bool_) * False
 
-            # Maximum ranges
+            self.Kalpha.setLine("Ka")
+            self.Kbeta.setLine("Kb")
+            self.Lalpha.setLine("La")
+            self.Lbeta.setLine("Lb")
+            self.M.setLine("M")
+
+            self.Kalpha.setRoiCount(self.RoiCount)
+            self.Kbeta.setRoiCount(self.RoiCount)
+            self.Lalpha.setRoiCount(self.RoiCount)
+            self.Lbeta.setRoiCount(self.RoiCount)
+            self.M.setRoiCount(self.RoiCount)
+
             self.Kalpha.setRange(xraylib.SymbolToAtomicNumber("B"), xraylib.SymbolToAtomicNumber("Rf"))
             self.Kbeta.setRange(xraylib.SymbolToAtomicNumber("Al"), xraylib.SymbolToAtomicNumber("Rf"))
             self.Lalpha.setRange(xraylib.SymbolToAtomicNumber("Sc"), xraylib.SymbolToAtomicNumber("Rf"))
@@ -106,6 +112,9 @@ class AddRoi(QtWidgets.QDialog):
 
     def setLastCustom(self, value, lastCustom):
         self.LastCustom = lastCustom
+
+    def SelectionChanged(self):
+        self.RoiCount = max(self.RoiCount, self.Kalpha.RoiCount, self.Kbeta.RoiCount, self.Lalpha.RoiCount, self.Lbeta.RoiCount, self.M.RoiCount)
 
     def CustomAdd_clicked(self):
         self.RoiCount += 1
