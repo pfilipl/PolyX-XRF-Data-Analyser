@@ -3,8 +3,6 @@ import sys
 
 import PDA
 
-CALIB_NBINS = 4096
-
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -34,11 +32,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Stitch             = self.tab_Stitch
 
     def setCalibrationSingle(self):
-        gain = self.Single.doubleSpinBox_CalibrationGain.value()
-        zero = self.Single.doubleSpinBox_CalibrationZero.value()
+        gain = self.Single.doubleSpinBox_CalibrationGain.value() / 1000
+        zero = self.Single.doubleSpinBox_CalibrationZero.value() / 1000
         noise = self.Single.doubleSpinBox_CalibrationNoise.value()
         fano = self.Single.doubleSpinBox_CalibrationFano.value()
-        self.Calib, self.Sigma  = PDA.gen_calib(CALIB_NBINS, gain, zero, noise, fano)
+        self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
 
         self.Single.setCalibration(self.Calib, self.Sigma)
         self.Batch.setCalibration(self.Calib, self.Sigma)
@@ -59,11 +57,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Batch.doubleSpinBox_CalibrationFano.blockSignals(False)
 
     def setCalibrationBatch(self):
-        gain = self.Batch.doubleSpinBox_CalibrationGain.value()
-        zero = self.Batch.doubleSpinBox_CalibrationZero.value()
+        gain = self.Batch.doubleSpinBox_CalibrationGain.value() / 1000
+        zero = self.Batch.doubleSpinBox_CalibrationZero.value() / 1000
         noise = self.Batch.doubleSpinBox_CalibrationNoise.value()
         fano = self.Batch.doubleSpinBox_CalibrationFano.value()
-        self.Calib, self.Sigma  = PDA.gen_calib(CALIB_NBINS, gain, zero, noise, fano)
+        self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
 
         self.Batch.setCalibration(self.Calib, self.Sigma)
         self.Single.setCalibration(self.Calib, self.Sigma)

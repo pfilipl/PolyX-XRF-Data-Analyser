@@ -9,19 +9,20 @@ class SingleWindow(QtWidgets.QWidget):
         uic.loadUi("single.ui", self)
 
         # Spectrum from map region
-        self.AreaX1             = self.doubleSpinBox_AreaX1.value()
-        self.AreaZ1             = self.doubleSpinBox_AreaZ1.value()
-        self.AreaX2             = self.doubleSpinBox_AreaX2.value()
-        self.AreaZ2             = self.doubleSpinBox_AreaZ2.value()
-        self.PointX             = self.doubleSpinBox_PointX.value()
-        self.PointZ             = self.doubleSpinBox_PointZ.value()
+        self.AreaX1             = self.doubleSpinBox_AreaX1
+        self.AreaZ1             = self.doubleSpinBox_AreaZ1
+        self.AreaX2             = self.doubleSpinBox_AreaX2
+        self.AreaZ2             = self.doubleSpinBox_AreaZ2
+        self.PointX             = self.doubleSpinBox_PointX
+        self.PointZ             = self.doubleSpinBox_PointZ
 
         self.pushButton_MarkPoint.clicked.connect(self.MarkPoint_clicked)
         self.pushButton_SelectArea.clicked.connect(self.SelectArea_clicked)
 
         # Regions of interest (ROIs)
         self.ROIs               = self.tableWidget_ROIs
-        self.ROIsDefault        = self.pushButton_ROIsDefault.isChecked()
+        self.ROIsDefault        = self.pushButton_ROIsDefault
+        self.RoiCount           = 0
 
         self.pushButton_ROIsImport.clicked.connect(self.ROIsImport_clicked)
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
@@ -34,19 +35,19 @@ class SingleWindow(QtWidgets.QWidget):
         self.Spectrum           = self.tab_Spectrum
 
         # Map
-        self.MapPath            = self.lineEdit_MapPath.text
+        self.MapPath            = self.lineEdit_MapPath
 
         self.toolButton_MapPathSearch.clicked.connect(self.MapPathSearch_clicked)
 
         # Results
-        self.ResultsPath        = self.lineEdit_ResultsPath.text
+        self.ResultsPath        = self.lineEdit_ResultsPath
 
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
         # Detectors
-        self.DetectorsML        = self.pushButton_DetectorsML.isChecked()
-        self.DetectorsBe        = self.pushButton_DetectorsBe.isChecked()
-        self.DetectorsSum       = self.pushButton_DetectorsSum.isChecked()
+        self.DetectorsML        = self.pushButton_DetectorsML
+        self.DetectorsBe        = self.pushButton_DetectorsBe
+        self.DetectorsSum       = self.pushButton_DetectorsSum
 
         # Energy calibration
         self.Calib              = None
@@ -83,17 +84,35 @@ class SingleWindow(QtWidgets.QWidget):
         return
 
     def ROIsAdd_clicked(self):
-        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma)
-        addroi.exec()
+        self.ROIsDefault.setChecked(False)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount)
+        table = addroi.tableWidget_CustomROIs
+        for row in range(self.ROIs.rowCount()):
+            table.insertRow(table.currentRow() + 1)
+            table.setItem(table.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 0).text()}"))
+            table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
+            table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
+            table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
+            table.setCurrentCell(table.currentRow() + 1, 0)
+        if addroi.exec():
+            self.RoiCount = addroi.RoiCount
         
     def ROIsSave_clicked(self):
         return
     
     def ROIsDelete_clicked(self):
-        return
+        rows = []
+        for item in self.ROIs.selectedItems():
+            rows.append(item.row())
+        rows = list(set(rows))
+        rows.sort(reverse = True)
+        for row in rows:
+            self.ROIs.removeRow(row)
     
     def ROIsDeleteAll_clicked(self):
-        return
+        self.ROIs.setCurrentCell(0, 0)
+        while self.ROIs.rowCount() > 0:
+            self.ROIs.removeRow(self.ROIs.currentRow())
     
     def MapPathSearch_clicked(self):
         return

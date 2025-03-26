@@ -147,6 +147,9 @@
             <property name="mouseTracking">
              <bool>true</bool>
             </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
             <property name="suffix">
              <string> eV</string>
             </property>
@@ -154,10 +157,10 @@
              <number>3</number>
             </property>
             <property name="minimum">
-             <double>-100.000000000000000</double>
+             <double>-2000.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>100.000000000000000</double>
+             <double>2000.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.001000000000000</double>
@@ -202,6 +205,9 @@
             </property>
             <property name="mouseTracking">
              <bool>true</bool>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
             </property>
             <property name="suffix">
              <string> eV/ch</string>
@@ -281,6 +287,9 @@
             <property name="mouseTracking">
              <bool>true</bool>
             </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
             <property name="decimals">
              <number>6</number>
             </property>
@@ -330,6 +339,9 @@
             </property>
             <property name="mouseTracking">
              <bool>true</bool>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
             </property>
             <property name="suffix">
              <string> eV</string>
@@ -1141,6 +1153,26 @@
           <property name="mouseTracking">
            <bool>true</bool>
           </property>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Start channel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Stop channel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Sum factor</string>
+           </property>
+          </column>
          </widget>
         </item>
        </layout>

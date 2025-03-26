@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>707</width>
     <height>480</height>
    </rect>
   </property>
@@ -684,7 +684,7 @@
         </layout>
        </item>
        <item row="1" column="7">
-        <widget class="QLabel" name="label_207">
+        <widget class="QLabel" name="label_LalphaLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -700,7 +700,7 @@
         </widget>
        </item>
        <item row="1" column="6">
-        <widget class="QLabel" name="label_210">
+        <widget class="QLabel" name="label_KalphaUnit">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -713,7 +713,7 @@
         </widget>
        </item>
        <item row="3" column="7">
-        <widget class="QLabel" name="label_227">
+        <widget class="QLabel" name="label_MLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -730,6 +730,9 @@
        </item>
        <item row="1" column="8">
         <widget class="QLabel" name="label_ElementLalpha">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -743,6 +746,9 @@
        </item>
        <item row="0" column="8">
         <widget class="QLabel" name="label_ElementLedge">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>40</width>
@@ -783,7 +789,7 @@
         </widget>
        </item>
        <item row="3" column="9">
-        <widget class="QLabel" name="label_229">
+        <widget class="QLabel" name="label_MUnit">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -797,6 +803,9 @@
        </item>
        <item row="3" column="5">
         <widget class="QLabel" name="label_ElementMedge">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -822,7 +831,7 @@
         </widget>
        </item>
        <item row="2" column="7">
-        <widget class="QLabel" name="label_208">
+        <widget class="QLabel" name="label_LbetaLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -851,7 +860,7 @@
         </widget>
        </item>
        <item row="1" column="9">
-        <widget class="QLabel" name="label_212">
+        <widget class="QLabel" name="label_LalphaUnit">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -865,6 +874,9 @@
        </item>
        <item row="0" column="5">
         <widget class="QLabel" name="label_ElementKedge">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="minimumSize">
           <size>
            <width>45</width>
@@ -925,7 +937,7 @@
         </widget>
        </item>
        <item row="1" column="4">
-        <widget class="QLabel" name="label_205">
+        <widget class="QLabel" name="label_KalphaLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -948,6 +960,9 @@
        </item>
        <item row="3" column="8">
         <widget class="QLabel" name="label_ElementM">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -960,7 +975,7 @@
         </widget>
        </item>
        <item row="2" column="9">
-        <widget class="QLabel" name="label_213">
+        <widget class="QLabel" name="label_LbetaUnit">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -974,6 +989,9 @@
        </item>
        <item row="1" column="5">
         <widget class="QLabel" name="label_ElementKalpha">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -986,7 +1004,7 @@
         </widget>
        </item>
        <item row="2" column="4">
-        <widget class="QLabel" name="label_206">
+        <widget class="QLabel" name="label_KbetaLabel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1009,6 +1027,9 @@
        </item>
        <item row="2" column="8">
         <widget class="QLabel" name="label_ElementLbeta">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -1022,6 +1043,9 @@
        </item>
        <item row="2" column="5">
         <widget class="QLabel" name="label_ElementKbeta">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
@@ -1034,7 +1058,7 @@
         </widget>
        </item>
        <item row="2" column="6">
-        <widget class="QLabel" name="label_211">
+        <widget class="QLabel" name="label_KbetaUnit">
          <property name="enabled">
           <bool>false</bool>
          </property>

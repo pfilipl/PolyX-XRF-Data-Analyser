@@ -60,9 +60,9 @@ class HoverableButton(QtWidgets.QPushButton):
         try: Lb = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.LB_LINE)
         except: Lb = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementLbeta").setText(f"{Lb:.3f}")
-        try: Ma = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.MA1_LINE)
-        except: Ma = float("NaN")
-        self.parent().findChild(QtWidgets.QLabel, "label_ElementM").setText(f"{Ma:.3f}")
+        try: M = xraylib.LineEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.MA1_LINE)
+        except: M = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementM").setText(f"{M:.3f}")
 
     def leaveEvent(self, event):
         self.parent().findChild(QtWidgets.QLabel, "label_ElementSymbol").setText("")
@@ -83,17 +83,28 @@ class PeriodicTable(QtWidgets.QWidget):
         super(PeriodicTable, self).__init__(parent)
         uic.loadUi("periodic_table.ui", self)
 
-        # Element info
-        self.ElementSymbol      = self.label_ElementSymbol
-        self.ElementName        = self.label_ElementName
+        # Elements info
         self.ElementKedge       = self.label_ElementKedge
+        self.ElementLedge       = self.label_ElementLedge
+        self.ElementMedge       = self.label_ElementMedge
+
         self.ElementKalpha      = self.label_ElementKalpha
         self.ElementKbeta       = self.label_ElementKbeta
-        self.ElementLedge       = self.label_ElementLedge
         self.ElementLalpha      = self.label_ElementLalpha
         self.ElementLbeta       = self.label_ElementLbeta
-        self.ElementMedge       = self.label_ElementMedge
-        self.ElementM           = self.label_ElementM
+        self.ElementM           = self.label_ElementM  
+
+        self.KalphaLabel        = self.label_KalphaLabel
+        self.KbetaLabel         = self.label_KbetaLabel
+        self.LalphaLabel        = self.label_LalphaLabel
+        self.LbetaLabel         = self.label_LbetaLabel
+        self.MLabel             = self.label_MLabel
+
+        self.KalphaUnit         = self.label_KalphaUnit
+        self.KbetaUnit          = self.label_KbetaUnit
+        self.LalphaUnit         = self.label_LalphaUnit
+        self.LbetaUnit          = self.label_LbetaUnit
+        self.MUnit              = self.label_MUnit
 
         # Elements
         self.Elements           = []
@@ -111,6 +122,26 @@ class PeriodicTable(QtWidgets.QWidget):
     # Setters
     def setLine(self, line):
         self.line = line
+        if self.line == "Ka":
+            self.ElementKalpha.setEnabled(True)
+            self.KalphaLabel.setEnabled(True)
+            self.KalphaUnit.setEnabled(True)
+        elif self.line == "Kb":
+            self.ElementKbeta.setEnabled(True)
+            self.KbetaLabel.setEnabled(True)
+            self.KbetaUnit.setEnabled(True)
+        elif self.line == "La":
+            self.ElementLalpha.setEnabled(True)
+            self.LalphaLabel.setEnabled(True)
+            self.LalphaUnit.setEnabled(True)
+        elif self.line == "Lb":
+            self.ElementLbeta.setEnabled(True)
+            self.LbetaLabel.setEnabled(True)
+            self.LbetaUnit.setEnabled(True)
+        elif self.line == "M":
+            self.ElementM.setEnabled(True)
+            self.MLabel.setEnabled(True)
+            self.MUnit.setEnabled(True)
 
     def setCalibration(self, calib, sigma):
         self.calib = calib
@@ -151,8 +182,8 @@ class PeriodicTable(QtWidgets.QWidget):
             PDA.add_ROI(roi, f"{self.Elements[Z - 1].text()}-{self.line}", self.calib, self.sigma, sigmaWidth, Width)
             ROIs.insertRow(ROIs.currentRow() + 1)
             ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[-1][0]}"))
-            ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(roi[-1][1])))
-            ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(roi[-1][2])))
+            ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(max(roi[-1][1], 1))))
+            ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(min(roi[-1][2], 4096))))
             ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.00)))
             ROIs.setCurrentCell(ROIs.currentRow() + 1, 0)
         else:

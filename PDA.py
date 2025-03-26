@@ -113,7 +113,10 @@ def gen_calib(N, a, b, n, f):
         # kalibracja energetyczna
         E = (i * a + b) * 1000  # [ch * keV/ch + keV] -> [eV]
         # kalibracja dyspersji pików
-        s = math.sqrt(n * n / 2.3548 / 2.3548 + 3.85 * f * E)   # [sqrt(eV * eV + eV * eV)]
+        try:
+            s = math.sqrt(n * n / 2.3548 / 2.3548 + 3.85 * f * E)   # [sqrt(eV * eV + eV * eV)]
+        except:
+            s = float("NaN")
         calib.append(E)
         sigma.append(s)
     return np.array(calib), np.array(sigma)
@@ -253,6 +256,8 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
                 line = xrl.LA_LINE
             elif line == "Lb":
                 line = xrl.LB_LINE
+            elif line == "M":
+                line = xrl.MA1_LINE
             else:
                 print("Unknown line symbol!")
     if line is not None:

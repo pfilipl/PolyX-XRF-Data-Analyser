@@ -9,35 +9,36 @@ class BatchWindow(QtWidgets.QWidget):
         uic.loadUi("batch.ui", self)
 
         # Detectors
-        self.DetectorsML                = self.pushButton_DetectorsML.isChecked()
-        self.DetectorsBe                = self.pushButton_DetectorsBe.isChecked()
-        self.DetectorsSum               = self.pushButton_DetectorsSum.isChecked()
+        self.DetectorsML                = self.pushButton_DetectorsML
+        self.DetectorsBe                = self.pushButton_DetectorsBe
+        self.DetectorsSum               = self.pushButton_DetectorsSum
 
         # Energy calibration
         self.Calib                      = None
         self.Sigma                      = None
 
         # Maps configuration
-        self.MapConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto.isChecked()
-        self.MapConfigValuesStart       = self.doubleSpinBox_MapsConfigValuesStart.value()
-        self.MapConfigValuesStop        = self.doubleSpinBox_MapsConfigValuesStop.value()
-        self.MapConfigAspectAuto        = self.pushButton_MapsConfigAspectAuto.isChecked()
-        self.MapConfigAspectValue       = self.doubleSpinBox_MapsConfigAspectValue.value()
-        self.MapConfigColormapDefault   = self.pushButton_MapsConfigColormapDefault.isChecked()
-        self.MapConfigColormapValue     = self.lineEdit_MapsConfigColormapValue.text
+        self.MapConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto
+        self.MapConfigValuesStart       = self.doubleSpinBox_MapsConfigValuesStart
+        self.MapConfigValuesStop        = self.doubleSpinBox_MapsConfigValuesStop
+        self.MapConfigAspectAuto        = self.pushButton_MapsConfigAspectAuto
+        self.MapConfigAspectValue       = self.doubleSpinBox_MapsConfigAspectValue
+        self.MapConfigColormapDefault   = self.pushButton_MapsConfigColormapDefault
+        self.MapConfigColormapValue     = self.lineEdit_MapsConfigColormapValue
 
         self.toolButton_MapsConfigColormapSearch.clicked.connect(self.MapsConfigColormapSearch_clicked)
         
         # Spectra configuration
-        self.SpectraConfigEnergyAuto    = self.pushButton_SpectraConfigEnergyAuto.isChecked()
-        self.SpectraConfigEnergyStart   = self.doubleSpinBox_SpectraConfigEnergyStart.value()
-        self.SpectraConfigEnergyStop    = self.doubleSpinBox_SpectraConfigEnergyStop.value()
-        self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto.isChecked()
-        self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue.value()
+        self.SpectraConfigEnergyAuto    = self.pushButton_SpectraConfigEnergyAuto
+        self.SpectraConfigEnergyStart   = self.doubleSpinBox_SpectraConfigEnergyStart
+        self.SpectraConfigEnergyStop    = self.doubleSpinBox_SpectraConfigEnergyStop
+        self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto
+        self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue
 
         # Regions of interest (ROIs)
         self.ROIs                       = self.tableWidget_ROIs
-        self.ROIsDefault                = self.pushButton_ROIsDefault.isChecked()
+        self.ROIsDefault                = self.pushButton_ROIsDefault
+        self.RoiCount                   = 0
 
         self.pushButton_ROIsImport.clicked.connect(self.ROIsImport_clicked)
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
@@ -46,16 +47,16 @@ class BatchWindow(QtWidgets.QWidget):
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
         # Experiment / Load
-        self.ExperimentPath             = self.lineEdit_ExperimentPath.text
-        self.ExceptionsPath             = self.lineEdit_ExceptionsPath.text
+        self.ExperimentPath             = self.lineEdit_ExperimentPath
+        self.ExceptionsPath             = self.lineEdit_ExceptionsPath
         self.Paths                      = self.listWidget_Paths
 
         self.toolButton_ExperimentPathSearch.clicked.connect(self.ExperimentPathSearch_clicked)
         self.toolButton_ExceptionsPathSearch.clicked.connect(self.ExceptionsPathSearch_clicked)
 
         # Results
-        self.ResultsPath                = self.lineEdit_ResultsPath.text
-        self.ResultsNested              = self.checkBox_ResultsNested.isChecked()
+        self.ResultsPath                = self.lineEdit_ResultsPath
+        self.ResultsNested              = self.checkBox_ResultsNested
 
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
@@ -85,17 +86,35 @@ class BatchWindow(QtWidgets.QWidget):
         return
 
     def ROIsAdd_clicked(self):
-        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma)
-        addroi.exec()
+        self.ROIsDefault.setChecked(False)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount)
+        table = addroi.tableWidget_CustomROIs
+        for row in range(self.ROIs.rowCount()):
+            table.insertRow(table.currentRow() + 1)
+            table.setItem(table.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 0).text()}"))
+            table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
+            table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
+            table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
+            table.setCurrentCell(table.currentRow() + 1, 0)
+        if addroi.exec():
+            self.RoiCount = addroi.RoiCount
         
     def ROIsSave_clicked(self):
         return
     
     def ROIsDelete_clicked(self):
-        return
+        rows = []
+        for item in self.ROIs.selectedItems():
+            rows.append(item.row())
+        rows = list(set(rows))
+        rows.sort(reverse = True)
+        for row in rows:
+            self.ROIs.removeRow(row)
     
     def ROIsDeleteAll_clicked(self):
-        return
+        self.ROIs.setCurrentCell(0, 0)
+        while self.ROIs.rowCount() > 0:
+            self.ROIs.removeRow(self.ROIs.currentRow())
     
     def ExperimentPathSearch_clicked(self):
         return
