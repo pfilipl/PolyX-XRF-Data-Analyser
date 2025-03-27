@@ -81,7 +81,20 @@ class SingleWindow(QtWidgets.QWidget):
         return
 
     def ROIsImport_clicked(self):
-        return
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            self.ROIs.setCurrentCell(0, 0)
+            file = open(fileName, "r")
+            for line in file:
+                if line[0] != "#":
+                    roi = line.split()
+                    self.ROIs.insertRow(self.ROIs.currentRow() + 1)
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[0]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{roi[1]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
+                    self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
+            file.close()
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -107,7 +120,14 @@ class SingleWindow(QtWidgets.QWidget):
             self.RoiCount = addroi.RoiCount
         
     def ROIsSave_clicked(self):
-        return
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, 'w')
+            fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
+            for row in range(self.ROIs.rowCount()):
+                fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
+            file.write(fileContent)
+            file.close()
     
     def ROIsDelete_clicked(self):
         rows = []
@@ -124,10 +144,14 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIs.removeRow(self.ROIs.currentRow())
     
     def MapPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
+        if path:
+            self.MapPath.setText(path)
     
     def ResultsPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Results path", self.ResultsPath.text())
+        if path:
+            self.ResultsPath.setText(path)
     
     def ReloadMap_clicked(self):
         return

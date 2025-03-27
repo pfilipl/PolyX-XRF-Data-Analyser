@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, uic
-import sys
+import sys, os
 
 import main, add_roi
 
@@ -48,11 +48,17 @@ class BatchWindow(QtWidgets.QWidget):
 
         # Experiment / Load
         self.ExperimentPath             = self.lineEdit_ExperimentPath
-        self.ExceptionsPath             = self.lineEdit_ExceptionsPath
-        self.Paths                      = self.listWidget_Paths
+        self.MapsNesting2               = self.radioButton_MapsNesting2
+        self.MapsNesting3               = self.radioButton_MapsNesting3
+        self.PathsList                  = self.listWidget_PathsList
+        self.Paths                      = None
 
+        self.ExperimentPath.editingFinished.connect(self.LoadExperiment)
         self.toolButton_ExperimentPathSearch.clicked.connect(self.ExperimentPathSearch_clicked)
-        self.toolButton_ExceptionsPathSearch.clicked.connect(self.ExceptionsPathSearch_clicked)
+        self.MapsNesting2.clicked.connect(self.LoadExperiment)
+        self.MapsNesting3.clicked.connect(self.LoadExperiment)
+        self.pushButton_PathsListExcept.clicked.connect(self.PathsListExcept_clicked)
+        self.pushButton_PathsListReload.clicked.connect(self.LoadExperiment)
 
         # Results
         self.ResultsPath                = self.lineEdit_ResultsPath
@@ -83,7 +89,20 @@ class BatchWindow(QtWidgets.QWidget):
         return
     
     def ROIsImport_clicked(self):
-        return
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            self.ROIs.setCurrentCell(0, 0)
+            file = open(fileName, "r")
+            for line in file:
+                if line[0] != "#":
+                    roi = line.split()
+                    self.ROIs.insertRow(self.ROIs.currentRow() + 1)
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[0]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{roi[1]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
+                    self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
+            file.close()
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -100,7 +119,14 @@ class BatchWindow(QtWidgets.QWidget):
             self.RoiCount = addroi.RoiCount
         
     def ROIsSave_clicked(self):
-        return
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, 'w')
+            fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
+            for row in range(self.ROIs.rowCount()):
+                fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
+            file.write(fileContent)
+            file.close()
     
     def ROIsDelete_clicked(self):
         rows = []
@@ -116,14 +142,43 @@ class BatchWindow(QtWidgets.QWidget):
         while self.ROIs.rowCount() > 0:
             self.ROIs.removeRow(self.ROIs.currentRow())
     
+    def PathsListExcept_clicked(self):
+        for item in self.PathsList.selectedItems():
+            self.PathsList.takeItem(self.PathsList.row(item))
+        self.Paths = []
+        experimentPath = self.ExperimentPath.text()
+        for row in range(self.PathsList.count()):
+            self.Paths.append(f"{experimentPath}{self.PathsList.item(row).text()}")
+
+    def LoadExperiment(self):
+        self.Paths = []
+        self.PathsList.clear()
+        experimentPath = self.ExperimentPath.text()
+        if experimentPath != self.ResultsPath.text():
+            for mainPath in os.listdir(experimentPath):
+                if mainPath != self.ResultsPath and os.path.isdir(os.path.join(experimentPath, mainPath)):
+                    if self.MapsNesting2.isChecked():
+                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}"))
+                        self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                        self.Paths.append(os.path.join(experimentPath, mainPath))
+                    elif self.MapsNesting3.isChecked():
+                        for path in os.listdir(os.path.join(experimentPath, mainPath)):
+                            if path != self.ResultsPath.text() and os.path.isdir(os.path.join(experimentPath, mainPath, path)):
+                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}/{path}"))
+                                self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                                self.Paths.append(os.path.join(experimentPath, mainPath, path))
+
     def ExperimentPathSearch_clicked(self):
-        return
-    
-    def ExceptionsPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ExperimentPath.text())
+        if path:
+            self.ExperimentPath.setText(path)
+            self.LoadExperiment()
     
     def ResultsPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
+        if path:
+            self.ResultsPath.setText(path)
+            self.LoadExperiment()
     
     def ImportConfig_clicked(self):
         return

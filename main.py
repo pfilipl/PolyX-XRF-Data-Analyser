@@ -9,11 +9,11 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi("main.ui", self)
         self.setWindowTitle('PolyX Data Analyser')
 
-        self.Calib              = None
-        self.Sigma              = None
+        self.Calib  = None
+        self.Sigma  = None
 
         # Single
-        self.Single             = self.tab_Single
+        self.Single = self.tab_Single
 
         self.Single.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationSingle)
         self.Single.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationSingle)
@@ -21,7 +21,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Single.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationSingle)
 
         # Batch
-        self.Batch              = self.tab_Batch
+        self.Batch  = self.tab_Batch
 
         self.Batch.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationBatch)
         self.Batch.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationBatch)
@@ -29,7 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Batch.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationBatch)
 
         # Stitch
-        self.Stitch             = self.tab_Stitch
+        self.Stitch = self.tab_Stitch
 
     def setCalibrationSingle(self):
         gain = self.Single.doubleSpinBox_CalibrationGain.value() / 1000
@@ -46,8 +46,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Batch.doubleSpinBox_CalibrationNoise.blockSignals(True)
         self.Batch.doubleSpinBox_CalibrationFano.blockSignals(True)
 
-        self.Batch.doubleSpinBox_CalibrationGain.setValue(gain)
-        self.Batch.doubleSpinBox_CalibrationZero.setValue(zero)
+        self.Batch.doubleSpinBox_CalibrationGain.setValue(gain * 1000)
+        self.Batch.doubleSpinBox_CalibrationZero.setValue(zero * 1000)
         self.Batch.doubleSpinBox_CalibrationNoise.setValue(noise)
         self.Batch.doubleSpinBox_CalibrationFano.setValue(fano)
 
@@ -71,8 +71,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Single.doubleSpinBox_CalibrationNoise.blockSignals(True)
         self.Single.doubleSpinBox_CalibrationFano.blockSignals(True)
 
-        self.Single.doubleSpinBox_CalibrationGain.setValue(gain)
-        self.Single.doubleSpinBox_CalibrationZero.setValue(zero)
+        self.Single.doubleSpinBox_CalibrationGain.setValue(gain * 1000)
+        self.Single.doubleSpinBox_CalibrationZero.setValue(zero * 1000)
         self.Single.doubleSpinBox_CalibrationNoise.setValue(noise)
         self.Single.doubleSpinBox_CalibrationFano.setValue(fano)
 

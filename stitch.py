@@ -40,13 +40,19 @@ class StitchWindow(QtWidgets.QWidget):
         self.HelpDescription.hide()
 
     def TopMapPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Top Map path", self.TopMapPath.text())
+        if path:
+            self.TopMapPath.setText(path)
 
     def BottomMapPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Bottom Map path", self.BottomMapPath.text())
+        if path:
+            self.BottomMapPath.setText(path)
     
     def ResultPathSearch_clicked(self):
-        return
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Result path", self.ResultPath.text())
+        if path:
+            self.ResultPath.setText(path)
     
     def StitchMaps_clicked(self):
         return
