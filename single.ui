@@ -258,6 +258,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -265,7 +268,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -283,6 +286,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -290,7 +296,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -308,6 +314,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -315,7 +324,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -390,6 +399,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -397,7 +409,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -415,6 +427,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -422,7 +437,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>
@@ -443,6 +458,9 @@
           <property name="suffix">
            <string> mm</string>
           </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
           <property name="minimum">
            <double>-100.000000000000000</double>
           </property>
@@ -450,7 +468,7 @@
            <double>100.000000000000000</double>
           </property>
           <property name="singleStep">
-           <double>0.010000000000000</double>
+           <double>0.001000000000000</double>
           </property>
          </widget>
         </item>

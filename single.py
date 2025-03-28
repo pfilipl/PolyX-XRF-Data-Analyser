@@ -24,9 +24,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.ROIsDefault        = self.pushButton_ROIsDefault
         self.RoiCount           = 0
 
-        self.pushButton_ROIsImport.clicked.connect(self.ROIsImport_clicked)
+        self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
-        self.pushButton_ROIsSave.clicked.connect(self.ROIsSave_clicked)
+        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None: self.ROIsSave_clicked(checked, fileName))
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
@@ -45,13 +45,18 @@ class SingleWindow(QtWidgets.QWidget):
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
         # Detectors
-        self.DetectorsML        = self.pushButton_DetectorsML
         self.DetectorsBe        = self.pushButton_DetectorsBe
+        self.DetectorsML        = self.pushButton_DetectorsML
         self.DetectorsSum       = self.pushButton_DetectorsSum
 
         # Energy calibration
         self.Calib              = None
         self.Sigma              = None
+
+        self.CalibrationGain    = self.doubleSpinBox_CalibrationGain
+        self.CalibrationZero    = self.doubleSpinBox_CalibrationZero
+        self.CalibrationNoise   = self.doubleSpinBox_CalibrationNoise
+        self.CalibrationFano    = self.doubleSpinBox_CalibrationFano
 
         # Process
         self.Progress           = self.progressBar_Progress
@@ -59,8 +64,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.AnalyseMap         = self.pushButton_AnalyseMap
 
         self.pushButton_ReloadMap.clicked.connect(self.ReloadMap_clicked)
-        self.pushButton_ImportConfig.clicked.connect(self.ImportConfig_clicked)
-        self.pushButton_SaveConfig.clicked.connect(self.SaveConfig_clicked)
+        self.pushButton_ImportConfig.clicked.connect(lambda clicked, fileName = None: self.ImportConfig_clicked(clicked, fileName))
+        self.pushButton_SaveConfig.clicked.connect(lambda clicked, fileName = None: self.SaveConfig_clicked(clicked, fileName))
         self.pushButton_AnalyseMap.clicked.connect(self.AnalyseMap_clicked)
 
         # Help
@@ -80,8 +85,9 @@ class SingleWindow(QtWidgets.QWidget):
     def SelectArea_clicked(self):
         return
 
-    def ROIsImport_clicked(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+    def ROIsImport_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIs.setCurrentCell(0, 0)
             file = open(fileName, "r")
@@ -119,8 +125,9 @@ class SingleWindow(QtWidgets.QWidget):
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         
-    def ROIsSave_clicked(self):
-        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+    def ROIsSave_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
@@ -156,11 +163,59 @@ class SingleWindow(QtWidgets.QWidget):
     def ReloadMap_clicked(self):
         return
     
-    def ImportConfig_clicked(self):
-        return
+    def ImportConfig_clicked(self, clicked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, "r")
+            for line in file:
+                if line[0] != "#":
+                    data = line.split()
+                    variableName = data[0]
+                    property = data[1]
+                    value = data[2]
+                    if len(data) > 3:
+                        value = " ".join(data[2:])
+                    if variableName == "ROIsPath":
+                        self.ROIsImport_clicked(False, value)
+                    else:
+                        if property == "Text": exec(f'self.{variableName}.set{property}("{value}")')
+                        else: exec(f'self.{variableName}.set{property}({value})')
+            file.close()
     
-    def SaveConfig_clicked(self):
-        return
+    def SaveConfig_clicked(self, clicked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, 'w')
+            fileContent = "# Element name\tProperty\tValue"
+
+            fileContent += f"\ndoubleSpinBox_AreaX1\tValue\t{self.AreaX1.value()}"
+            fileContent += f"\ndoubleSpinBox_AreaZ1\tValue\t{self.AreaZ1.value()}"
+            fileContent += f"\ndoubleSpinBox_AreaX2\tValue\t{self.AreaX2.value()}"
+            fileContent += f"\ndoubleSpinBox_AreaZ2\tValue\t{self.AreaZ2.value()}"
+            fileContent += f"\ndoubleSpinBox_PointX\tValue\t{self.PointX.value()}"
+            fileContent += f"\ndoubleSpinBox_PointZ\tValue\t{self.PointZ.value()}"
+
+            fileContent += f"\npushButton_ROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+            fileContent += f'\nROIsPath\tPath\t{fileName.split(".", 1)[-2] + "_ROIs." + fileName.split(".", 1)[-1]}'
+            self.ROIsSave_clicked(False, fileName.split('.', 1)[-2] + "_ROIs." + fileName.split('.', 1)[-1])
+
+            fileContent += f"\nMapPath\tText\t{self.MapPath.text()}"
+            fileContent += f"\nResultsPath\tText\t{self.ResultsPath.text()}"
+            fileContent += f"\nResultsPath\tText\t{self.ResultsPath.text()}"
+
+            fileContent += f"\npushButton_DetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
+            fileContent += f"\npushButton_DetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
+            fileContent += f"\npushButton_DetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
+
+            fileContent += f"\ndoubleSpinBox_CalibrationGain\tValue\t{self.CalibrationGain.value()}"
+            fileContent += f"\ndoubleSpinBox_CalibrationZero\tValue\t{self.CalibrationZero.value()}"
+            fileContent += f"\ndoubleSpinBox_CalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
+            fileContent += f"\ndoubleSpinBox_CalibrationFano\tValue\t{self.CalibrationFano.value()}"
+
+            file.write(fileContent)
+            file.close()
     
     def AnalyseMap_clicked(self):
         return

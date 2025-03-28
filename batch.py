@@ -9,13 +9,18 @@ class BatchWindow(QtWidgets.QWidget):
         uic.loadUi("batch.ui", self)
 
         # Detectors
-        self.DetectorsML                = self.pushButton_DetectorsML
         self.DetectorsBe                = self.pushButton_DetectorsBe
+        self.DetectorsML                = self.pushButton_DetectorsML
         self.DetectorsSum               = self.pushButton_DetectorsSum
 
         # Energy calibration
         self.Calib                      = None
         self.Sigma                      = None
+
+        self.CalibrationGain            = self.doubleSpinBox_CalibrationGain
+        self.CalibrationZero            = self.doubleSpinBox_CalibrationZero
+        self.CalibrationNoise           = self.doubleSpinBox_CalibrationNoise
+        self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
 
         # Maps configuration
         self.MapConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto
