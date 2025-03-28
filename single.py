@@ -87,7 +87,7 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsImport_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIs.setCurrentCell(0, 0)
             file = open(fileName, "r")
@@ -127,7 +127,7 @@ class SingleWindow(QtWidgets.QWidget):
         
     def ROIsSave_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
@@ -165,58 +165,59 @@ class SingleWindow(QtWidgets.QWidget):
     
     def ImportConfig_clicked(self, clicked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.SingleConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, "r")
             for line in file:
-                if line[0] != "#":
+                if line[0] not in ["#", "\n"]:
                     data = line.split()
                     variableName = data[0]
                     property = data[1]
-                    value = data[2]
-                    if len(data) > 3:
+                    value = None
+                    if len(data) > 2:
                         value = " ".join(data[2:])
                     if variableName == "ROIsPath":
                         self.ROIsImport_clicked(False, value)
                     else:
-                        if property == "Text": exec(f'self.{variableName}.set{property}("{value}")')
+                        if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
                         else: exec(f'self.{variableName}.set{property}({value})')
             file.close()
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PDA Files(*.SingleConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "# Element name\tProperty\tValue"
 
-            fileContent += f"\ndoubleSpinBox_AreaX1\tValue\t{self.AreaX1.value()}"
-            fileContent += f"\ndoubleSpinBox_AreaZ1\tValue\t{self.AreaZ1.value()}"
-            fileContent += f"\ndoubleSpinBox_AreaX2\tValue\t{self.AreaX2.value()}"
-            fileContent += f"\ndoubleSpinBox_AreaZ2\tValue\t{self.AreaZ2.value()}"
-            fileContent += f"\ndoubleSpinBox_PointX\tValue\t{self.PointX.value()}"
-            fileContent += f"\ndoubleSpinBox_PointZ\tValue\t{self.PointZ.value()}"
+            fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
+            fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
+            fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
+            fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
+            fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
+            fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
 
-            fileContent += f"\npushButton_ROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+            fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
             fileContent += f'\nROIsPath\tPath\t{fileName.split(".", 1)[-2] + "_ROIs." + fileName.split(".", 1)[-1]}'
             self.ROIsSave_clicked(False, fileName.split('.', 1)[-2] + "_ROIs." + fileName.split('.', 1)[-1])
 
-            fileContent += f"\nMapPath\tText\t{self.MapPath.text()}"
-            fileContent += f"\nResultsPath\tText\t{self.ResultsPath.text()}"
-            fileContent += f"\nResultsPath\tText\t{self.ResultsPath.text()}"
+            fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
+            fileContent += f'\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
-            fileContent += f"\npushButton_DetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
-            fileContent += f"\npushButton_DetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
-            fileContent += f"\npushButton_DetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
+            fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
+            fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
+            fileContent += f"\nDetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
 
-            fileContent += f"\ndoubleSpinBox_CalibrationGain\tValue\t{self.CalibrationGain.value()}"
-            fileContent += f"\ndoubleSpinBox_CalibrationZero\tValue\t{self.CalibrationZero.value()}"
-            fileContent += f"\ndoubleSpinBox_CalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
-            fileContent += f"\ndoubleSpinBox_CalibrationFano\tValue\t{self.CalibrationFano.value()}"
+            fileContent += f"\n\nCalibrationGain\tValue\t{self.CalibrationGain.value()}"
+            fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"
+            fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
+            fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
 
             file.write(fileContent)
             file.close()
     
+            # TODO: SingleConfig in one file
+
     def AnalyseMap_clicked(self):
         return
     

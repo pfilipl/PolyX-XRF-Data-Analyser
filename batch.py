@@ -23,13 +23,13 @@ class BatchWindow(QtWidgets.QWidget):
         self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
 
         # Maps configuration
-        self.MapConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto
-        self.MapConfigValuesStart       = self.doubleSpinBox_MapsConfigValuesStart
-        self.MapConfigValuesStop        = self.doubleSpinBox_MapsConfigValuesStop
-        self.MapConfigAspectAuto        = self.pushButton_MapsConfigAspectAuto
-        self.MapConfigAspectValue       = self.doubleSpinBox_MapsConfigAspectValue
-        self.MapConfigColormapDefault   = self.pushButton_MapsConfigColormapDefault
-        self.MapConfigColormapValue     = self.lineEdit_MapsConfigColormapValue
+        self.MapsConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto
+        self.MapsConfigValuesStart       = self.doubleSpinBox_MapsConfigValuesStart
+        self.MapsConfigValuesStop        = self.doubleSpinBox_MapsConfigValuesStop
+        self.MapsConfigAspectAuto        = self.pushButton_MapsConfigAspectAuto
+        self.MapsConfigAspectValue       = self.doubleSpinBox_MapsConfigAspectValue
+        self.MapsConfigColormapDefault   = self.pushButton_MapsConfigColormapDefault
+        self.MapsConfigColormapValue     = self.lineEdit_MapsConfigColormapValue
 
         self.toolButton_MapsConfigColormapSearch.clicked.connect(self.MapsConfigColormapSearch_clicked)
         
@@ -45,9 +45,9 @@ class BatchWindow(QtWidgets.QWidget):
         self.ROIsDefault                = self.pushButton_ROIsDefault
         self.RoiCount                   = 0
 
-        self.pushButton_ROIsImport.clicked.connect(self.ROIsImport_clicked)
+        self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
-        self.pushButton_ROIsSave.clicked.connect(self.ROIsSave_clicked)
+        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None: self.ROIsSave_clicked(checked, fileName))
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
@@ -75,8 +75,8 @@ class BatchWindow(QtWidgets.QWidget):
         self.Progress                   = self.progressBar_Progress
         self.AnalyseMaps                = self.pushButton_AnalyseMaps
 
-        self.pushButton_ImportConfig.clicked.connect(self.ImportConfig_clicked)
-        self.pushButton_SaveConfig.clicked.connect(self.SaveConfig_clicked)
+        self.pushButton_ImportConfig.clicked.connect(lambda checked, fileName = None: self.ImportConfig_clicked(checked, fileName))
+        self.pushButton_SaveConfig.clicked.connect(lambda checked, fileName = None: self.SaveConfig_clicked(checked, fileName))
         self.pushButton_AnalyseMaps.clicked.connect(self.AnalyseMaps_clicked)
 
         # Help
@@ -93,8 +93,9 @@ class BatchWindow(QtWidgets.QWidget):
     def MapsConfigColormapSearch_clicked(self):
         return
     
-    def ROIsImport_clicked(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+    def ROIsImport_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIs.setCurrentCell(0, 0)
             file = open(fileName, "r")
@@ -123,8 +124,9 @@ class BatchWindow(QtWidgets.QWidget):
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         
-    def ROIsSave_clicked(self):
-        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "Text files(*.dat *.txt);; All files(*)")
+    def ROIsSave_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
@@ -165,13 +167,13 @@ class BatchWindow(QtWidgets.QWidget):
                     if self.MapsNesting2.isChecked():
                         self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}"))
                         self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                        self.Paths.append(os.path.join(experimentPath, mainPath))
+                        self.Paths.append(f"{os.path.join(experimentPath, mainPath)}")
                     elif self.MapsNesting3.isChecked():
                         for path in os.listdir(os.path.join(experimentPath, mainPath)):
                             if path != self.ResultsPath.text() and os.path.isdir(os.path.join(experimentPath, mainPath, path)):
                                 self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}/{path}"))
                                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                                self.Paths.append(os.path.join(experimentPath, mainPath, path))
+                                self.Paths.append(f"{os.path.join(experimentPath, mainPath, path)}")
 
     def ExperimentPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ExperimentPath.text())
@@ -179,17 +181,99 @@ class BatchWindow(QtWidgets.QWidget):
             self.ExperimentPath.setText(path)
             self.LoadExperiment()
     
+    def PathsSave(self, fileName):
+        file = open(fileName, "w")
+        fileContent = "# Paths"
+        for path in self.Paths:
+            fileContent += f"\n{path}"
+        file.write(fileContent)
+        file.close()
+
+    def PathsImport(self, fileName):
+        file = open(fileName, "r")
+        self.PathsList.clear()
+        self.Paths = []
+        for path in file:
+            if path[0] != "#":
+                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'/{path.split("/")[-1][:-1]}'))
+                self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                self.Paths.append(path)
+
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
         if path:
             self.ResultsPath.setText(path)
             self.LoadExperiment()
+
+    def ImportConfig_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Batch config", self.ResultsPath.text(), "PDA Files(*.BatchConfig);; Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, "r")
+            for line in file:
+                if line[0] not in ["#", "\n"]:
+                    data = line.split()
+                    variableName = data[0]
+                    property = data[1]
+                    value = None
+                    if len(data) > 2:
+                        value = " ".join(data[2:])
+                    if variableName == "ROIsPath":
+                        self.ROIsImport_clicked(False, value)
+                    elif variableName == "PathsList":
+                        self.PathsImport(value)
+                    else:
+                        if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                        else: exec(f'self.{variableName}.set{property}({value})')
+            file.close()
     
-    def ImportConfig_clicked(self):
-        return
-    
-    def SaveConfig_clicked(self):
-        return
+    def SaveConfig_clicked(self, checked, fileName):
+        if fileName is None:
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Batch config", self.ResultsPath.text(), "PDA Files(*.BatchConfig);; Text files(*.dat *.txt);; All files(*)")
+        if fileName:
+            file = open(fileName, 'w')
+            fileContent = "# Element name\tProperty\tValue"
+
+            fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
+            fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
+            fileContent += f"\nDetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
+
+            fileContent += f"\n\nCalibrationGain\tValue\t{self.CalibrationGain.value()}"
+            fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"
+            fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
+            fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
+
+            fileContent += f"\n\nMapsConfigValuesAuto\tChecked\t{self.MapsConfigValuesAuto.isChecked()}"
+            fileContent += f"\nMapsConfigValuesStart\tValue\t{self.MapsConfigValuesStart.value()}"
+            fileContent += f"\nMapsConfigValuesStop\tValue\t{self.MapsConfigValuesStop.value()}"
+            fileContent += f"\nMapsConfigAspectAuto\tChecked\t{self.MapsConfigAspectAuto.isChecked()}"
+            fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
+            fileContent += f"\nMapsConfigColormapDefault\tChecked\t{self.MapsConfigColormapDefault.isChecked()}"
+            fileContent += f"\nMapsConfigColormapValue\tText\t{self.MapsConfigColormapValue.text()}"
+
+            fileContent += f"\n\nSpectraConfigEnergyAuto\tChecked\t{self.SpectraConfigEnergyAuto.isChecked()}"
+            fileContent += f"\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"
+            fileContent += f"\nSpectraConfigEnergyStop\tValue\t{self.SpectraConfigEnergyStop.value()}"
+            fileContent += f"\nSpectraConfigAspectAuto\tChecked\t{self.SpectraConfigAspectAuto.isChecked()}"
+            fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
+
+            fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+            fileContent += f'\nROIsPath\tPath\t{fileName.split(".", 1)[-2] + "_ROIs." + fileName.split(".", 1)[-1]}'
+            self.ROIsSave_clicked(False, fileName.split('.', 1)[-2] + "_ROIs." + fileName.split('.', 1)[-1])
+
+            fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
+            fileContent += f"\nMapsNesting2\tChecked\t{self.MapsNesting2.isChecked()}"
+            fileContent += f"\nMapsNesting3\tChecked\t{self.MapsNesting3.isChecked()}"
+            fileContent += f'\nPathsList\tPath\t{fileName.split(".", 1)[-2] + "_Paths." + fileName.split(".", 1)[-1]}'
+            self.PathsSave(fileName.split('.', 1)[-2] + "_Paths." + fileName.split('.', 1)[-1])
+            
+            fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
+            fileContent += f"\nResultsNested\tChecked\t{self.ResultsNested.isChecked()}"
+
+            file.write(fileContent)
+            file.close()
+
+            # TODO: BatchConfig in one file
     
     def AnalyseMaps_clicked(self):
         return
