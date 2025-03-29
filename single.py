@@ -26,7 +26,7 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
-        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None: self.ROIsSave_clicked(checked, fileName))
+        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None, mode = 'w': self.ROIsSave_clicked(checked, fileName, mode))
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
@@ -87,12 +87,17 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsImport_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+            self.ROIsDeleteAll_clicked()
+            self.ROIsDefault.setChecked(False)
             self.ROIs.setCurrentCell(0, 0)
+            read = False
             file = open(fileName, "r")
             for line in file:
-                if line[0] != "#":
+                if line[0] != "\n" and line[0:2] == "##":
+                    read = True if line == "## ROIs\n" else False
+                if read and line[0] not in ["#", "\n"]:
                     roi = line.split()
                     self.ROIs.insertRow(self.ROIs.currentRow() + 1)
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[0]}"))
@@ -125,12 +130,12 @@ class SingleWindow(QtWidgets.QWidget):
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         
-    def ROIsSave_clicked(self, checked, fileName):
+    def ROIsSave_clicked(self, checked, fileName, mode):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
-            file = open(fileName, 'w')
-            fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
+            file = open(fileName, mode)
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)
@@ -165,44 +170,35 @@ class SingleWindow(QtWidgets.QWidget):
     
     def ImportConfig_clicked(self, clicked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.SingleConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+            read = False
             file = open(fileName, "r")
             for line in file:
-                if line[0] not in ["#", "\n"]:
+                if line[0] != "\n" and line[0:2] == "##":
+                    read = True if line in ["## General configuration\n", "## Single configuration\n"] else False
+                if read and line[0] not in ["#", "\n"]:
                     data = line.split()
                     variableName = data[0]
                     property = data[1]
                     value = None
                     if len(data) > 2:
                         value = " ".join(data[2:])
-                    if variableName == "ROIsPath":
-                        self.ROIsImport_clicked(False, value)
-                    else:
-                        if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
-                        else: exec(f'self.{variableName}.set{property}({value})')
+                    if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                    else: exec(f'self.{variableName}.set{property}({value})')
             file.close()
+            self.ROIsImport_clicked(False, fileName)
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PDA Files(*.SingleConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
-            fileContent = "# Element name\tProperty\tValue"
-
-            fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
-            fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
-            fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
-            fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
-            fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
-            fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
+            fileContent = "## General configuration\n# Element name\tProperty\tValue"
 
             fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
-            fileContent += f'\nROIsPath\tPath\t{fileName.split(".", 1)[-2] + "_ROIs." + fileName.split(".", 1)[-1]}'
-            self.ROIsSave_clicked(False, fileName.split('.', 1)[-2] + "_ROIs." + fileName.split('.', 1)[-1])
 
-            fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
-            fileContent += f'\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
+            fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
             fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
             fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
@@ -213,10 +209,21 @@ class SingleWindow(QtWidgets.QWidget):
             fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
             fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
 
-            file.write(fileContent)
+            fileContent += "\n\n# -----\n\n## Single configuration\n# Element name\tProperty\tValue"
+
+            fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
+            fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
+            fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
+            fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
+            fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
+            fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
+
+            fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
+
+            file.write(fileContent + "\n\n# -----\n\n")
             file.close()
-    
-            # TODO: SingleConfig in one file
+
+            self.ROIsSave_clicked(False, fileName, 'a')
 
     def AnalyseMap_clicked(self):
         return

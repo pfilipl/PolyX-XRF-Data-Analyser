@@ -47,7 +47,7 @@ class BatchWindow(QtWidgets.QWidget):
 
         self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
-        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None: self.ROIsSave_clicked(checked, fileName))
+        self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None, mode = 'w': self.ROIsSave_clicked(checked, fileName, mode))
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
@@ -95,12 +95,17 @@ class BatchWindow(QtWidgets.QWidget):
     
     def ROIsImport_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+            self.ROIsDeleteAll_clicked()
+            self.ROIsDefault.setChecked(False)
             self.ROIs.setCurrentCell(0, 0)
+            read = False
             file = open(fileName, "r")
             for line in file:
-                if line[0] != "#":
+                if line[0] != "\n" and line[0:2] == "##":
+                    read = True if line == "## ROIs\n" else False
+                if read and line[0] not in ["#", "\n"]:
                     roi = line.split()
                     self.ROIs.insertRow(self.ROIs.currentRow() + 1)
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[0]}"))
@@ -124,12 +129,12 @@ class BatchWindow(QtWidgets.QWidget):
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         
-    def ROIsSave_clicked(self, checked, fileName):
+    def ROIsSave_clicked(self, checked, fileName, mode):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.ROIsConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
-            file = open(fileName, 'w')
-            fileContent = "# Name\t Start channel\t Stop channel\t Sum factor"
+            file = open(fileName, mode)
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)
@@ -181,23 +186,26 @@ class BatchWindow(QtWidgets.QWidget):
             self.ExperimentPath.setText(path)
             self.LoadExperiment()
     
-    def PathsSave(self, fileName):
-        file = open(fileName, "w")
-        fileContent = "# Paths"
+    def PathsSave(self, fileName, mode):
+        file = open(fileName, mode)
+        fileContent = "## Paths\n"
         for path in self.Paths:
             fileContent += f"\n{path}"
         file.write(fileContent)
         file.close()
 
     def PathsImport(self, fileName):
-        file = open(fileName, "r")
         self.PathsList.clear()
         self.Paths = []
-        for path in file:
-            if path[0] != "#":
-                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'/{path.split("/")[-1][:-1]}'))
+        read = False
+        file = open(fileName, "r")
+        for line in file:
+            if line[0] != "\n" and line[0:2] == "##":
+                read = True if line == "## Paths\n" else False
+            if read and line[0] not in ["#", "\n"]:
+                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'/{line.split("/")[-1][:-1]}'))
                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                self.Paths.append(path)
+                self.Paths.append(line)
 
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
@@ -207,32 +215,32 @@ class BatchWindow(QtWidgets.QWidget):
 
     def ImportConfig_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Batch config", self.ResultsPath.text(), "PDA Files(*.BatchConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Batch config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+            read = False
             file = open(fileName, "r")
             for line in file:
-                if line[0] not in ["#", "\n"]:
+                if line[0] != "\n" and line[0:2] == "##":
+                    read = True if line in ["## General configuration\n", "## Batch configuration\n"] else False
+                if read and line[0] not in ["#", "\n"]:
                     data = line.split()
                     variableName = data[0]
                     property = data[1]
                     value = None
                     if len(data) > 2:
                         value = " ".join(data[2:])
-                    if variableName == "ROIsPath":
-                        self.ROIsImport_clicked(False, value)
-                    elif variableName == "PathsList":
-                        self.PathsImport(value)
-                    else:
-                        if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
-                        else: exec(f'self.{variableName}.set{property}({value})')
+                    if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                    else: exec(f'self.{variableName}.set{property}({value})')
             file.close()
+            self.ROIsImport_clicked(False, fileName)
+            self.PathsImport(fileName)
     
     def SaveConfig_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Batch config", self.ResultsPath.text(), "PDA Files(*.BatchConfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Batch config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
-            fileContent = "# Element name\tProperty\tValue"
+            fileContent = "## General configuration\n# Element name\tProperty\tValue"
 
             fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
             fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
@@ -242,6 +250,12 @@ class BatchWindow(QtWidgets.QWidget):
             fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"
             fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
             fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
+
+            fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+
+            fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
+
+            fileContent += "\n\n# -----\n\n## Batch configuration\n# Element name\tProperty\tValue"            
 
             fileContent += f"\n\nMapsConfigValuesAuto\tChecked\t{self.MapsConfigValuesAuto.isChecked()}"
             fileContent += f"\nMapsConfigValuesStart\tValue\t{self.MapsConfigValuesStart.value()}"
@@ -257,23 +271,22 @@ class BatchWindow(QtWidgets.QWidget):
             fileContent += f"\nSpectraConfigAspectAuto\tChecked\t{self.SpectraConfigAspectAuto.isChecked()}"
             fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
 
-            fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
-            fileContent += f'\nROIsPath\tPath\t{fileName.split(".", 1)[-2] + "_ROIs." + fileName.split(".", 1)[-1]}'
-            self.ROIsSave_clicked(False, fileName.split('.', 1)[-2] + "_ROIs." + fileName.split('.', 1)[-1])
-
             fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
             fileContent += f"\nMapsNesting2\tChecked\t{self.MapsNesting2.isChecked()}"
             fileContent += f"\nMapsNesting3\tChecked\t{self.MapsNesting3.isChecked()}"
-            fileContent += f'\nPathsList\tPath\t{fileName.split(".", 1)[-2] + "_Paths." + fileName.split(".", 1)[-1]}'
-            self.PathsSave(fileName.split('.', 1)[-2] + "_Paths." + fileName.split('.', 1)[-1])
             
-            fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
-            fileContent += f"\nResultsNested\tChecked\t{self.ResultsNested.isChecked()}"
+            fileContent += f"\n\nResultsNested\tChecked\t{self.ResultsNested.isChecked()}"
 
-            file.write(fileContent)
+            file.write(fileContent + "\n\n# -----\n\n")
             file.close()
 
-            # TODO: BatchConfig in one file
+            self.ROIsSave_clicked(False, fileName, 'a')
+            
+            file = open(fileName, 'a')
+            file.write("\n\n# -----\n\n")
+            file.close()
+
+            self.PathsSave(fileName, 'a')
     
     def AnalyseMaps_clicked(self):
         return
