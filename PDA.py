@@ -268,7 +268,7 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
             width = sigma_width
         ROI.append([name, idx - width, idx + width])
 
-def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = None, normalize = None, Origin = "lower", Aspect = 'auto'):
+def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = None, normalize = None, Origin = 'upper', Aspect = 'auto'):
     Map = []
     Fig = []
     if normalize is not None:
