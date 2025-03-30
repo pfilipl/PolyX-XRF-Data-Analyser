@@ -27,7 +27,6 @@ class StitchWindow(QtWidgets.QWidget):
 
         self.TopMapCanvas.setStyleSheet("background-color:transparent;")
         topLayout = QtWidgets.QVBoxLayout()
-        self.TopMapCanvas.setSizePolicy
         topLayout.addWidget(self.TopMapToolbar)
         topLayout.addWidget(self.TopMapCanvas)
         self.TopMap.setLayout(topLayout)

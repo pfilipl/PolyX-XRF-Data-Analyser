@@ -1,7 +1,18 @@
 from PyQt6 import QtWidgets, uic
-import sys, xraylib
+import sys, xraylib, matplotlib, numpy
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
+matplotlib.use('QtAgg')
 
-import main, add_roi
+import main, add_roi, PDA
+
+class MatplotlibCanvas(FigureCanvasQTAgg):
+    def __init__(self, parent = None):
+        self.figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
+        self.axes = self.figure.add_subplot(facecolor = "None")
+        self.figure.patch.set_facecolor("None")
+        self.axes2x = None
+        self.axes2y = None
+        super().__init__(self.figure)
 
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -32,11 +43,30 @@ class SingleWindow(QtWidgets.QWidget):
 
         # Map & Spectrum
         self.Map                = self.tab_Map
+        self.MapCanvas          = MatplotlibCanvas(self.Map)
+        self.MapToolbar         = NavigationToolbar2QT(self.MapCanvas, self.Map)
+        self.MapSumSignal       = None
         self.Spectrum           = self.tab_Spectrum
+        self.SpectrumCanvas     = MatplotlibCanvas(self.Spectrum)
+        self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
+        self.SpectrumSumSignal  = None
 
-        # Map
+        self.MapCanvas.setStyleSheet("background-color:transparent;")
+        mapLayout = QtWidgets.QVBoxLayout()
+        mapLayout.addWidget(self.MapCanvas)
+        mapLayout.addWidget(self.MapToolbar)
+        self.Map.setLayout(mapLayout)
+
+        self.SpectrumCanvas.setStyleSheet("background-color:transparent;")
+        spectrumLayout = QtWidgets.QVBoxLayout()
+        spectrumLayout.addWidget(self.SpectrumCanvas)
+        spectrumLayout.addWidget(self.SpectrumToolbar)
+        self.Spectrum.setLayout(spectrumLayout)
+
+        # Map path
         self.MapPath            = self.lineEdit_MapPath
 
+        self.MapPath.editingFinished.connect(self.Load)
         self.toolButton_MapPathSearch.clicked.connect(self.MapPathSearch_clicked)
 
         # Results
@@ -79,6 +109,43 @@ class SingleWindow(QtWidgets.QWidget):
         self.Calib = calib
         self.Sigma = sigma
 
+    def Load(self):
+        canvas = self.MapCanvas
+        path = self.MapPath.text()
+
+        try:
+            head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
+        except:
+            if path == "":
+                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the empty path.")
+            else:
+                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
+        else:
+            data = Data[2]
+            sumSignal = numpy.sum(data, axis=2)
+            self.MapSumSignal = sumSignal
+            canvas.axes.cla()
+            img = canvas.axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            canvas.axes.set_xlabel("X [px]")
+            canvas.axes.set_ylabel("Z [px]")
+
+            canvas.axes2x = canvas.axes.secondary_xaxis('top', transform = canvas.axes.transData)
+            canvas.axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(canvas.axes.get_xticks()) - 2))
+            canvas.axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(canvas.axes2x.get_xticks())))
+            canvas.axes2x.set_xlabel("X [mm]")
+
+            canvas.axes2y = canvas.axes.secondary_yaxis('right', transform = canvas.axes.transData)
+            canvas.axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(canvas.axes.get_yticks()) - 2))
+            canvas.axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(canvas.axes2y.get_yticks())))
+            canvas.axes2y.set_ylabel("Z [mm]")
+
+            colorBar = canvas.figure.colorbar(img)
+            colorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(colorBar.get_ticks()) - 2))
+            canvas.draw()
+    
+    def Reload(self):
+        return
+    
     def MarkPoint_clicked(self):
         return
 
@@ -159,6 +226,7 @@ class SingleWindow(QtWidgets.QWidget):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
         if path:
             self.MapPath.setText(path)
+            self.Load()
     
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Results path", self.ResultsPath.text())
@@ -166,7 +234,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.ResultsPath.setText(path)
     
     def ReloadMap_clicked(self):
-        return
+        self.Reload()
     
     def ImportConfig_clicked(self, clicked, fileName):
         if fileName is None:
