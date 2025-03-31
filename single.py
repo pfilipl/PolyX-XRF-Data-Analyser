@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, uic
-import sys, xraylib, matplotlib, numpy
+import sys, xraylib, matplotlib, numpy, scipy, math
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
@@ -7,12 +7,15 @@ import main, add_roi, PDA
 
 class MatplotlibCanvas(FigureCanvasQTAgg):
     def __init__(self, parent = None):
-        self.figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
-        self.axes = self.figure.add_subplot(facecolor = "None")
-        self.figure.patch.set_facecolor("None")
-        self.axes2x = None
-        self.axes2y = None
-        super().__init__(self.figure)
+        self.Figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
+        self.Axes = self.Figure.add_subplot(facecolor = "None")
+        self.Axes.get_xaxis().set_visible(False)
+        self.Axes.get_yaxis().set_visible(False)
+        self.Figure.patch.set_facecolor("None")
+        self.Axes2x = None
+        self.Axes2y = None
+        self.ColorBar = None
+        super().__init__(self.Figure)
 
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -109,8 +112,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.Calib = calib
         self.Sigma = sigma
 
-    def Load(self):
-        canvas = self.MapCanvas
+    def Load(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True):
+        map = self.MapCanvas
+        spectrum = self.SpectrumCanvas
         path = self.MapPath.text()
 
         try:
@@ -122,29 +126,154 @@ class SingleWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
         else:
             data = Data[2]
-            sumSignal = numpy.sum(data, axis=2)
+            sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
             self.MapSumSignal = sumSignal
-            canvas.axes.cla()
-            img = canvas.axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
-            canvas.axes.set_xlabel("X [px]")
-            canvas.axes.set_ylabel("Z [px]")
+            if map.ColorBar: map.ColorBar.remove()
+            map.Axes.cla()
+            imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            map.Axes.get_xaxis().set_visible(False)
+            map.Axes.get_yaxis().set_visible(False)
 
-            canvas.axes2x = canvas.axes.secondary_xaxis('top', transform = canvas.axes.transData)
-            canvas.axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(canvas.axes.get_xticks()) - 2))
-            canvas.axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(canvas.axes2x.get_xticks())))
-            canvas.axes2x.set_xlabel("X [mm]")
+            map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+            map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
+            map.Axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
+            map.Axes2x.set_xlabel("X [mm]")
 
-            canvas.axes2y = canvas.axes.secondary_yaxis('right', transform = canvas.axes.transData)
-            canvas.axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(canvas.axes.get_yticks()) - 2))
-            canvas.axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(canvas.axes2y.get_yticks())))
-            canvas.axes2y.set_ylabel("Z [mm]")
+            map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+            map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
+            map.Axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
+            map.Axes2y.set_ylabel("Z [mm]")
 
-            colorBar = canvas.figure.colorbar(img)
-            colorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(colorBar.get_ticks()) - 2))
-            canvas.draw()
+            map.ColorBar = map.figure.colorbar(imgMap)
+            map.ColorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
+            map.draw()
+
+            spectrum.Axes.cla()
+            if self.Calib is not None:
+                cEmin = (numpy.abs(self.Calib - Emin * 1000)).argmin() - 1
+                if Emax is None:
+                    Emax = self.Calib[-1] / 1000
+                    cEmax = head["bins"][0, 0] - 1
+                else:
+                    cEmax = (numpy.abs(self.Calib - Emax * 1000)).argmin() + 1
+            if isinstance(pos, list):
+                pos = numpy.array(pos)
+            PDA.check_pos(pos, [data.shape[0], data.shape[1]])
+            x0 = min(pos[0, 0], pos[1, 0])
+            z0 = min(pos[0, 1], pos[1, 1])
+            x1 = max(pos[0, 0], pos[1, 0])
+            z1 = max(pos[0, 1], pos[1, 1])
+            for d in range(len(Data)):
+                data = Data[d]
+                if x1 > x0 and z1 > z0:
+                    sumData = data[x0:x1, z0:z1, :]
+                    sumData = numpy.sum(numpy.sum(sumData, axis = 0), axis = 0)
+                elif x1 == x0 and z1 > z0:
+                    sumData = data[x0, z0:z1, :]
+                    sumData = numpy.sum(sumData, axis = 0)
+                elif x1 > x0 and z1 == z0:
+                    sumData = data[x0:x1, z0, :]
+                    sumData = numpy.sum(sumData, axis = 0)
+                else:
+                    sumData = data[x0, z0, :]
+                imgSpectrum = spectrum.Axes.plot(sumData, label = PDA.detectors[d])
+            spectrum.Axes.set_yscale('log')
+            spectrum.Axes.get_xaxis().set_visible(True)
+            spectrum.Axes.get_yaxis().set_visible(True)
+
+            if self.Calib is not None:
+                spectrum.Axes.set_ylim([1, numpy.max(numpy.sum(numpy.sum(data[x0:x1, z0:z1, cEmin:cEmax], axis = 0), axis = 0)) * 1.5])
+            else:
+                spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
+
+            if self.ROIsDefault.isChecked(): roi = ROI
+            # else:
+            #     roi = []
+            #     for row in range(self.ROIs.rowCount()):
+
+            if roi is not None:
+                for i in range(len(roi)):
+                    if roi[i][0] != 'Total signal':
+                        spectrum.Axes.add_patch(matplotlib.patches.Rectangle((roi[i][1], 0), roi[i][2] - roi[i][1], 1, facecolor = 'r', alpha = 0.2, transform = spectrum.Axes.get_xaxis_transform()))
+                        if self.Calib is not None:
+                            if roi[i][1] + (roi[i][2] - roi[i][1]) / 2 > cEmin and roi[i][1] + (roi[i][2] - roi[i][1]) / 2 < cEmax:
+                                spectrum.Axes.text(roi[i][1] + (roi[i][2] - roi[i][1]) / 2, 0.7, roi[i][0], ha = 'center', rotation = 'vertical', transform = spectrum.Axes.get_xaxis_transform())
+                        else:
+                            spectrum.Axes.text(roi[i][1] + (roi[i][2] - roi[i][1]) / 2, 0.7, roi[i][0], ha = 'center', rotation = 'vertical', transform = spectrum.Axes.get_xaxis_transform())
+
+            if peaks is not None:
+                if isinstance(peaks, bool):
+                    if peaks:
+                        xP = scipy.signal.find_peaks(sumData, height = 1e-5 * numpy.max(sumData), width = 10)
+                        for xp in xP[0]:
+                            if self.Calib is not None:
+                                if  xp > (numpy.abs(self.Calib - 0)).argmin() + 50:
+                                    spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C2'))
+                                    if xp > cEmin and xp < cEmax:
+                                        ka = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Ka'] - self.Calib[xp] / 1000)).argmin()]
+                                        kb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Kb'] - self.Calib[xp] / 1000)).argmin()]
+                                        la = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['La'] - self.Calib[xp] / 1000)).argmin()]
+                                        lb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Lb'] - self.Calib[xp] / 1000)).argmin()]
+                                        spectrum.Axes.text(xp, 0.05, ka, ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform())
+                                        spectrum.Axes.text(xp, 0.12, kb, ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform())
+                                        spectrum.Axes.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform())
+                                        spectrum.Axes.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform())
+                            else:
+                                spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C2'))
+                        if self.Calib is not None:
+                            spectrum.Axes.text(0.05, 0.75, "Ka", ha = 'left', color = 'C4', transform = spectrum.Axes.transAxes)
+                            spectrum.Axes.text(0.05, 0.80, "Kb", ha = 'left', color = 'C6', transform = spectrum.Axes.transAxes)
+                            spectrum.Axes.text(0.05, 0.85, "La", ha = 'left', color = 'C5', transform = spectrum.Axes.transAxes)
+                            spectrum.Axes.text(0.05, 0.90, "Lb", ha = 'left', color = 'C7', transform = spectrum.Axes.transAxes)
+                elif self.Calib is not None:
+                    for name in peaks:
+                        if name != 'Total signal':
+                            try: 
+                                element = xraylib.SymbolToAtomicNumber(name.split("-")[-2])
+                            except:
+                                print("Unknown element symbol!")
+                                continue
+                            line = name.split("-")[-1]
+                            if line == "Ka":
+                                line = xraylib.KA_LINE
+                            elif line == "Kb":
+                                line = xraylib.KB_LINE
+                            elif line == "La":
+                                line = xraylib.LA_LINE
+                            elif line == "Lb":
+                                line = xraylib.LB_LINE
+                            else:
+                                print("Unknown line symbol!")
+                                continue
+                            xp = (numpy.abs(self.Calib - xraylib.LineEnergy(element, line) * 1000)).argmin()
+                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = spectrum.Axes.get_xaxis_transform()))
+                            if xp > cEmin and xp < cEmax:
+                                spectrum.Axes.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = spectrum.Axes.get_xaxis_transform())
+            
+            spectrum.Axes.legend(loc = "upper right", ncols = len(Data), facecolor = "None", edgecolor = "None")
+            
+            if self.Calib is None:
+                spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
+                spectrum.Axes.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
+                spectrum.Axes.set_xlabel("channel")
+            else:
+                spectrum.Axes.get_xaxis().set_visible(False)
+                spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom', transform = spectrum.Axes.transData)
+                spectrum.Axes.set_xlim([cEmin, cEmax])
+                Eval = numpy.linspace(Emin * 1000, Emax * 1000, len(spectrum.Axes.get_xticks()) - 2)
+                E = []
+                for eval in Eval:
+                    E.append((numpy.abs(self.Calib - eval)).argmin())
+                spectrum.Axes2x.set_xticks(E)
+                spectrum.Axes2x.set_xticklabels(numpy.abs(numpy.round(self.Calib[E] / 1000, 2)))
+                spectrum.Axes2x.set_xlabel("E [keV]")
+
+            spectrum.draw()
+
+            if not self.ReloadMap.isEnabled(): self.ReloadMap.setEnabled(True)
     
     def Reload(self):
-        return
+        self.Load(0, 4096, [[0, 0], [1000, 1000]], 0, None, None, True)
     
     def MarkPoint_clicked(self):
         return
@@ -152,12 +281,12 @@ class SingleWindow(QtWidgets.QWidget):
     def SelectArea_clicked(self):
         return
 
-    def ROIsImport_clicked(self, checked, fileName):
+    def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:
             fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIsDeleteAll_clicked()
-            self.ROIsDefault.setChecked(False)
+            if changeROIsDefault: self.ROIsDefault.setChecked(False)
             self.ROIs.setCurrentCell(0, 0)
             read = False
             file = open(fileName, "r")
@@ -173,6 +302,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
             file.close()
+        self.Load()
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -225,7 +355,9 @@ class SingleWindow(QtWidgets.QWidget):
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
         if path:
+            self.MapPath.blockSignals(True)
             self.MapPath.setText(path)
+            self.MapPath.blockSignals(False)
             self.Load()
     
     def ResultsPathSearch_clicked(self):
@@ -255,7 +387,7 @@ class SingleWindow(QtWidgets.QWidget):
                     if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
                     else: exec(f'self.{variableName}.set{property}({value})')
             file.close()
-            self.ROIsImport_clicked(False, fileName)
+            self.ROIsImport_clicked(False, fileName, False)
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:

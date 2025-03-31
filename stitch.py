@@ -7,10 +7,12 @@ import main, PDA
 
 class MatplotlibCanvas(FigureCanvasQTAgg):
     def __init__(self, parent = None):
-        self.figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
-        self.axes = self.figure.add_subplot(facecolor = "None")
-        self.figure.patch.set_facecolor("None")
-        super().__init__(self.figure)
+        self.Figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
+        self.Axes = self.Figure.add_subplot(facecolor = "None")
+        self.Axes.get_xaxis().set_visible(False)
+        self.Axes.get_yaxis().set_visible(False)
+        self.Figure.patch.set_facecolor("None")
+        super().__init__(self.Figure)
 
 class StitchWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -87,8 +89,8 @@ class StitchWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
         else:
             sumSignal = numpy.sum(Data[2], axis=2)
-            canvas.axes.cla()
-            canvas.axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            canvas.Axes.cla()
+            canvas.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
             canvas.draw()
 
             if mode == "top":
@@ -102,28 +104,32 @@ class StitchWindow(QtWidgets.QWidget):
         if mode == "top":
             canvas = self.TopMapCanvas
             sumSignal = self.TopMapSumSignal
-            canvas.axes.cla()
+            canvas.Axes.cla()
             if value:
-                canvas.axes.imshow(sumSignal[:, :-value].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                canvas.Axes.imshow(sumSignal[:, :-value].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
             else:
-                canvas.axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                canvas.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
         elif mode == "bottom":
             canvas = self.BottomMapCanvas
             sumSignal = self.BottomMapSumSignal
-            canvas.axes.cla()
-            canvas.axes.imshow(sumSignal[:, value:].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            canvas.Axes.cla()
+            canvas.Axes.imshow(sumSignal[:, value:].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
         canvas.draw()
 
     def TopMapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Top Map path", self.TopMapPath.text())
         if path:
+            self.TopMapPath.blockSignals(True)
             self.TopMapPath.setText(path)
+            self.TopMapPath.blockSignals(False)
             self.LoadMap("top")
 
     def BottomMapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Bottom Map path", self.BottomMapPath.text())
         if path:
+            self.BottomMapPath.blockSignals(True)
             self.BottomMapPath.setText(path)
+            self.BottomMapPath.blockSignals(False)
             self.LoadMap("bottom")
     
     def ResultPathSearch_clicked(self):
