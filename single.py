@@ -27,8 +27,20 @@ class SingleWindow(QtWidgets.QWidget):
         self.AreaZ1             = self.doubleSpinBox_AreaZ1
         self.AreaX2             = self.doubleSpinBox_AreaX2
         self.AreaZ2             = self.doubleSpinBox_AreaZ2
+        self.AreaEnabled        = False
+        self.AreaChanged        = False
         self.PointX             = self.doubleSpinBox_PointX
         self.PointZ             = self.doubleSpinBox_PointZ
+        self.PointEnabled       = False
+        self.PointChanged       = False
+        self.LastChanged        = "area"
+
+        self.AreaX1.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
+        self.AreaZ1.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
+        self.AreaX2.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
+        self.AreaZ2.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
+        self.PointX.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
+        self.PointZ.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
 
         self.pushButton_MarkPoint.clicked.connect(self.MarkPoint_clicked)
         self.pushButton_SelectArea.clicked.connect(self.SelectArea_clicked)
@@ -52,7 +64,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.Spectrum           = self.tab_Spectrum
         self.SpectrumCanvas     = MatplotlibCanvas(self.Spectrum)
         self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
-        self.SpectrumSumSignal  = None
+        # self.SpectrumSumSignal  = None
+        self.Head               = None
 
         self.MapCanvas.setStyleSheet("background-color:transparent;")
         mapLayout = QtWidgets.QVBoxLayout()
@@ -112,6 +125,14 @@ class SingleWindow(QtWidgets.QWidget):
         self.Calib = calib
         self.Sigma = sigma
 
+    def Changed(self, value, mode):
+        if mode == "area":
+            self.AreaChanged = True
+            self.LastChanged = "area"
+        elif mode == "point":
+            self.PointChanged = True
+            self.LastChanged = "point"
+
     def Load(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True):
         map = self.MapCanvas
         spectrum = self.SpectrumCanvas
@@ -125,6 +146,7 @@ class SingleWindow(QtWidgets.QWidget):
             else:
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
         else:
+            self.Head = head
             data = Data[2]
             sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
             self.MapSumSignal = sumSignal
@@ -146,6 +168,24 @@ class SingleWindow(QtWidgets.QWidget):
 
             map.ColorBar = map.figure.colorbar(imgMap)
             map.ColorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
+            
+            if self.AreaChanged or self.PointChanged:
+                if isinstance(pos, list):
+                    pos = numpy.array(pos)
+                PDA.check_pos(pos, [data.shape[0], data.shape[1]])
+                if pos.shape[0] == 1:
+                    x0 = pos[0, 0]
+                    z0 = pos[0, 1]
+                    map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), 3, 3, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+                elif pos.shape[0] == 2:
+                    x0 = min(pos[0, 0], pos[1, 0])
+                    z0 = min(pos[0, 1], pos[1, 1])
+                    x1 = max(pos[0, 0], pos[1, 0])
+                    z1 = max(pos[0, 1], pos[1, 1])
+                    map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), x1 - x0 + 2, z1 - z0 + 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+                else:
+                    print("Invalid pos!")
+                        
             map.draw()
 
             spectrum.Axes.cla()
@@ -159,10 +199,16 @@ class SingleWindow(QtWidgets.QWidget):
             if isinstance(pos, list):
                 pos = numpy.array(pos)
             PDA.check_pos(pos, [data.shape[0], data.shape[1]])
-            x0 = min(pos[0, 0], pos[1, 0])
-            z0 = min(pos[0, 1], pos[1, 1])
-            x1 = max(pos[0, 0], pos[1, 0])
-            z1 = max(pos[0, 1], pos[1, 1])
+            if pos.shape[0] == 1:
+                x0 = pos[0, 0]
+                z0 = pos[0, 1]
+                x1 = pos[0, 0]
+                z1 = pos[0, 1]
+            elif pos.shape[0] == 2:
+                x0 = min(pos[0, 0], pos[1, 0])
+                z0 = min(pos[0, 1], pos[1, 1])
+                x1 = max(pos[0, 0], pos[1, 0])
+                z1 = max(pos[0, 1], pos[1, 1])
             for d in range(len(Data)):
                 data = Data[d]
                 if x1 > x0 and z1 > z0:
@@ -180,16 +226,20 @@ class SingleWindow(QtWidgets.QWidget):
             spectrum.Axes.set_yscale('log')
             spectrum.Axes.get_xaxis().set_visible(True)
             spectrum.Axes.get_yaxis().set_visible(True)
+            if self.AreaChanged or self.PointChanged:
+                if pos.shape[0] == 1: spectrum.Axes.set_title(f"pos = [{self.PointX.value()} mm, {self.PointZ.value()} mm]")
+                elif pos.shape[0] == 2: spectrum.Axes.set_title(f"pos = [[{self.AreaX1.value()} mm, {self.AreaZ1.value()} mm], [{self.AreaX2.value()} mm, {self.AreaZ2.value()} mm]]")
 
             if self.Calib is not None:
                 spectrum.Axes.set_ylim([1, numpy.max(numpy.sum(numpy.sum(data[x0:x1, z0:z1, cEmin:cEmax], axis = 0), axis = 0)) * 1.5])
             else:
                 spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
 
-            if self.ROIsDefault.isChecked(): roi = ROI
-            # else:
-            #     roi = []
-            #     for row in range(self.ROIs.rowCount()):
+            if roi is None and self.ROIsDefault.isChecked(): roi = ROI
+            elif roi is None:
+                roi = []
+                for row in range(self.ROIs.rowCount()):
+                    roi.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
 
             if roi is not None:
                 for i in range(len(roi)):
@@ -270,10 +320,87 @@ class SingleWindow(QtWidgets.QWidget):
 
             spectrum.draw()
 
+            self.AreaX1.setMinimum(min(head["Xpositions"][0, :]))
+            self.AreaX2.setMinimum(min(head["Xpositions"][0, :]))
+            self.AreaZ1.setMinimum(min(head["Zpositions"][0, :]))
+            self.AreaZ2.setMinimum(min(head["Zpositions"][0, :]))
+
+            self.AreaX1.setMaximum(max(head["Xpositions"][0, :]))
+            self.AreaX2.setMaximum(max(head["Xpositions"][0, :]))
+            self.AreaZ1.setMaximum(max(head["Zpositions"][0, :]))
+            self.AreaZ2.setMaximum(max(head["Zpositions"][0, :]))
+
+            if self.AreaEnabled:
+                if self.AreaX1.value() != min(head["Xpositions"][0, :]): self.Changed(None, "area")
+                if self.AreaX2.value() != max(head["Xpositions"][0, :]): self.Changed(None, "area")
+                if self.AreaZ1.value() != min(head["Zpositions"][0, :]): self.Changed(None, "area")
+                if self.AreaZ2.value() != max(head["Zpositions"][0, :]): self.Changed(None, "area")
+            
+            if not self.AreaChanged:
+                self.AreaX1.blockSignals(True)
+                self.AreaX2.blockSignals(True)
+                self.AreaZ1.blockSignals(True)
+                self.AreaZ2.blockSignals(True)
+
+                self.AreaX1.setValue(min(head["Xpositions"][0, :]))
+                self.AreaX2.setValue(max(head["Xpositions"][0, :]))
+                self.AreaZ1.setValue(min(head["Zpositions"][0, :]))
+                self.AreaZ2.setValue(max(head["Zpositions"][0, :]))
+
+                self.AreaX1.blockSignals(False)
+                self.AreaX2.blockSignals(False)
+                self.AreaZ1.blockSignals(False)
+                self.AreaZ2.blockSignals(False)
+
+            self.PointX.setMinimum(min(head["Xpositions"][0, :]))
+            self.PointZ.setMinimum(min(head["Zpositions"][0, :]))
+
+            self.PointX.setMaximum(max(head["Xpositions"][0, :]))
+            self.PointZ.setMaximum(max(head["Zpositions"][0, :]))
+
+            if self.PointEnabled:
+                if self.PointX.value() != min(head["Xpositions"][0, :]): self.Changed(None, "point")
+                if self.PointZ.value() != min(head["Zpositions"][0, :]): self.Changed(None, "point")
+
+            if not self.PointChanged:
+                self.PointX.blockSignals(True)
+                self.PointZ.blockSignals(True)
+
+                self.PointX.setValue(min(head["Xpositions"][0, :]))
+                self.PointZ.setValue(min(head["Zpositions"][0, :]))
+
+                self.PointX.blockSignals(False)
+                self.PointZ.blockSignals(False)
+
             if not self.ReloadMap.isEnabled(): self.ReloadMap.setEnabled(True)
+            if not self.AreaEnabled:
+                self.AreaX1.setEnabled(True)
+                self.AreaZ1.setEnabled(True)
+                self.AreaX2.setEnabled(True)
+                self.AreaZ2.setEnabled(True)
+                self.AreaEnabled = True
+            if not self.PointEnabled:
+                self.PointX.setEnabled(True)
+                self.PointZ.setEnabled(True)
+                self.PointEnabled = True
+            # if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
+            # if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
     
     def Reload(self):
-        self.Load(0, 4096, [[0, 0], [1000, 1000]], 0, None, None, True)
+        if self.ROIsDefault.isChecked(): ROI = None
+        else:
+            ROI = []
+            for row in range(self.ROIs.rowCount()):
+                ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+        if self.AreaChanged or self.PointChanged:
+            if self.LastChanged == "area":
+                POS = PDA.real_pos([[self.AreaX1.value(), self.AreaZ1.value()], [self.AreaX2.value(), self.AreaZ2.value()]], self.Head)
+            elif self.LastChanged == "point":
+                POS = PDA.real_pos([[self.PointX.value(), self.PointZ.value()]], self.Head)
+        else:
+            POS = [[0, 0], [1000, 1000]]
+        
+        self.Load(0, 4096, POS, roi = ROI)
     
     def MarkPoint_clicked(self):
         return
@@ -384,10 +511,17 @@ class SingleWindow(QtWidgets.QWidget):
                     value = None
                     if len(data) > 2:
                         value = " ".join(data[2:])
-                    if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
-                    else: exec(f'self.{variableName}.set{property}({value})')
+                    if variableName in ["MapPath", "AreaX1", "AreaX2", "AreaZ1", "AreaZ2", "PointX", "PointZ"]:
+                        exec(f'self.{variableName}.blockSignals(True)')
+                    if property == "Text": 
+                        exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                    else: 
+                        exec(f'self.{variableName}.set{property}({value})')
+                    if variableName in ["MapPath", "AreaX1", "AreaX2", "AreaZ1", "AreaZ2", "PointX", "PointZ"]:
+                        exec(f'self.{variableName}.blockSignals(False)')
             file.close()
             self.ROIsImport_clicked(False, fileName, False)
+            self.Reload()
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:
@@ -411,12 +545,14 @@ class SingleWindow(QtWidgets.QWidget):
 
             fileContent += "\n\n# -----\n\n## Single configuration\n# Element name\tProperty\tValue"
 
-            fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
-            fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
-            fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
-            fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
-            fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
-            fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
+            if self.AreaEnabled:
+                fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
+                fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
+                fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
+                fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
+            if self.PointEnabled:
+                fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
+                fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
 
             fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
 
