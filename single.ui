@@ -582,6 +582,9 @@
           <property name="text">
            <string>Select area</string>
           </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
@@ -600,6 +603,9 @@
           </property>
           <property name="text">
            <string>Mark point</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

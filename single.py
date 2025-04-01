@@ -23,12 +23,14 @@ class SingleWindow(QtWidgets.QWidget):
         uic.loadUi("single.ui", self)
 
         # Spectrum from map region
+        self.SelectArea         = self.pushButton_SelectArea
         self.AreaX1             = self.doubleSpinBox_AreaX1
         self.AreaZ1             = self.doubleSpinBox_AreaZ1
         self.AreaX2             = self.doubleSpinBox_AreaX2
         self.AreaZ2             = self.doubleSpinBox_AreaZ2
         self.AreaEnabled        = False
         self.AreaChanged        = False
+        self.MarkPoint          = self.pushButton_MarkPoint
         self.PointX             = self.doubleSpinBox_PointX
         self.PointZ             = self.doubleSpinBox_PointZ
         self.PointEnabled       = False
@@ -42,8 +44,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.PointX.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
         self.PointZ.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
 
-        self.pushButton_MarkPoint.clicked.connect(self.MarkPoint_clicked)
-        self.pushButton_SelectArea.clicked.connect(self.SelectArea_clicked)
+        self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
+        self.SelectArea.toggled.connect(self.SelectArea_toggled)
 
         # Regions of interest (ROIs)
         self.ROIs               = self.tableWidget_ROIs
@@ -66,12 +68,18 @@ class SingleWindow(QtWidgets.QWidget):
         self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
         # self.SpectrumSumSignal  = None
         self.Head               = None
+        self.LastPressedX       = None
+        self.LastPressedZ       = None
+        self.LastReleasedX      = None
+        self.LastReleasedZ      = None
 
         self.MapCanvas.setStyleSheet("background-color:transparent;")
         mapLayout = QtWidgets.QVBoxLayout()
         mapLayout.addWidget(self.MapCanvas)
         mapLayout.addWidget(self.MapToolbar)
         self.Map.setLayout(mapLayout)
+        self.MapCanvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
+        self.MapCanvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
 
         self.SpectrumCanvas.setStyleSheet("background-color:transparent;")
         spectrumLayout = QtWidgets.QVBoxLayout()
@@ -124,6 +132,18 @@ class SingleWindow(QtWidgets.QWidget):
     def setCalibration(self, calib, sigma):
         self.Calib = calib
         self.Sigma = sigma
+
+    def MatplotlibButtonPressed(self, event):
+        if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
+            self.LastPressedX = event.xdata
+            self.LastPressedZ = event.ydata
+            self.MarkPoint.setChecked(False)
+
+    def MatplotlibButtonReleased(self, event):
+        if self.SelectArea.isChecked():
+            self.LastReleasedX = event.xdata
+            self.LastReleasedZ = event.ydata
+            self.SelectArea.setChecked(False)
 
     def Changed(self, value, mode):
         if mode == "area":
@@ -383,8 +403,8 @@ class SingleWindow(QtWidgets.QWidget):
                 self.PointX.setEnabled(True)
                 self.PointZ.setEnabled(True)
                 self.PointEnabled = True
-            # if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
-            # if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
+            if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
+            if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
     
     def Reload(self):
         if self.ROIsDefault.isChecked(): ROI = None
@@ -402,11 +422,19 @@ class SingleWindow(QtWidgets.QWidget):
         
         self.Load(0, 4096, POS, roi = ROI)
     
-    def MarkPoint_clicked(self):
-        return
+    def MarkPoint_toggled(self, checked):
+        if not checked:
+            if self.LastPressedX is not None and self.LastPressedZ is not None:
+                self.PointX.setValue(self.Head["Xpositions"][0, round(self.LastPressedX)])
+                self.PointZ.setValue(self.Head["Zpositions"][0, round(self.LastPressedZ)])
 
-    def SelectArea_clicked(self):
-        return
+    def SelectArea_toggled(self, checked):
+        if not checked:
+            if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
+                self.AreaX1.setValue(self.Head["Xpositions"][0, round(self.LastPressedX)])
+                self.AreaZ1.setValue(self.Head["Zpositions"][0, round(self.LastPressedZ)])
+                self.AreaX2.setValue(self.Head["Xpositions"][0, round(self.LastReleasedX)])
+                self.AreaZ2.setValue(self.Head["Zpositions"][0, round(self.LastReleasedZ)])
 
     def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:
