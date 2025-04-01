@@ -17,6 +17,19 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         self.ColorBar = None
         super().__init__(self.Figure)
 
+class RectangleDrawer:
+    def __init__(self, rectangle):
+        self.Rectangle = rectangle
+        self.X = rectangle.get_x()
+        self.Y = rectangle.get_y()
+        self.CanvasID = rectangle.figure.canvas.mpl_connect('motion_notify_event', self)
+
+    def __call__(self, event):
+        if event.inaxes == self.Rectangle.axes:
+            self.Rectangle.set_height(event.ydata - self.Y)
+            self.Rectangle.set_width(event.xdata - self.X)
+            self.Rectangle.figure.canvas.draw()
+
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(SingleWindow, self).__init__(parent)
@@ -72,6 +85,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastPressedZ       = None
         self.LastReleasedX      = None
         self.LastReleasedZ      = None
+        self.LastMotionX        = None
+        self.LastMotionZ        = None
+        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r', facecolor = 'none')
 
         self.MapCanvas.setStyleSheet("background-color:transparent;")
         mapLayout = QtWidgets.QVBoxLayout()
@@ -80,6 +96,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.Map.setLayout(mapLayout)
         self.MapCanvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
         self.MapCanvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
+        self.MapCanvas.mpl_connect("motion_notify_event", self.MatplotlibMouseMotion)
 
         self.SpectrumCanvas.setStyleSheet("background-color:transparent;")
         spectrumLayout = QtWidgets.QVBoxLayout()
@@ -135,15 +152,39 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MatplotlibButtonPressed(self, event):
         if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
-            self.LastPressedX = event.xdata
-            self.LastPressedZ = event.ydata
-            self.MarkPoint.setChecked(False)
+            if event.inaxes == self.MapCanvas.Axes:
+                self.LastPressedX = event.xdata
+                self.LastPressedZ = event.ydata
+                self.Rectangle.set_xy((self.LastPressedX - 1, self.LastPressedZ - 1))
+                self.Rectangle.set_height(3)
+                self.Rectangle.set_width(3)
+                self.MapCanvas.Axes.add_patch(self.Rectangle)
+                self.MapCanvas.draw()
+                self.MarkPoint.setChecked(False)
 
     def MatplotlibButtonReleased(self, event):
         if self.SelectArea.isChecked():
-            self.LastReleasedX = event.xdata
-            self.LastReleasedZ = event.ydata
+            if event.inaxes == self.MapCanvas.Axes:
+                self.LastReleasedX = event.xdata
+                self.LastReleasedZ = event.ydata
+            else:
+                self.LastReleasedX = self.LastMotionX
+                self.LastReleasedZ = self.LastMotionZ
+                self.LastMotionX = None
+                self.LastMotionZ = None
+            # self.Rectangle.set_height(self.LastReleasedZ + 1 - self.Rectangle.get_y())
+            # self.Rectangle.set_width(self.LastReleasedX + 1 - self.Rectangle.get_x())
+            # self.MapCanvas.draw()
             self.SelectArea.setChecked(False)
+
+    def MatplotlibMouseMotion(self, event):
+        if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
+            if event.inaxes == self.MapCanvas.Axes:
+                self.LastMotionX = event.xdata
+                self.LastMotionZ = event.ydata
+                self.Rectangle.set_height(self.LastMotionZ + 1 - self.Rectangle.get_y())
+                self.Rectangle.set_width(self.LastMotionX + 1 - self.Rectangle.get_x())
+                self.MapCanvas.draw()
 
     def Changed(self, value, mode):
         if mode == "area":
@@ -153,7 +194,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.PointChanged = True
             self.LastChanged = "point"
 
-    def Load(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True):
+    def Load(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True):
         map = self.MapCanvas
         spectrum = self.SpectrumCanvas
         path = self.MapPath.text()
@@ -356,7 +397,7 @@ class SingleWindow(QtWidgets.QWidget):
                 if self.AreaZ1.value() != min(head["Zpositions"][0, :]): self.Changed(None, "area")
                 if self.AreaZ2.value() != max(head["Zpositions"][0, :]): self.Changed(None, "area")
             
-            if not self.AreaChanged:
+            if not self.AreaChanged or startLoad:
                 self.AreaX1.blockSignals(True)
                 self.AreaX2.blockSignals(True)
                 self.AreaZ1.blockSignals(True)
@@ -382,7 +423,7 @@ class SingleWindow(QtWidgets.QWidget):
                 if self.PointX.value() != min(head["Xpositions"][0, :]): self.Changed(None, "point")
                 if self.PointZ.value() != min(head["Zpositions"][0, :]): self.Changed(None, "point")
 
-            if not self.PointChanged:
+            if not self.PointChanged or startLoad:
                 self.PointX.blockSignals(True)
                 self.PointZ.blockSignals(True)
 
@@ -420,13 +461,20 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
-        self.Load(0, 4096, POS, roi = ROI)
+        self.Load(0, 4096, POS, roi = ROI, startLoad = False)
     
     def MarkPoint_toggled(self, checked):
         if not checked:
             if self.LastPressedX is not None and self.LastPressedZ is not None:
                 self.PointX.setValue(self.Head["Xpositions"][0, round(self.LastPressedX)])
                 self.PointZ.setValue(self.Head["Zpositions"][0, round(self.LastPressedZ)])
+                self.LastPressedX = None
+                self.LastPressedZ = None
+        else:
+            if self.SelectArea.isChecked(): 
+                self.SelectArea.blockSignals(True)
+                self.SelectArea.setChecked(False)
+                self.SelectArea.blockSignals(False)
 
     def SelectArea_toggled(self, checked):
         if not checked:
@@ -435,6 +483,15 @@ class SingleWindow(QtWidgets.QWidget):
                 self.AreaZ1.setValue(self.Head["Zpositions"][0, round(self.LastPressedZ)])
                 self.AreaX2.setValue(self.Head["Xpositions"][0, round(self.LastReleasedX)])
                 self.AreaZ2.setValue(self.Head["Zpositions"][0, round(self.LastReleasedZ)])
+                self.LastPressedX = None
+                self.LastPressedZ = None
+                self.LastReleasedX = None
+                self.LastReleasedZ = None
+        else:
+            if self.MarkPoint.isChecked(): 
+                self.MarkPoint.blockSignals(True)
+                self.MarkPoint.setChecked(False)
+                self.MarkPoint.blockSignals(False)
 
     def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:
@@ -539,6 +596,7 @@ class SingleWindow(QtWidgets.QWidget):
                     value = None
                     if len(data) > 2:
                         value = " ".join(data[2:])
+
                     if variableName in ["MapPath", "AreaX1", "AreaX2", "AreaZ1", "AreaZ2", "PointX", "PointZ"]:
                         exec(f'self.{variableName}.blockSignals(True)')
                     if property == "Text": 
@@ -573,12 +631,12 @@ class SingleWindow(QtWidgets.QWidget):
 
             fileContent += "\n\n# -----\n\n## Single configuration\n# Element name\tProperty\tValue"
 
-            if self.AreaEnabled:
+            if self.AreaChanged:
                 fileContent += f"\n\nAreaX1\tValue\t{self.AreaX1.value()}"
                 fileContent += f"\nAreaZ1\tValue\t{self.AreaZ1.value()}"
                 fileContent += f"\nAreaX2\tValue\t{self.AreaX2.value()}"
                 fileContent += f"\nAreaZ2\tValue\t{self.AreaZ2.value()}"
-            if self.PointEnabled:
+            if self.PointChanged:
                 fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
                 fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
 
