@@ -1090,7 +1090,7 @@
       </layout>
      </item>
      <item row="12" column="0" colspan="3">
-      <widget class="QPushButton" name="pushButton_AnalyseMap">
+      <widget class="QPushButton" name="pushButton_Analyse">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1112,7 +1112,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Analyse map</string>
+        <string>Analyse</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -1266,7 +1266,7 @@
       </layout>
      </item>
      <item row="10" column="0" colspan="3">
-      <widget class="QPushButton" name="pushButton_ReloadMap">
+      <widget class="QPushButton" name="pushButton_Reload">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1274,7 +1274,7 @@
         <bool>true</bool>
        </property>
        <property name="text">
-        <string>Reload map</string>
+        <string>Reload</string>
        </property>
       </widget>
      </item>
@@ -1288,7 +1288,7 @@
   <tabstop>doubleSpinBox_CalibrationZero</tabstop>
   <tabstop>doubleSpinBox_CalibrationNoise</tabstop>
   <tabstop>doubleSpinBox_CalibrationFano</tabstop>
-  <tabstop>pushButton_AnalyseMap</tabstop>
+  <tabstop>pushButton_Analyse</tabstop>
  </tabstops>
  <resources/>
  <connections/>

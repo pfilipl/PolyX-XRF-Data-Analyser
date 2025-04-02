@@ -107,7 +107,7 @@ class SingleWindow(QtWidgets.QWidget):
         # Map path
         self.MapPath            = self.lineEdit_MapPath
 
-        self.MapPath.editingFinished.connect(self.Load)
+        self.MapPath.editingFinished.connect(self.LoadData)
         self.toolButton_MapPathSearch.clicked.connect(self.MapPathSearch_clicked)
 
         # Results
@@ -131,13 +131,13 @@ class SingleWindow(QtWidgets.QWidget):
 
         # Process
         self.Progress           = self.progressBar_Progress
-        self.ReloadMap          = self.pushButton_ReloadMap
-        self.AnalyseMap         = self.pushButton_AnalyseMap
+        self.Reload          = self.pushButton_Reload
+        self.Analyse         = self.pushButton_Analyse
 
-        self.pushButton_ReloadMap.clicked.connect(self.ReloadMap_clicked)
+        self.pushButton_Reload.clicked.connect(self.Reload_clicked)
         self.pushButton_ImportConfig.clicked.connect(lambda clicked, fileName = None: self.ImportConfig_clicked(clicked, fileName))
         self.pushButton_SaveConfig.clicked.connect(lambda clicked, fileName = None: self.SaveConfig_clicked(clicked, fileName))
-        self.pushButton_AnalyseMap.clicked.connect(self.AnalyseMap_clicked)
+        self.pushButton_Analyse.clicked.connect(self.Analyse_clicked)
 
         # Help
         self.Help               = self.label_Help
@@ -194,7 +194,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.PointChanged = True
             self.LastChanged = "point"
 
-    def Load(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True):
+    def LoadData(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True):
         map = self.MapCanvas
         spectrum = self.SpectrumCanvas
         path = self.MapPath.text()
@@ -433,7 +433,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.PointX.blockSignals(False)
                 self.PointZ.blockSignals(False)
 
-            if not self.ReloadMap.isEnabled(): self.ReloadMap.setEnabled(True)
+            if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.AreaEnabled:
                 self.AreaX1.setEnabled(True)
                 self.AreaZ1.setEnabled(True)
@@ -447,7 +447,7 @@ class SingleWindow(QtWidgets.QWidget):
             if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
             if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
     
-    def Reload(self):
+    def ReloadData(self):
         if self.ROIsDefault.isChecked(): ROI = None
         else:
             ROI = []
@@ -461,7 +461,7 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
-        self.Load(0, 4096, POS, roi = ROI, startLoad = False)
+        self.LoadData(0, 4096, POS, roi = ROI, startLoad = False)
     
     def MarkPoint_toggled(self, checked):
         if not checked:
@@ -514,7 +514,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
             file.close()
-        self.Load()
+        self.LoadData()
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -570,15 +570,15 @@ class SingleWindow(QtWidgets.QWidget):
             self.MapPath.blockSignals(True)
             self.MapPath.setText(path)
             self.MapPath.blockSignals(False)
-            self.Load()
+            self.LoadData()
     
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Results path", self.ResultsPath.text())
         if path:
             self.ResultsPath.setText(path)
     
-    def ReloadMap_clicked(self):
-        self.Reload()
+    def Reload_clicked(self):
+        self.ReloadData()
     
     def ImportConfig_clicked(self, clicked, fileName):
         if fileName is None:
@@ -607,7 +607,7 @@ class SingleWindow(QtWidgets.QWidget):
                         exec(f'self.{variableName}.blockSignals(False)')
             file.close()
             self.ROIsImport_clicked(False, fileName, False)
-            self.Reload()
+            self.ReloadData()
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:
@@ -647,7 +647,7 @@ class SingleWindow(QtWidgets.QWidget):
 
             self.ROIsSave_clicked(False, fileName, 'a')
 
-    def AnalyseMap_clicked(self):
+    def Analyse_clicked(self):
         return
     
 if __name__ == "__main__":

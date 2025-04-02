@@ -1243,7 +1243,7 @@
       </widget>
      </item>
      <item row="11" column="0" colspan="2">
-      <widget class="QPushButton" name="pushButton_AnalyseMaps">
+      <widget class="QPushButton" name="pushButton_Analyse">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -1577,7 +1577,7 @@
   <tabstop>pushButton_ROIsDelete</tabstop>
   <tabstop>pushButton_ROIsDeleteAll</tabstop>
   <tabstop>pushButton_SaveConfig</tabstop>
-  <tabstop>pushButton_AnalyseMaps</tabstop>
+  <tabstop>pushButton_Analyse</tabstop>
  </tabstops>
  <resources/>
  <connections/>

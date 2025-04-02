@@ -73,11 +73,11 @@ class BatchWindow(QtWidgets.QWidget):
 
         # Process
         self.Progress                   = self.progressBar_Progress
-        self.AnalyseMaps                = self.pushButton_AnalyseMaps
+        self.Analyse                = self.pushButton_Analyse
 
         self.pushButton_ImportConfig.clicked.connect(lambda checked, fileName = None: self.ImportConfig_clicked(checked, fileName))
         self.pushButton_SaveConfig.clicked.connect(lambda checked, fileName = None: self.SaveConfig_clicked(checked, fileName))
-        self.pushButton_AnalyseMaps.clicked.connect(self.AnalyseMaps_clicked)
+        self.pushButton_Analyse.clicked.connect(self.Analyse_clicked)
 
         # Help
         self.Help                       = self.label_Help
@@ -288,7 +288,7 @@ class BatchWindow(QtWidgets.QWidget):
 
             self.PathsSave(fileName, 'a')
     
-    def AnalyseMaps_clicked(self):
+    def Analyse_clicked(self):
         return
 
 if __name__ == "__main__":
