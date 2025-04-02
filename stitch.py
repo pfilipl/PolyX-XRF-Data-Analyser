@@ -11,6 +11,7 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         self.Axes = self.Figure.add_subplot(facecolor = "None")
         self.Axes.get_xaxis().set_visible(False)
         self.Axes.get_yaxis().set_visible(False)
+        self.Axes.format_coord = lambda x, y: ""
         self.Figure.patch.set_facecolor("None")
         super().__init__(self.Figure)
 
@@ -76,9 +77,11 @@ class StitchWindow(QtWidgets.QWidget):
         if mode == "top":
             canvas = self.TopMapCanvas
             path = self.TopMapPath.text()
+            offset = self.TopMapOffset
         elif mode == "bottom":
             canvas = self.BottomMapCanvas
             path = self.BottomMapPath.text()
+            offset = self.BottomMapOffset
 
         try:
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
@@ -91,7 +94,10 @@ class StitchWindow(QtWidgets.QWidget):
             sumSignal = numpy.sum(Data[2], axis=2)
             canvas.Axes.cla()
             canvas.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            canvas.Axes.format_coord = lambda x, y: f'x = {round(x)} px, z = {round(y)} px'
             canvas.draw()
+
+            offset.setMaximum(Data[2].shape[1] - 1)
 
             if mode == "top":
                 self.TopMapSumSignal = sumSignal

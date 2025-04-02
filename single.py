@@ -11,24 +11,12 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         self.Axes = self.Figure.add_subplot(facecolor = "None")
         self.Axes.get_xaxis().set_visible(False)
         self.Axes.get_yaxis().set_visible(False)
+        self.Axes.format_coord = lambda x, y: ""
         self.Figure.patch.set_facecolor("None")
         self.Axes2x = None
         self.Axes2y = None
         self.ColorBar = None
         super().__init__(self.Figure)
-
-class RectangleDrawer:
-    def __init__(self, rectangle):
-        self.Rectangle = rectangle
-        self.X = rectangle.get_x()
-        self.Y = rectangle.get_y()
-        self.CanvasID = rectangle.figure.canvas.mpl_connect('motion_notify_event', self)
-
-    def __call__(self, event):
-        if event.inaxes == self.Rectangle.axes:
-            self.Rectangle.set_height(event.ydata - self.Y)
-            self.Rectangle.set_width(event.xdata - self.X)
-            self.Rectangle.figure.canvas.draw()
 
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -36,6 +24,12 @@ class SingleWindow(QtWidgets.QWidget):
         uic.loadUi("single.ui", self)
 
         # Spectrum from map region
+        self.MarkPoint          = self.pushButton_MarkPoint
+        self.PointX             = self.doubleSpinBox_PointX
+        self.PointZ             = self.doubleSpinBox_PointZ
+        self.PointEnabled       = False
+        self.PointChanged       = False
+        
         self.SelectArea         = self.pushButton_SelectArea
         self.AreaX1             = self.doubleSpinBox_AreaX1
         self.AreaZ1             = self.doubleSpinBox_AreaZ1
@@ -43,19 +37,15 @@ class SingleWindow(QtWidgets.QWidget):
         self.AreaZ2             = self.doubleSpinBox_AreaZ2
         self.AreaEnabled        = False
         self.AreaChanged        = False
-        self.MarkPoint          = self.pushButton_MarkPoint
-        self.PointX             = self.doubleSpinBox_PointX
-        self.PointZ             = self.doubleSpinBox_PointZ
-        self.PointEnabled       = False
-        self.PointChanged       = False
+        
         self.LastChanged        = "area"
 
-        self.AreaX1.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
-        self.AreaZ1.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
-        self.AreaX2.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
-        self.AreaZ2.valueChanged.connect(lambda value, mode = "area": self.Changed(value, mode))
-        self.PointX.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
-        self.PointZ.valueChanged.connect(lambda value, mode = "point": self.Changed(value, mode))
+        self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
+        self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
+        self.AreaX1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaZ1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaX2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaZ2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
 
         self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
         self.SelectArea.toggled.connect(self.SelectArea_toggled)
@@ -71,16 +61,13 @@ class SingleWindow(QtWidgets.QWidget):
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
-        # Map & Spectrum
+        # Map
         self.Map                = self.tab_Map
         self.MapCanvas          = MatplotlibCanvas(self.Map)
         self.MapToolbar         = NavigationToolbar2QT(self.MapCanvas, self.Map)
-        self.MapSumSignal       = None
-        self.Spectrum           = self.tab_Spectrum
-        self.SpectrumCanvas     = MatplotlibCanvas(self.Spectrum)
-        self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
-        # self.SpectrumSumSignal  = None
-        self.Head               = None
+        # self.MapSumSignal       = None
+
+        self.Data               = None
         self.LastPressedX       = None
         self.LastPressedZ       = None
         self.LastReleasedX      = None
@@ -97,6 +84,11 @@ class SingleWindow(QtWidgets.QWidget):
         self.MapCanvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
         self.MapCanvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
         self.MapCanvas.mpl_connect("motion_notify_event", self.MatplotlibMouseMotion)
+
+        # Spectrum
+        self.Spectrum           = self.tab_Spectrum
+        self.SpectrumCanvas     = MatplotlibCanvas(self.Spectrum)
+        self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
 
         self.SpectrumCanvas.setStyleSheet("background-color:transparent;")
         spectrumLayout = QtWidgets.QVBoxLayout()
@@ -131,13 +123,13 @@ class SingleWindow(QtWidgets.QWidget):
 
         # Process
         self.Progress           = self.progressBar_Progress
-        self.Reload          = self.pushButton_Reload
-        self.Analyse         = self.pushButton_Analyse
+        self.Reload             = self.pushButton_Reload
+        self.Analyse            = self.pushButton_Analyse
 
-        self.pushButton_Reload.clicked.connect(self.Reload_clicked)
+        self.Reload.clicked.connect(self.Reload_clicked)
         self.pushButton_ImportConfig.clicked.connect(lambda clicked, fileName = None: self.ImportConfig_clicked(clicked, fileName))
         self.pushButton_SaveConfig.clicked.connect(lambda clicked, fileName = None: self.SaveConfig_clicked(clicked, fileName))
-        self.pushButton_Analyse.clicked.connect(self.Analyse_clicked)
+        self.Analyse.clicked.connect(self.Analyse_clicked)
 
         # Help
         self.Help               = self.label_Help
@@ -186,13 +178,9 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Rectangle.set_width(self.LastMotionX + 1 - self.Rectangle.get_x())
                 self.MapCanvas.draw()
 
-    def Changed(self, value, mode):
-        if mode == "area":
-            self.AreaChanged = True
-            self.LastChanged = "area"
-        elif mode == "point":
-            self.PointChanged = True
-            self.LastChanged = "point"
+    def RegionChanged(self, value, mode):
+        exec(f"self.{mode}Changed = True")
+        exec(f'self.LastChanged = "{mode}"')
 
     def LoadData(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True):
         map = self.MapCanvas
@@ -210,7 +198,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.Head = head
             data = Data[2]
             sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
-            self.MapSumSignal = sumSignal
+            # self.MapSumSignal = sumSignal
             if map.ColorBar: map.ColorBar.remove()
             map.Axes.cla()
             imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
@@ -227,9 +215,11 @@ class SingleWindow(QtWidgets.QWidget):
             map.Axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
             map.Axes2y.set_ylabel("Z [mm]")
 
+            map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
+
             map.ColorBar = map.figure.colorbar(imgMap)
             map.ColorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
-            
+
             if self.AreaChanged or self.PointChanged:
                 if isinstance(pos, list):
                     pos = numpy.array(pos)
@@ -367,6 +357,7 @@ class SingleWindow(QtWidgets.QWidget):
                 spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
                 spectrum.Axes.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
                 spectrum.Axes.set_xlabel("channel")
+                spectrum.Axes.format_coord = lambda x, y: f'x = {x:d} ch, y = {y:.3e}'
             else:
                 spectrum.Axes.get_xaxis().set_visible(False)
                 spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom', transform = spectrum.Axes.transData)
@@ -378,6 +369,7 @@ class SingleWindow(QtWidgets.QWidget):
                 spectrum.Axes2x.set_xticks(E)
                 spectrum.Axes2x.set_xticklabels(numpy.abs(numpy.round(self.Calib[E] / 1000, 2)))
                 spectrum.Axes2x.set_xlabel("E [keV]")
+                spectrum.Axes.format_coord = lambda x, y: f'E = {self.Calib[round(x)] / 1000:.3f} keV, y = {y:.3e}'
 
             spectrum.draw()
 
@@ -392,10 +384,10 @@ class SingleWindow(QtWidgets.QWidget):
             self.AreaZ2.setMaximum(max(head["Zpositions"][0, :]))
 
             if self.AreaEnabled:
-                if self.AreaX1.value() != min(head["Xpositions"][0, :]): self.Changed(None, "area")
-                if self.AreaX2.value() != max(head["Xpositions"][0, :]): self.Changed(None, "area")
-                if self.AreaZ1.value() != min(head["Zpositions"][0, :]): self.Changed(None, "area")
-                if self.AreaZ2.value() != max(head["Zpositions"][0, :]): self.Changed(None, "area")
+                if self.AreaX1.value() != min(head["Xpositions"][0, :]): self.RegionChanged(None, "Area")
+                if self.AreaX2.value() != max(head["Xpositions"][0, :]): self.RegionChanged(None, "Area")
+                if self.AreaZ1.value() != min(head["Zpositions"][0, :]): self.RegionChanged(None, "Area")
+                if self.AreaZ2.value() != max(head["Zpositions"][0, :]): self.RegionChanged(None, "Area")
             
             if not self.AreaChanged or startLoad:
                 self.AreaX1.blockSignals(True)
@@ -420,8 +412,8 @@ class SingleWindow(QtWidgets.QWidget):
             self.PointZ.setMaximum(max(head["Zpositions"][0, :]))
 
             if self.PointEnabled:
-                if self.PointX.value() != min(head["Xpositions"][0, :]): self.Changed(None, "point")
-                if self.PointZ.value() != min(head["Zpositions"][0, :]): self.Changed(None, "point")
+                if self.PointX.value() != min(head["Xpositions"][0, :]): self.RegionChanged(None, "Point")
+                if self.PointZ.value() != min(head["Zpositions"][0, :]): self.RegionChanged(None, "Point")
 
             if not self.PointChanged or startLoad:
                 self.PointX.blockSignals(True)
