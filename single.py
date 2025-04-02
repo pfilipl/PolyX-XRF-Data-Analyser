@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, uic
+from PyQt6 import QtWidgets, QtGui, QtCore, uic
 import sys, xraylib, matplotlib, numpy, scipy, math
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
@@ -74,7 +74,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastReleasedZ      = None
         self.LastMotionX        = None
         self.LastMotionZ        = None
-        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r', facecolor = 'none')
+        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'k')
 
         self.MapCanvas.setStyleSheet("background-color:transparent;")
         mapLayout = QtWidgets.QVBoxLayout()
@@ -147,9 +147,10 @@ class SingleWindow(QtWidgets.QWidget):
             if event.inaxes == self.MapCanvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
-                self.Rectangle.set_xy((self.LastPressedX - 1, self.LastPressedZ - 1))
-                self.Rectangle.set_height(3)
-                self.Rectangle.set_width(3)
+                self.Rectangle.set_facecolor('k')
+                self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
+                self.Rectangle.set_height(0.25)
+                self.Rectangle.set_width(0.25)
                 self.MapCanvas.Axes.add_patch(self.Rectangle)
                 self.MapCanvas.draw()
                 self.MarkPoint.setChecked(False)
@@ -164,9 +165,6 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastReleasedZ = self.LastMotionZ
                 self.LastMotionX = None
                 self.LastMotionZ = None
-            # self.Rectangle.set_height(self.LastReleasedZ + 1 - self.Rectangle.get_y())
-            # self.Rectangle.set_width(self.LastReleasedX + 1 - self.Rectangle.get_x())
-            # self.MapCanvas.draw()
             self.SelectArea.setChecked(False)
 
     def MatplotlibMouseMotion(self, event):
@@ -174,8 +172,9 @@ class SingleWindow(QtWidgets.QWidget):
             if event.inaxes == self.MapCanvas.Axes:
                 self.LastMotionX = event.xdata
                 self.LastMotionZ = event.ydata
-                self.Rectangle.set_height(self.LastMotionZ + 1 - self.Rectangle.get_y())
-                self.Rectangle.set_width(self.LastMotionX + 1 - self.Rectangle.get_x())
+                self.Rectangle.set_facecolor('none')
+                self.Rectangle.set_height(self.LastMotionZ - self.Rectangle.get_y())
+                self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
                 self.MapCanvas.draw()
 
     def RegionChanged(self, value, mode):
@@ -183,6 +182,7 @@ class SingleWindow(QtWidgets.QWidget):
         exec(f'self.LastChanged = "{mode}"')
 
     def LoadData(self, startLoad = True, importLoad = False):
+        QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         path = self.MapPath.text()
         try:
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
@@ -246,6 +246,8 @@ class SingleWindow(QtWidgets.QWidget):
                 self.AreaX2.blockSignals(False)
                 self.AreaZ1.blockSignals(False)
                 self.AreaZ2.blockSignals(False)
+
+        QtGui.QGuiApplication.restoreOverrideCursor()
     
     def LoadMapData(self, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], importLoad = False):
         map = self.MapCanvas
@@ -282,7 +284,7 @@ class SingleWindow(QtWidgets.QWidget):
             if pos.shape[0] == 1:
                 x0 = pos[0, 0]
                 z0 = pos[0, 1]
-                map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), 3, 3, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+                map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             elif pos.shape[0] == 2:
                 x0 = min(pos[0, 0], pos[1, 0])
                 z0 = min(pos[0, 1], pos[1, 1])
@@ -434,6 +436,7 @@ class SingleWindow(QtWidgets.QWidget):
         spectrum.draw()
 
     def ReloadData(self):
+        QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         head = self.Data["head"]
         if self.ROIsDefault.isChecked(): ROI = None
         else:
@@ -449,16 +452,21 @@ class SingleWindow(QtWidgets.QWidget):
             POS = [[0, 0], [1000, 1000]]
         
         self.LoadMapData(roiStart = 0, roiStop = 4096, pos = POS)
-        self.LoadSpectrum(pos = POS, roi = ROI)
-    
+        self.LoadSpectrum(pos = POS, roi = ROI, startLoad = False)
+        QtGui.QGuiApplication.restoreOverrideCursor()
+
     def MarkPoint_toggled(self, checked):
         head = self.Data["head"]
+        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
             if self.LastPressedX is not None and self.LastPressedZ is not None:
                 self.PointX.setValue(head["Xpositions"][0, round(self.LastPressedX)])
                 self.PointZ.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
                 self.LastPressedX = None
                 self.LastPressedZ = None
+                # QtGui.QGuiApplication.restoreOverrideCursor()
+                self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
             if self.SelectArea.isChecked(): 
                 self.SelectArea.blockSignals(True)
@@ -467,6 +475,8 @@ class SingleWindow(QtWidgets.QWidget):
 
     def SelectArea_toggled(self, checked):
         head = self.Data["head"]
+        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
             if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
                 self.AreaX1.setValue(head["Xpositions"][0, round(self.LastPressedX)])
@@ -477,6 +487,8 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastPressedZ = None
                 self.LastReleasedX = None
                 self.LastReleasedZ = None
+                # QtGui.QGuiApplication.restoreOverrideCursor()
+                self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
             if self.MarkPoint.isChecked(): 
                 self.MarkPoint.blockSignals(True)

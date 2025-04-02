@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, uic
+from PyQt6 import QtWidgets, QtGui, QtCore, uic
 import sys, matplotlib, numpy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
@@ -74,6 +74,7 @@ class StitchWindow(QtWidgets.QWidget):
         self.HelpDescription.hide()
 
     def LoadMap(self, mode):
+        QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         if mode == "top":
             canvas = self.TopMapCanvas
             path = self.TopMapPath.text()
@@ -105,6 +106,8 @@ class StitchWindow(QtWidgets.QWidget):
             elif mode == "bottom":
                 self.BottomMapSumSignal = sumSignal
                 if not self.BottomMapOffset.isEnabled(): self.BottomMapOffset.setEnabled(True)
+
+        QtGui.QGuiApplication.restoreOverrideCursor()
 
     def ReloadMap(self, value, mode):
         if mode == "top":
