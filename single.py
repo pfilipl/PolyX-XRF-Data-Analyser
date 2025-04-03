@@ -1,9 +1,9 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, xraylib, matplotlib, numpy, scipy, math
+import sys, xraylib, matplotlib, numpy, scipy, math, time, os
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
-import main, add_roi, PDA
+import main, add_roi, PDA, analyse
 
 class MatplotlibCanvas(FigureCanvasQTAgg):
     def __init__(self, parent = None):
@@ -125,6 +125,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.Progress           = self.progressBar_Progress
         self.Reload             = self.pushButton_Reload
         self.Analyse            = self.pushButton_Analyse
+        self.OutputConfig       = None
 
         self.Reload.clicked.connect(self.Reload_clicked)
         self.pushButton_ImportConfig.clicked.connect(lambda clicked, fileName = None: self.ImportConfig_clicked(clicked, fileName))
@@ -198,6 +199,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.LoadSpectrum(startLoad = startLoad, importLoad = importLoad)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
+            if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
             if not self.PointEnabled:
                 self.PointX.setEnabled(True)
                 self.PointZ.setEnabled(True)
@@ -655,7 +657,26 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIsSave_clicked(False, fileName, 'a')
 
     def Analyse_clicked(self):
-        return
+        path = self.ResultsPath.text()
+        if not os.path.isdir(path):
+            if path == "":
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the empty path.")
+            else:
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the path:\n{path}")
+        else:
+            outputConfig = analyse.Analyse(self, self.OutputConfig)
+            if outputConfig.exec():
+                self.OutputConfig = outputConfig.Output
+                self.Progress.setValue(0)
+                self.Progress.setMaximum(len(self.OutputConfig.keys()))
+                QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+                path = self.ResultsPath.text()
+                for name in self.OutputConfig.keys():
+                    if self.OutputConfig[name]:
+                        time.sleep(0.1)
+                        # exec(f'analyse.{name}({self.Data}, {path})')
+                    self.Progress.setValue(self.Progress.value() + 1)
+                QtGui.QGuiApplication.restoreOverrideCursor()
     
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

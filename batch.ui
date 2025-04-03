@@ -1265,7 +1265,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Analyse maps</string>
+        <string>Analyse</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
