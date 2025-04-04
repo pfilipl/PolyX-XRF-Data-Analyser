@@ -1,4 +1,4 @@
-import math
+import math, os, pathlib
 import scipy.integrate as integrate
 import scipy.stats as stats
 import scipy.io as sio
@@ -10,7 +10,6 @@ from matplotlib.patches import Rectangle
 import matplotlib.lines as lines
 import matplotlib.scale as scale
 import xraylib as xrl
-import os
 
 detectors = {
     0 : "Be",
@@ -136,7 +135,10 @@ def gen_calib(N, a, b, n, f):
 # -> RC         - list,             
 # -> ROI        - list(list),       
 def data_load(path, variant = "fast"):
-    dataname = path.split("/")[-1]
+    if isinstance(path, pathlib.Path):
+        dataname = path.stem
+    else:
+        dataname = path.split("/")[-1]
     Data1 = []
     Data2 = []
     ICR1 = []
@@ -152,10 +154,16 @@ def data_load(path, variant = "fast"):
     PIN = []
     I0 = []
     RC = []
-    number_of_files = len([name for name in os.listdir(path) if (os.path.isfile(os.path.join(path, name)) and os.path.splitext(name)[-1].lower() == ".mat" and os.path.splitext(name)[0][:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+    if isinstance(path, pathlib.Path):
+        number_of_files = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+    else:
+        number_of_files = len([name for name in os.listdir(path) if (os.path.isfile(os.path.join(path, name)) and os.path.splitext(name)[-1].lower() == ".mat" and os.path.splitext(name)[0][:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
     if number_of_files > 0:
         for i in range(0, number_of_files):
-            mat = sio.loadmat(f"{path}/{dataname}_{i+1:04}.mat")
+            if isinstance(path, pathlib.Path):
+                mat = sio.loadmat(f"{path.as_posix()}/{dataname}_{i+1:04}.mat")
+            else:
+                mat = sio.loadmat(f"{path}/{dataname}_{i+1:04}.mat")
             data1 = mat["dane1line"][0, :, :]
             data2 = mat["dane1line"][1, :, :]
             icr1 = mat["stats1line"][0, :, 2]
@@ -201,7 +209,8 @@ def data_load(path, variant = "fast"):
         I0 = np.array(I0).transpose()
 
     ROI = []
-    head = sio.loadmat(f"{path}/{dataname}_HEADER.mat")
+    head = sio.loadmat(f"{path.as_posix()}/{dataname}_HEADER.mat")
+    # head = sio.loadmat(f"{path}/{dataname}_HEADER.mat")
     try:
         for i in range(head["roi_listbins"].shape[0]):
             ROI.append([head["roi_listbins"][i, 1][0], head["roi_listbins"][i, 2][0][0], head["roi_listbins"][i, 3][0][0]])

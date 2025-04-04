@@ -1,7 +1,7 @@
-from PyQt6 import QtWidgets, uic
-import sys, os
+from PyQt6 import QtWidgets, QtGui, QtCore, uic
+import sys, os, time, pathlib
 
-import main, add_roi
+import main, add_roi, analyse, PDA
 
 class BatchWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -73,7 +73,8 @@ class BatchWindow(QtWidgets.QWidget):
 
         # Process
         self.Progress                   = self.progressBar_Progress
-        self.Analyse                = self.pushButton_Analyse
+        self.Analyse                    = self.pushButton_Analyse
+        self.OutputConfig               = None
 
         self.pushButton_ImportConfig.clicked.connect(lambda checked, fileName = None: self.ImportConfig_clicked(checked, fileName))
         self.pushButton_SaveConfig.clicked.connect(lambda checked, fileName = None: self.SaveConfig_clicked(checked, fileName))
@@ -165,20 +166,23 @@ class BatchWindow(QtWidgets.QWidget):
     def LoadExperiment(self):
         self.Paths = []
         self.PathsList.clear()
-        experimentPath = self.ExperimentPath.text()
-        if experimentPath != self.ResultsPath.text():
-            for mainPath in os.listdir(experimentPath):
-                if mainPath != self.ResultsPath and os.path.isdir(os.path.join(experimentPath, mainPath)):
+        experimentPath = pathlib.Path(self.ExperimentPath.text())
+        resultsPath = pathlib.Path(self.ResultsPath.text())
+        if experimentPath != resultsPath:
+            for mainPath in experimentPath.iterdir():
+                if mainPath != resultsPath and mainPath.is_dir():
                     if self.MapsNesting2.isChecked():
-                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}"))
+                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f".{os.sep}{str(mainPath).split(os.sep)[-1]}"))
                         self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                        self.Paths.append(f"{os.path.join(experimentPath, mainPath)}")
+                        self.Paths.append(experimentPath / mainPath)
                     elif self.MapsNesting3.isChecked():
-                        for path in os.listdir(os.path.join(experimentPath, mainPath)):
-                            if path != self.ResultsPath.text() and os.path.isdir(os.path.join(experimentPath, mainPath, path)):
-                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"/{mainPath}/{path}"))
+                        for path in mainPath.iterdir():
+                            if path != resultsPath and path.is_dir():
+                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f".{os.sep}{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
                                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                                self.Paths.append(f"{os.path.join(experimentPath, mainPath, path)}")
+                                self.Paths.append(experimentPath / mainPath / path)
+        if len(self.Paths): self.Analyse.setEnabled(True)
+        else: self.Analyse.setEnabled(False)
 
     def ExperimentPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ExperimentPath.text())
@@ -203,9 +207,15 @@ class BatchWindow(QtWidgets.QWidget):
             if line[0] != "\n" and line[0:2] == "##":
                 read = True if line == "## Paths\n" else False
             if read and line[0] not in ["#", "\n"]:
-                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'/{line.split("/")[-1][:-1]}'))
+                path = pathlib.Path(line[:-1])
+                if path.parents[0] == pathlib.Path(self.ExperimentPath.text()):
+                    self.MapsNesting2.setChecked(True)
+                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'.{os.sep}{str(path).split(os.sep)[-1]}'))
+                elif path.parents[1] == pathlib.Path(self.ExperimentPath.text()):
+                    self.MapsNesting3.setChecked(True)
+                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'.{os.sep}{str(path.parent).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}'))
                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                self.Paths.append(line)
+                self.Paths.append(pathlib.Path(line))
 
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
@@ -289,7 +299,35 @@ class BatchWindow(QtWidgets.QWidget):
             self.PathsSave(fileName, 'a')
     
     def Analyse_clicked(self):
-        return
+        resultPath = self.ResultsPath.text()
+        if not os.path.isdir(resultPath):
+            if resultPath == "":
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the empty path.")
+            else:
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the path:\n{resultPath}")
+        else:
+            outputConfig = analyse.Analyse(self, self.OutputConfig)
+            if outputConfig.exec():
+                self.OutputConfig = outputConfig.Output
+                self.Progress.setValue(0)
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) * len(self.Paths))
+                QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+                for path in self.Paths:
+                    try:
+                        head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
+                    except:
+                        if path == "":
+                            QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the empty path.")
+                        else:
+                            QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
+                    else:
+                        tempData = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
+                    for name in self.OutputConfig.keys():
+                        if self.OutputConfig[name]:
+                            time.sleep(0.1)\
+                            # exec(f'analyse.{name}({tempData}, {path})')
+                        self.Progress.setValue(self.Progress.value() + 1)
+                QtGui.QGuiApplication.restoreOverrideCursor()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
