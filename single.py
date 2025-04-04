@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, xraylib, matplotlib, numpy, scipy, math, time, os
+import sys, xraylib, matplotlib, numpy, scipy, math, time, os, pathlib
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
@@ -111,6 +111,11 @@ class SingleWindow(QtWidgets.QWidget):
         self.DetectorsBe        = self.pushButton_DetectorsBe
         self.DetectorsML        = self.pushButton_DetectorsML
         self.DetectorsSum       = self.pushButton_DetectorsSum
+        self.LastDetector       = None
+
+        self.DetectorsBe.clicked.connect(lambda checked, mode = "Be": self.DetectorChanged(checked, mode))
+        self.DetectorsML.clicked.connect(lambda checked, mode = "ML": self.DetectorChanged(checked, mode))
+        self.DetectorsSum.clicked.connect(lambda checked, mode = "Sum": self.DetectorChanged(checked, mode))
 
         # Energy calibration
         self.Calib              = None
@@ -182,13 +187,27 @@ class SingleWindow(QtWidgets.QWidget):
         exec(f"self.{mode}Changed = True")
         exec(f'self.LastChanged = "{mode}"')
 
+    def DetectorChanged(self, checked, mode):
+        if checked:
+            if self.LastDetector is None:
+                self.LastDetector = mode
+            for detector in ["Be", "ML", "Sum"]:
+                if detector != mode:
+                    exec(f'if self.Detectors{detector}.isChecked(): self.LastDetector = "{detector}"')
+                    exec(f"self.Detectors{detector}.setChecked(False)")
+        else:
+            if self.LastDetector != mode:
+                exec(f"self.Detectors{self.LastDetector}.setChecked(True)")
+            else:
+                self.LastDetector = None
+
     def LoadData(self, startLoad = True, importLoad = False):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-        path = self.MapPath.text()
+        path = pathlib.Path(self.MapPath.text())
         try:
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
         except:
-            if path == "":
+            if path == pathlib.Path():
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the empty path.")
             else:
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
@@ -657,9 +676,9 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIsSave_clicked(False, fileName, 'a')
 
     def Analyse_clicked(self):
-        path = self.ResultsPath.text()
-        if not os.path.isdir(path):
-            if path == "":
+        path = pathlib.Path(self.ResultsPath.text())
+        if not path.is_dir():
+            if path == pathlib.Path():
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the empty path.")
             else:
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the path:\n{path}")
@@ -670,7 +689,6 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setValue(0)
                 self.Progress.setMaximum(len(self.OutputConfig.keys()))
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-                path = self.ResultsPath.text()
                 for name in self.OutputConfig.keys():
                     if self.OutputConfig[name]:
                         time.sleep(0.1)
