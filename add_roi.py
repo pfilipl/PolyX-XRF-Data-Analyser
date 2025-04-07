@@ -208,7 +208,10 @@ class AddRoi(QtWidgets.QDialog):
                 table.setCurrentCell(table.currentRow() + 1, 0)
 
                 if singleParent:
-                    tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text())), self.CustomROIs.item(row, 0).text())
+                    i = tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text())), self.CustomROIs.item(row, 0).text())
+                    tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
+                    tabs.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonReleased(event, canvas))
+                    tabs.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibMouseMotion(event, canvas))
             
             self.accept()
 

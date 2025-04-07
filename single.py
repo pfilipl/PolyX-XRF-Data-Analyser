@@ -92,9 +92,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastMotionZ        = None
         self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'k')
 
-        self.TotalSignal.Canvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
-        self.TotalSignal.Canvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
-        self.TotalSignal.Canvas.mpl_connect("motion_notify_event", self.MatplotlibMouseMotion)
+        self.TotalSignal.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonPressed(event, canvas))
+        self.TotalSignal.Canvas.mpl_connect("button_release_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonReleased(event, canvas))
+        self.TotalSignal.Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibMouseMotion(event, canvas))
 
         # Map path
         self.MapPath            = self.lineEdit_MapPath
@@ -149,22 +149,22 @@ class SingleWindow(QtWidgets.QWidget):
         self.Calib = calib
         self.Sigma = sigma
 
-    def MatplotlibButtonPressed(self, event):
+    def MatplotlibButtonPressed(self, event, canvas):
         if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
-            if event.inaxes == self.TotalSignal.Canvas.Axes:
+            if event.inaxes == canvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
                 self.Rectangle.set_facecolor('k')
                 self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
                 self.Rectangle.set_height(0.25)
                 self.Rectangle.set_width(0.25)
-                self.TotalSignal.Canvas.Axes.add_patch(self.Rectangle)
-                self.TotalSignal.Canvas.draw()
+                canvas.Axes.add_patch(self.Rectangle)
+                canvas.draw()
                 self.MarkPoint.setChecked(False)
 
-    def MatplotlibButtonReleased(self, event):
+    def MatplotlibButtonReleased(self, event, canvas):
         if self.SelectArea.isChecked():
-            if event.inaxes == self.TotalSignal.Canvas.Axes:
+            if event.inaxes == canvas.Axes:
                 self.LastReleasedX = event.xdata
                 self.LastReleasedZ = event.ydata
             else:
@@ -174,15 +174,15 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastMotionZ = None
             self.SelectArea.setChecked(False)
 
-    def MatplotlibMouseMotion(self, event):
+    def MatplotlibMouseMotion(self, event, canvas):
         if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
-            if event.inaxes == self.TotalSignal.Canvas.Axes:
+            if event.inaxes == canvas.Axes:
                 self.LastMotionX = event.xdata
                 self.LastMotionZ = event.ydata
                 self.Rectangle.set_facecolor('none')
                 self.Rectangle.set_height(self.LastMotionZ - self.Rectangle.get_y())
                 self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
-                self.TotalSignal.Canvas.draw()
+                canvas.draw()
 
     def RegionChanged(self, value, mode):
         exec(f"self.{mode}Changed = True")
@@ -228,10 +228,12 @@ class SingleWindow(QtWidgets.QWidget):
             load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad)
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
             load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None)
-            load_plots.MapStats2D(self, self.I0, "I0", det, importLoad = importLoad)
-            load_plots.MapStats2D(self, self.PIN, "PIN", det, importLoad = importLoad)
-            load_plots.MapStats2D(self, self.DT, "DT", det, importLoad = importLoad)
-            load_plots.PlotStats1D(self, self.RC, "RC", importLoad = importLoad)
+            load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad)
+            load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]", importLoad = importLoad)
+            load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", importLoad = importLoad)
+            load_plots.PlotStats1D(self, self.RC, "RC", "I [mA]", importLoad = importLoad)
+            for i in range(7, self.tabWidget.count()):
+                load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
@@ -308,10 +310,12 @@ class SingleWindow(QtWidgets.QWidget):
         load_plots.MapData(self, self.TotalSignal, det, pos = POS)
         load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
         load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None)
-        load_plots.MapStats2D(self, self.I0, "I0", det)
-        load_plots.MapStats2D(self, self.PIN, "PIN", det)
-        load_plots.MapStats2D(self, self.DT, "DT", det)
+        load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]")
+        load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]")
+        load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]")
         # load_plots.PlotStats1D(self, self.RC, "RC")
+        for i in range(7, self.tabWidget.count()):
+            load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MarkPoint_toggled(self, checked):
@@ -377,7 +381,10 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
-                    self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
+                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
+                    self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
+                    self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
+                    self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
             file.close()
 
     def ROIsAdd_clicked(self):

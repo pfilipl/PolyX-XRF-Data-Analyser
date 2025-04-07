@@ -51,7 +51,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
                 
     map.draw()
 
-def PlotStats1D(widget, tab, dataName, importLoad = False):
+def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
     plot = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data[dataName]
@@ -61,6 +61,7 @@ def PlotStats1D(widget, tab, dataName, importLoad = False):
     plot.Axes.get_xaxis().set_visible(False)
     plot.Axes.get_yaxis().set_visible(True)
     plot.Axes.set_xlim([0, len(data)])
+    if ylabel: plot.Axes.set_ylabel(ylabel)
 
     plot.Axes2x = plot.Axes.secondary_xaxis('bottom', transform = plot.Axes.transData)
     plot.Axes2x.set_xticks(numpy.linspace(0, len(data) - 1, len(plot.Axes.get_xticks()) - 2))
@@ -71,7 +72,7 @@ def PlotStats1D(widget, tab, dataName, importLoad = False):
 
     plot.draw()
 
-def MapStats2D(widget, tab, dataName, detector = 2, importLoad = False):
+def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False):
     map = tab.Canvas
     head = widget.Data["head"]
     Data = widget.Data[dataName]
@@ -101,6 +102,7 @@ def MapStats2D(widget, tab, dataName, detector = 2, importLoad = False):
 
     map.ColorBar = map.figure.colorbar(imgMap)
     map.ColorBar.set_ticks(numpy.linspace(numpy.min(data), numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
+    if clabel: map.ColorBar.set_label(clabel)
 
     map.draw()
 
