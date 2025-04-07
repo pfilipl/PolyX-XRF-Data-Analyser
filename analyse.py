@@ -11,6 +11,9 @@ class Analyse(QtWidgets.QDialog):
 
         if outputConfig is None:
             self.Output = {
+                "DetectorsBe"       : True,
+                "DetectorsML"       : True,
+                "DetectorsSum"      : False,
                 "DiagRC"            : True,
                 "DiagTotal"         : True,
                 "DiagMax"           : True,
@@ -34,7 +37,10 @@ class Analyse(QtWidgets.QDialog):
             self.Output = outputConfig
 
         for name in self.Output.keys():
-            exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
+            if name[:9] == "Detectors":
+                exec(f'self.pushButton_{name}.setChecked(self.Output["{name}"])')
+            else:
+                exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
 
@@ -43,7 +49,10 @@ class Analyse(QtWidgets.QDialog):
             self.reject()
         else:
             for name in self.Output.keys():
-                exec(f'self.Output["{name}"] = self.checkBox_{name}.isChecked()')
+                if name[:9] == "Detectors":
+                    exec(f'self.Output["{name}"] = self.pushButton_{name}.isChecked()')
+                else:
+                    exec(f'self.Output["{name}"] = self.checkBox_{name}.isChecked()')
             self.accept()
 
 if __name__ == "__main__":
