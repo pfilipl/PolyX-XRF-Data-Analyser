@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, xraylib, matplotlib, numpy, scipy, math, time, os, pathlib
+import sys, xraylib, matplotlib, time, pathlib, numpy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
@@ -79,6 +79,10 @@ class SingleWindow(QtWidgets.QWidget):
         self.I0                 = self.tab_I0
         self.PIN                = self.tab_PIN
         self.DT                 = self.tab_DT
+        self.RC                 = self.tab_RC
+
+        # self.tabWidget.setCurrentIndex(self.tabWidget.addTab(PreviewTab(self), "RC"))
+        # self.RC =  self.tabWidget.currentWidget()
 
         self.Data               = None
         self.LastPressedX       = None
@@ -109,6 +113,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.DetectorsML        = self.pushButton_DetectorsML
         self.DetectorsSum       = self.pushButton_DetectorsSum
         self.LastDetector       = None
+        self.CurrentDetector    = None
 
         self.DetectorsBe.clicked.connect(lambda checked, mode = "Be": self.DetectorChanged(checked, mode))
         self.DetectorsML.clicked.connect(lambda checked, mode = "ML": self.DetectorChanged(checked, mode))
@@ -147,20 +152,20 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MatplotlibButtonPressed(self, event):
         if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
-            if event.inaxes == self.TotalSignalCanvas.Axes:
+            if event.inaxes == self.TotalSignal.Canvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
                 self.Rectangle.set_facecolor('k')
                 self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
                 self.Rectangle.set_height(0.25)
                 self.Rectangle.set_width(0.25)
-                self.TotalSignalCanvas.Axes.add_patch(self.Rectangle)
-                self.TotalSignalCanvas.draw()
+                self.TotalSignal.Canvas.Axes.add_patch(self.Rectangle)
+                self.TotalSignal.Canvas.draw()
                 self.MarkPoint.setChecked(False)
 
     def MatplotlibButtonReleased(self, event):
         if self.SelectArea.isChecked():
-            if event.inaxes == self.TotalSignalCanvas.Axes:
+            if event.inaxes == self.TotalSignal.Canvas.Axes:
                 self.LastReleasedX = event.xdata
                 self.LastReleasedZ = event.ydata
             else:
@@ -172,13 +177,13 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MatplotlibMouseMotion(self, event):
         if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
-            if event.inaxes == self.TotalSignalCanvas.Axes:
+            if event.inaxes == self.TotalSignal.Canvas.Axes:
                 self.LastMotionX = event.xdata
                 self.LastMotionZ = event.ydata
                 self.Rectangle.set_facecolor('none')
                 self.Rectangle.set_height(self.LastMotionZ - self.Rectangle.get_y())
                 self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
-                self.TotalSignalCanvas.draw()
+                self.TotalSignal.Canvas.draw()
 
     def RegionChanged(self, value, mode):
         exec(f"self.{mode}Changed = True")
@@ -186,17 +191,24 @@ class SingleWindow(QtWidgets.QWidget):
 
     def DetectorChanged(self, checked, mode):
         if checked:
+            self.CurrentDetector = mode
             if self.LastDetector is None:
                 self.LastDetector = mode
             for detector in ["Be", "ML", "Sum"]:
                 if detector != mode:
                     exec(f'if self.Detectors{detector}.isChecked(): self.LastDetector = "{detector}"')
+                    exec(f"self.Detectors{detector}.blockSignals(True)")
                     exec(f"self.Detectors{detector}.setChecked(False)")
+                    exec(f"self.Detectors{detector}.blockSignals(False)")
         else:
             if self.LastDetector != mode:
+                self.CurrentDetector = self.LastDetector
+                exec(f"self.Detectors{self.LastDetector}.blockSignals(True)")
                 exec(f"self.Detectors{self.LastDetector}.setChecked(True)")
+                exec(f"self.Detectors{self.LastDetector}.blockSignals(False)")
             else:
                 self.LastDetector = None
+                self.CurrentDetector = None
 
     def LoadData(self, startLoad = True, importLoad = False):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
@@ -211,8 +223,16 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             self.Data = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
 
-            load_plots.MapData(self, self.TotalSignal.Canvas, importLoad = importLoad)
-            load_plots.Spectrum(self, self.SumSpectrum.Canvas, startLoad = startLoad, importLoad = importLoad)
+            if self.CurrentDetector == "Be": det = 0
+            elif self.CurrentDetector == "ML": det = 1
+            else: det = 2
+            load_plots.MapData(self, self.TotalSignal.Canvas, det, importLoad = importLoad)
+            load_plots.MapStats2D(self, self.I0.Canvas, "I0", det, importLoad = importLoad)
+            load_plots.MapStats2D(self, self.PIN.Canvas, "PIN", det, importLoad = importLoad)
+            load_plots.MapStats2D(self, self.DT.Canvas, "DT", det, importLoad = importLoad)
+            load_plots.Spectrum(self, self.SumSpectrum.Canvas, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
+            load_plots.Spectrum(self, self.MaxSpectrum.Canvas, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None)
+            load_plots.PlotStats1D(self, self.RC.Canvas, "RC", importLoad = importLoad)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
@@ -283,8 +303,16 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
-        load_plots.MapData(self, self.TotalSignal.Canvas, roiStart = 0, roiStop = 4096, pos = POS)
-        load_plots.Spectrum(self, self.SumSpectrum.Canvas, pos = POS, roi = ROI, startLoad = False)
+        if self.CurrentDetector == "Be": det = 0
+        elif self.CurrentDetector == "ML": det = 1
+        else: det = 2
+        load_plots.MapData(self, self.TotalSignal.Canvas, det, roiStart = 0, roiStop = 4096, pos = POS)
+        load_plots.MapStats2D(self, self.I0.Canvas, "I0", det)
+        load_plots.MapStats2D(self, self.PIN.Canvas, "PIN", det)
+        load_plots.MapStats2D(self, self.DT.Canvas, "DT", det)
+        load_plots.Spectrum(self, self.SumSpectrum.Canvas, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
+        load_plots.Spectrum(self, self.MaxSpectrum.Canvas, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None)
+        load_plots.PlotStats1D(self, self.RC.Canvas, "RC")
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MarkPoint_toggled(self, checked):
@@ -432,15 +460,18 @@ class SingleWindow(QtWidgets.QWidget):
                     if len(data) > 2:
                         value = " ".join(data[2:])
 
+                    if variableName[:9] == "Detectors":
+                        if variableName[9:] == "Be": self.CurrentDetector = "Be"
+                        elif variableName[9:] == "ML": self.CurrentDetector = "ML"
+                        else: self.CurrentDetector = "Sum"
+
                     if variableName in ["MapPath"]:
-                    # if variableName in ["MapPath", "AreaX1", "AreaX2", "AreaZ1", "AreaZ2", "PointX", "PointZ"]:
                         exec(f'self.{variableName}.blockSignals(True)')
                     if property == "Text": 
                         exec(f'self.{variableName}.set{property}("{value if value else ""}")')
                     else: 
                         exec(f'self.{variableName}.set{property}({value})')
                     if variableName in ["MapPath"]:
-                    # if variableName in ["MapPath", "AreaX1", "AreaX2", "AreaZ1", "AreaZ2", "PointX", "PointZ"]:
                         exec(f'self.{variableName}.blockSignals(False)')
             file.close()
             self.ROIsImport_clicked(False, fileName, False)
@@ -458,9 +489,8 @@ class SingleWindow(QtWidgets.QWidget):
 
             fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
-            fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
-            fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
-            fileContent += f"\nDetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
+            if self.CurrentDetector is not None:
+                fileContent += f"\n\nDetectors{self.CurrentDetector}\tChecked\tTrue"
 
             fileContent += f"\n\nCalibrationGain\tValue\t{self.CalibrationGain.value()}"
             fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"

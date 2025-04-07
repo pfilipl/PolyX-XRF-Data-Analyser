@@ -3,12 +3,11 @@ import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
 
-def MapData(widget, canvas, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], importLoad = False):
+def MapData(widget, canvas, detector = 2, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], importLoad = False):
     map = canvas
     head = widget.Data["head"]
-    Data = widget.Data["Data"]
+    data = widget.Data["Data"][detector]
 
-    data = Data[2]
     sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
     if map.ColorBar: map.ColorBar.remove()
     map.Axes.cla()
@@ -50,10 +49,63 @@ def MapData(widget, canvas, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 
                 
     map.draw()
 
-def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False):
+def PlotStats1D(widget, canvas, dataName, importLoad = False):
+    plot = canvas
+    head = widget.Data["head"]
+    data = widget.Data[dataName]
+
+    plot.Axes.cla()
+    imgMap = plot.Axes.plot(data, ".-")
+    plot.Axes.get_xaxis().set_visible(False)
+    plot.Axes.get_yaxis().set_visible(True)
+    plot.Axes.set_xlim([0, len(data)])
+
+    plot.Axes2x = plot.Axes.secondary_xaxis('bottom', transform = plot.Axes.transData)
+    plot.Axes2x.set_xticks(numpy.linspace(0, len(data) - 1, len(plot.Axes.get_xticks()) - 2))
+    plot.Axes2x.set_xticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(plot.Axes2x.get_xticks())))
+    plot.Axes2x.set_xlabel("Z [mm]")
+
+    plot.Axes.format_coord = lambda x, y: f'z = {head["Zpositions"][0, round(x)]:.3f} mm, I = {y:.3f} mA'
+
+    plot.draw()
+
+def MapStats2D(widget, canvas, dataName, detector = 2, importLoad = False):
+    map = canvas
+    head = widget.Data["head"]
+    Data = widget.Data[dataName]
+
+    if isinstance(Data, list):
+        data = Data[detector]
+    else:
+        data = Data
+
+    if map.ColorBar: map.ColorBar.remove()
+    map.Axes.cla()
+    imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+    map.Axes.get_xaxis().set_visible(False)
+    map.Axes.get_yaxis().set_visible(False)
+
+    map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+    map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
+    map.Axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
+    map.Axes2x.set_xlabel("X [mm]")
+
+    map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+    map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
+    map.Axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
+    map.Axes2y.set_ylabel("Z [mm]")
+
+    map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
+
+    map.ColorBar = map.figure.colorbar(imgMap)
+    map.ColorBar.set_ticks(numpy.linspace(numpy.min(data), numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
+
+    map.draw()
+
+def Spectrum(widget, canvas, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False):
     spectrum = canvas
     head = widget.Data["head"]
-    Data = widget.Data["Data"]
+    data = widget.Data["Data"][detector]
     ROI = widget.Data["ROI"]
     spectrum.Axes.cla()
     if widget.Calib is not None:
@@ -65,7 +117,7 @@ def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = No
             cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
     if isinstance(pos, list):
         pos = numpy.array(pos)
-    PDA.check_pos(pos, [Data[2].shape[0], Data[2].shape[1]])
+    PDA.check_pos(pos, [data.shape[0], data.shape[1]])
     if pos.shape[0] == 1:
         x0 = pos[0, 0]
         z0 = pos[0, 1]
@@ -76,21 +128,21 @@ def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = No
         z0 = min(pos[0, 1], pos[1, 1])
         x1 = max(pos[0, 0], pos[1, 0])
         z1 = max(pos[0, 1], pos[1, 1])
-    for d in range(len(Data)):
-        data = Data[d]
-        if x1 > x0 and z1 > z0:
-            sumData = data[x0:x1, z0:z1, :]
-            sumData = numpy.sum(numpy.sum(sumData, axis = 0), axis = 0)
-        elif x1 == x0 and z1 > z0:
-            sumData = data[x0, z0:z1, :]
-            sumData = numpy.sum(sumData, axis = 0)
-        elif x1 > x0 and z1 == z0:
-            sumData = data[x0:x1, z0, :]
-            sumData = numpy.sum(sumData, axis = 0)
-        else:
-            sumData = data[x0, z0, :]
-        imgSpectrum = spectrum.Axes.plot(sumData, label = PDA.detectors[d])
-    spectrum.Axes.set_yscale('log')
+        
+    if x1 > x0 and z1 > z0:
+        sumData = data[x0:x1, z0:z1, :]
+        sumData = func(func(sumData, axis = 0), axis = 0)
+    elif x1 == x0 and z1 > z0:
+        sumData = data[x0, z0:z1, :]
+        sumData = func(sumData, axis = 0)
+    elif x1 > x0 and z1 == z0:
+        sumData = data[x0:x1, z0, :]
+        sumData = func(sumData, axis = 0)
+    else:
+        sumData = data[x0, z0, :]
+    imgSpectrum = spectrum.Axes.plot(sumData)
+
+    if func == numpy.sum: spectrum.Axes.set_yscale('log')
     spectrum.Axes.get_xaxis().set_visible(True)
     spectrum.Axes.get_yaxis().set_visible(True)
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):
@@ -98,7 +150,7 @@ def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = No
         elif pos.shape[0] == 2: spectrum.Axes.set_title(f"pos = [[{widget.AreaX1.value()} mm, {widget.AreaZ1.value()} mm], [{widget.AreaX2.value()} mm, {widget.AreaZ2.value()} mm]]")
 
     if widget.Calib is not None:
-        spectrum.Axes.set_ylim([1, numpy.max(numpy.sum(numpy.sum(data[x0:x1, z0:z1, cEmin:cEmax], axis = 0), axis = 0)) * 1.5])
+        spectrum.Axes.set_ylim([1, numpy.max(func(func(data[x0:x1, z0:z1, cEmin:cEmax], axis = 0), axis = 0)) * 1.5])
     else:
         spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
 
@@ -125,7 +177,7 @@ def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = No
                 for xp in xP[0]:
                     if widget.Calib is not None:
                         if  xp > (numpy.abs(widget.Calib - 0)).argmin() + 50:
-                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C2'))
+                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C1'))
                             if xp > cEmin and xp < cEmax:
                                 ka = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Ka'] - widget.Calib[xp] / 1000)).argmin()]
                                 kb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)).argmin()]
@@ -166,8 +218,6 @@ def Spectrum(widget, canvas, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = No
                     spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = spectrum.Axes.get_xaxis_transform()))
                     if xp > cEmin and xp < cEmax:
                         spectrum.Axes.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = spectrum.Axes.get_xaxis_transform())
-    
-    spectrum.Axes.legend(loc = "upper right", ncols = len(Data), facecolor = "None", edgecolor = "None")
     
     if widget.Calib is None:
         spectrum.Axes.set_xlim([0, head["bins"][0, 0]])

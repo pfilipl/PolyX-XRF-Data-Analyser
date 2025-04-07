@@ -662,6 +662,16 @@
           <string>Total signal</string>
          </attribute>
         </widget>
+        <widget class="PreviewTab" name="tab_SumSpectrum">
+         <attribute name="title">
+          <string>Sum spectrum</string>
+         </attribute>
+        </widget>
+        <widget class="PreviewTab" name="tab_MaxSpectrum">
+         <attribute name="title">
+          <string>Max spectrum</string>
+         </attribute>
+        </widget>
         <widget class="PreviewTab" name="tab_I0">
          <attribute name="title">
           <string>I0</string>
@@ -677,14 +687,9 @@
           <string>DT</string>
          </attribute>
         </widget>
-        <widget class="PreviewTab" name="tab_SumSpectrum">
+        <widget class="PreviewTab" name="tab_RC">
          <attribute name="title">
-          <string>Sum spectrum</string>
-         </attribute>
-        </widget>
-        <widget class="PreviewTab" name="tab_MaxSpectrum">
-         <attribute name="title">
-          <string>Max spectrum</string>
+          <string>RC</string>
          </attribute>
         </widget>
        </widget>
