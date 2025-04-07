@@ -18,6 +18,17 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         self.ColorBar = None
         super().__init__(self.Figure)
 
+class PreviewTab(QtWidgets.QWidget):
+    def __init__(self, parent = None):
+        super(PreviewTab, self).__init__(parent)
+        self.Canvas = MatplotlibCanvas(self)
+        self.Toolbar = NavigationToolbar2QT(self.Canvas, self)
+        self.Canvas.setStyleSheet("background-color:transparent;")
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.Canvas)
+        layout.addWidget(self.Toolbar)
+        self.setLayout(layout)
+
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(SingleWindow, self).__init__(parent)
@@ -38,7 +49,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.AreaEnabled        = False
         self.AreaChanged        = False
         
-        self.LastChanged        = "area"
+        self.LastChanged        = "Area"
 
         self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
         self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
@@ -61,11 +72,13 @@ class SingleWindow(QtWidgets.QWidget):
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
-        # Map
-        self.Map                = self.tab_Map
-        self.MapCanvas          = MatplotlibCanvas(self.Map)
-        self.MapToolbar         = NavigationToolbar2QT(self.MapCanvas, self.Map)
-        # self.MapSumSignal       = None
+        # Tabs
+        self.TotalSignal        = self.tab_TotalSignal
+        self.SumSpectrum        = self.tab_SumSpectrum
+        self.MaxSpectrum        = self.tab_MaxSpectrum
+        self.I0                 = self.tab_I0
+        self.PIN                = self.tab_PIN
+        self.DT                 = self.tab_DT
 
         self.Data               = None
         self.LastPressedX       = None
@@ -76,25 +89,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastMotionZ        = None
         self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'k')
 
-        self.MapCanvas.setStyleSheet("background-color:transparent;")
-        mapLayout = QtWidgets.QVBoxLayout()
-        mapLayout.addWidget(self.MapCanvas)
-        mapLayout.addWidget(self.MapToolbar)
-        self.Map.setLayout(mapLayout)
-        self.MapCanvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
-        self.MapCanvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
-        self.MapCanvas.mpl_connect("motion_notify_event", self.MatplotlibMouseMotion)
-
-        # Spectrum
-        self.Spectrum           = self.tab_Spectrum
-        self.SpectrumCanvas     = MatplotlibCanvas(self.Spectrum)
-        self.SpectrumToolbar    = NavigationToolbar2QT(self.SpectrumCanvas, self.Spectrum)
-
-        self.SpectrumCanvas.setStyleSheet("background-color:transparent;")
-        spectrumLayout = QtWidgets.QVBoxLayout()
-        spectrumLayout.addWidget(self.SpectrumCanvas)
-        spectrumLayout.addWidget(self.SpectrumToolbar)
-        self.Spectrum.setLayout(spectrumLayout)
+        self.TotalSignal.Canvas.mpl_connect("button_press_event", self.MatplotlibButtonPressed)
+        self.TotalSignal.Canvas.mpl_connect("button_release_event", self.MatplotlibButtonReleased)
+        self.TotalSignal.Canvas.mpl_connect("motion_notify_event", self.MatplotlibMouseMotion)
 
         # Map path
         self.MapPath            = self.lineEdit_MapPath
@@ -150,20 +147,20 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MatplotlibButtonPressed(self, event):
         if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
-            if event.inaxes == self.MapCanvas.Axes:
+            if event.inaxes == self.TotalSignalCanvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
                 self.Rectangle.set_facecolor('k')
                 self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
                 self.Rectangle.set_height(0.25)
                 self.Rectangle.set_width(0.25)
-                self.MapCanvas.Axes.add_patch(self.Rectangle)
-                self.MapCanvas.draw()
+                self.TotalSignalCanvas.Axes.add_patch(self.Rectangle)
+                self.TotalSignalCanvas.draw()
                 self.MarkPoint.setChecked(False)
 
     def MatplotlibButtonReleased(self, event):
         if self.SelectArea.isChecked():
-            if event.inaxes == self.MapCanvas.Axes:
+            if event.inaxes == self.TotalSignalCanvas.Axes:
                 self.LastReleasedX = event.xdata
                 self.LastReleasedZ = event.ydata
             else:
@@ -175,13 +172,13 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MatplotlibMouseMotion(self, event):
         if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
-            if event.inaxes == self.MapCanvas.Axes:
+            if event.inaxes == self.TotalSignalCanvas.Axes:
                 self.LastMotionX = event.xdata
                 self.LastMotionZ = event.ydata
                 self.Rectangle.set_facecolor('none')
                 self.Rectangle.set_height(self.LastMotionZ - self.Rectangle.get_y())
                 self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
-                self.MapCanvas.draw()
+                self.TotalSignalCanvas.draw()
 
     def RegionChanged(self, value, mode):
         exec(f"self.{mode}Changed = True")
@@ -214,8 +211,8 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             self.Data = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
 
-            load_plots.MapData(self, self.MapCanvas, importLoad = importLoad)
-            load_plots.Spectrum(self, self.SpectrumCanvas, startLoad = startLoad, importLoad = importLoad)
+            load_plots.MapData(self, self.TotalSignal.Canvas, importLoad = importLoad)
+            load_plots.Spectrum(self, self.SumSpectrum.Canvas, startLoad = startLoad, importLoad = importLoad)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
@@ -286,14 +283,14 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
-        load_plots.MapData(self, self.MapCanvas, roiStart = 0, roiStop = 4096, pos = POS)
-        load_plots.Spectrum(self, self.SpectrumCanvas, pos = POS, roi = ROI, startLoad = False)
+        load_plots.MapData(self, self.TotalSignal.Canvas, roiStart = 0, roiStop = 4096, pos = POS)
+        load_plots.Spectrum(self, self.SumSpectrum.Canvas, pos = POS, roi = ROI, startLoad = False)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MarkPoint_toggled(self, checked):
         head = self.Data["head"]
         # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
             if self.LastPressedX is not None and self.LastPressedZ is not None:
                 self.PointX.setValue(head["Xpositions"][0, round(self.LastPressedX)])
@@ -301,7 +298,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastPressedX = None
                 self.LastPressedZ = None
                 # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
             if self.SelectArea.isChecked(): 
                 self.SelectArea.blockSignals(True)
@@ -311,7 +308,7 @@ class SingleWindow(QtWidgets.QWidget):
     def SelectArea_toggled(self, checked):
         head = self.Data["head"]
         # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
             if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
                 self.AreaX1.setValue(head["Xpositions"][0, round(self.LastPressedX)])
@@ -323,7 +320,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastReleasedX = None
                 self.LastReleasedZ = None
                 # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.MapCanvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
             if self.MarkPoint.isChecked(): 
                 self.MarkPoint.blockSignals(True)

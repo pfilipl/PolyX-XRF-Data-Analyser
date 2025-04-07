@@ -657,14 +657,34 @@
         <property name="documentMode">
          <bool>false</bool>
         </property>
-        <widget class="QWidget" name="tab_Map">
+        <widget class="PreviewTab" name="tab_TotalSignal">
          <attribute name="title">
-          <string>Map</string>
+          <string>Total signal</string>
          </attribute>
         </widget>
-        <widget class="QWidget" name="tab_Spectrum">
+        <widget class="PreviewTab" name="tab_I0">
          <attribute name="title">
-          <string>Spectrum</string>
+          <string>I0</string>
+         </attribute>
+        </widget>
+        <widget class="PreviewTab" name="tab_PIN">
+         <attribute name="title">
+          <string>I1/PIN</string>
+         </attribute>
+        </widget>
+        <widget class="PreviewTab" name="tab_DT">
+         <attribute name="title">
+          <string>DT</string>
+         </attribute>
+        </widget>
+        <widget class="PreviewTab" name="tab_SumSpectrum">
+         <attribute name="title">
+          <string>Sum spectrum</string>
+         </attribute>
+        </widget>
+        <widget class="PreviewTab" name="tab_MaxSpectrum">
+         <attribute name="title">
+          <string>Max spectrum</string>
          </attribute>
         </widget>
        </widget>
@@ -1282,6 +1302,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PreviewTab</class>
+   <extends>QWidget</extends>
+   <header>single</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>pushButton_DetectorsSum</tabstop>
   <tabstop>doubleSpinBox_CalibrationGain</tabstop>
