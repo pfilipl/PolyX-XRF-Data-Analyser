@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, QtCore, uic
 import sys, numpy, xraylib, math
 
-import main
+import main, single
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0):
@@ -190,6 +190,15 @@ class AddRoi(QtWidgets.QDialog):
             table.setCurrentCell(0, 0)
             while table.rowCount() > 0:
                 table.removeRow(table.currentRow())
+
+            try:
+                tabs = self.parent().findChild(QtWidgets.QTabWidget, "tabWidget")
+                while tabs.count() > 7:
+                    tabs.removeTab(7)
+                singleParent = True
+            except:
+                signleParent = False
+
             for row in range(self.CustomROIs.rowCount()):
                 table.insertRow(table.currentRow() + 1)
                 table.setItem(table.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 0).text()}"))
@@ -197,6 +206,10 @@ class AddRoi(QtWidgets.QDialog):
                 table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 2).text()}"))
                 table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 3).text()}"))
                 table.setCurrentCell(table.currentRow() + 1, 0)
+
+                if singleParent:
+                    tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text())), self.CustomROIs.item(row, 0).text())
+            
             self.accept()
 
 if __name__ == "__main__":

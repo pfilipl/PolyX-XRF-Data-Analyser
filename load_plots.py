@@ -3,10 +3,12 @@ import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
 
-def MapData(widget, canvas, detector = 2, roiStart = 0, roiStop = 4096, pos = [[0, 0], [1000, 1000]], importLoad = False):
-    map = canvas
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False):
+    map = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data["Data"][detector]
+    roiStart = tab.RoiStart
+    roiStop = tab.RoiStop
 
     sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
     if map.ColorBar: map.ColorBar.remove()
@@ -49,8 +51,8 @@ def MapData(widget, canvas, detector = 2, roiStart = 0, roiStop = 4096, pos = [[
                 
     map.draw()
 
-def PlotStats1D(widget, canvas, dataName, importLoad = False):
-    plot = canvas
+def PlotStats1D(widget, tab, dataName, importLoad = False):
+    plot = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data[dataName]
 
@@ -69,8 +71,8 @@ def PlotStats1D(widget, canvas, dataName, importLoad = False):
 
     plot.draw()
 
-def MapStats2D(widget, canvas, dataName, detector = 2, importLoad = False):
-    map = canvas
+def MapStats2D(widget, tab, dataName, detector = 2, importLoad = False):
+    map = tab.Canvas
     head = widget.Data["head"]
     Data = widget.Data[dataName]
 
@@ -102,8 +104,8 @@ def MapStats2D(widget, canvas, dataName, detector = 2, importLoad = False):
 
     map.draw()
 
-def Spectrum(widget, canvas, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False):
-    spectrum = canvas
+def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False):
+    spectrum = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data["Data"][detector]
     ROI = widget.Data["ROI"]

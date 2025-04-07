@@ -19,7 +19,7 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         super().__init__(self.Figure)
 
 class PreviewTab(QtWidgets.QWidget):
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, roiStart = 1, roiStop = 4096):
         super(PreviewTab, self).__init__(parent)
         self.Canvas = MatplotlibCanvas(self)
         self.Toolbar = NavigationToolbar2QT(self.Canvas, self)
@@ -28,6 +28,8 @@ class PreviewTab(QtWidgets.QWidget):
         layout.addWidget(self.Canvas)
         layout.addWidget(self.Toolbar)
         self.setLayout(layout)
+        self.RoiStart = roiStart
+        self.RoiStop = roiStop
 
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -80,9 +82,6 @@ class SingleWindow(QtWidgets.QWidget):
         self.PIN                = self.tab_PIN
         self.DT                 = self.tab_DT
         self.RC                 = self.tab_RC
-
-        # self.tabWidget.setCurrentIndex(self.tabWidget.addTab(PreviewTab(self), "RC"))
-        # self.RC =  self.tabWidget.currentWidget()
 
         self.Data               = None
         self.LastPressedX       = None
@@ -226,13 +225,13 @@ class SingleWindow(QtWidgets.QWidget):
             if self.CurrentDetector == "Be": det = 0
             elif self.CurrentDetector == "ML": det = 1
             else: det = 2
-            load_plots.MapData(self, self.TotalSignal.Canvas, det, importLoad = importLoad)
-            load_plots.MapStats2D(self, self.I0.Canvas, "I0", det, importLoad = importLoad)
-            load_plots.MapStats2D(self, self.PIN.Canvas, "PIN", det, importLoad = importLoad)
-            load_plots.MapStats2D(self, self.DT.Canvas, "DT", det, importLoad = importLoad)
-            load_plots.Spectrum(self, self.SumSpectrum.Canvas, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
-            load_plots.Spectrum(self, self.MaxSpectrum.Canvas, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None)
-            load_plots.PlotStats1D(self, self.RC.Canvas, "RC", importLoad = importLoad)
+            load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad)
+            load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
+            load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None)
+            load_plots.MapStats2D(self, self.I0, "I0", det, importLoad = importLoad)
+            load_plots.MapStats2D(self, self.PIN, "PIN", det, importLoad = importLoad)
+            load_plots.MapStats2D(self, self.DT, "DT", det, importLoad = importLoad)
+            load_plots.PlotStats1D(self, self.RC, "RC", importLoad = importLoad)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
@@ -306,13 +305,13 @@ class SingleWindow(QtWidgets.QWidget):
         if self.CurrentDetector == "Be": det = 0
         elif self.CurrentDetector == "ML": det = 1
         else: det = 2
-        load_plots.MapData(self, self.TotalSignal.Canvas, det, roiStart = 0, roiStop = 4096, pos = POS)
-        load_plots.MapStats2D(self, self.I0.Canvas, "I0", det)
-        load_plots.MapStats2D(self, self.PIN.Canvas, "PIN", det)
-        load_plots.MapStats2D(self, self.DT.Canvas, "DT", det)
-        load_plots.Spectrum(self, self.SumSpectrum.Canvas, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
-        load_plots.Spectrum(self, self.MaxSpectrum.Canvas, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None)
-        load_plots.PlotStats1D(self, self.RC.Canvas, "RC")
+        load_plots.MapData(self, self.TotalSignal, det, pos = POS)
+        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
+        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None)
+        load_plots.MapStats2D(self, self.I0, "I0", det)
+        load_plots.MapStats2D(self, self.PIN, "PIN", det)
+        load_plots.MapStats2D(self, self.DT, "DT", det)
+        # load_plots.PlotStats1D(self, self.RC, "RC")
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MarkPoint_toggled(self, checked):
@@ -362,6 +361,9 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIsDeleteAll_clicked()
             if changeROIsDefault: self.ROIsDefault.setChecked(False)
             self.ROIs.setCurrentCell(0, 0)
+            while self.tabWidget.count() > 7:
+                self.tabWidget.removeTab(7)
+
             read = False
             file = open(fileName, "r")
             for line in file:
@@ -375,6 +377,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
+                    self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
             file.close()
 
     def ROIsAdd_clicked(self):
@@ -418,12 +421,15 @@ class SingleWindow(QtWidgets.QWidget):
         rows = list(set(rows))
         rows.sort(reverse = True)
         for row in rows:
+            self.tabWidget.removeTab(7 + row)
             self.ROIs.removeRow(row)
     
     def ROIsDeleteAll_clicked(self):
         self.ROIs.setCurrentCell(0, 0)
         while self.ROIs.rowCount() > 0:
             self.ROIs.removeRow(self.ROIs.currentRow())
+        while self.tabWidget.count() > 7:
+                self.tabWidget.removeTab(7)
     
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
