@@ -216,9 +216,9 @@ class SingleWindow(QtWidgets.QWidget):
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
         except:
             if path == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the empty path.")
+                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map under the path:\n{path}")
+                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
         else:
             self.Data = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
 
@@ -533,9 +533,9 @@ class SingleWindow(QtWidgets.QWidget):
         path = pathlib.Path(self.ResultsPath.text())
         if not path.is_dir():
             if path == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the empty path.")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files under the path:\n{path}")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{path}")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig)
             if outputConfig.exec():
