@@ -74,13 +74,6 @@ class AddRoi(QtWidgets.QDialog):
             self.XRFLines.setEnabled(True)
             self.XRFWarning.hide()
 
-            # Periodic tables
-            # self.KalphaChecked          = numpy.ones(119, numpy.bool_) * False
-            # self.KbetaChecked           = numpy.ones(119, numpy.bool_) * False
-            # self.LalphaChecked          = numpy.ones(119, numpy.bool_) * False
-            # self.LbetaChecked           = numpy.ones(119, numpy.bool_) * False
-            # self.MChecked               = numpy.ones(119, numpy.bool_) * False
-
             self.Kalpha.setLine("Ka")
             self.Kbeta.setLine("Kb")
             self.Lalpha.setLine("La")

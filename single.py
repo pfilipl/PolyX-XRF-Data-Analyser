@@ -394,6 +394,10 @@ class SingleWindow(QtWidgets.QWidget):
         for row in range(self.ROIs.rowCount()):
             table.insertRow(table.currentRow() + 1)
             table.setItem(table.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 0).text()}"))
+            table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
+            table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
+            table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
+            table.setCurrentCell(table.currentRow() + 1, 0)
             try:
                 name = self.ROIs.item(row, 0).text().split("-")
                 if name[1] == "Ka": addroi.tab_Kalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
@@ -403,10 +407,6 @@ class SingleWindow(QtWidgets.QWidget):
                 elif name[1] == "M": addroi.tab_M.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
             except:
                 continue
-            table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
-            table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
-            table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
-            table.setCurrentCell(table.currentRow() + 1, 0)
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         
