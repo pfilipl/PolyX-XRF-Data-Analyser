@@ -121,6 +121,7 @@ class SingleWindow(QtWidgets.QWidget):
         # Energy calibration
         self.Calib              = None
         self.Sigma              = None
+        self.monoE              = None
 
         self.CalibrationGain    = self.doubleSpinBox_CalibrationGain
         self.CalibrationZero    = self.doubleSpinBox_CalibrationZero
@@ -221,6 +222,11 @@ class SingleWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
         else:
             self.Data = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
+
+            try:
+                self.monoE = head["monoE"][0][0]
+            except:
+                self.monoE = None
 
             if self.ROIsDefault.isChecked():
                 self.ROIsDeleteAll_clicked()
@@ -405,7 +411,7 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
-        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount, self.monoE)
         table = addroi.tableWidget_CustomROIs
         for row in range(self.ROIs.rowCount()):
             table.insertRow(table.currentRow() + 1)

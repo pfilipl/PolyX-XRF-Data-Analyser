@@ -4,13 +4,14 @@ import sys, numpy, xraylib, math
 import main, single
 
 class AddRoi(QtWidgets.QDialog):
-    def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0):
+    def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0, monoE = None):
         super(AddRoi, self).__init__(parent)
         uic.loadUi("add_roi.ui", self)
         self.setWindowTitle('Add Regions of Interest (ROIs)')
 
         self.Calib                      = calib
         self.Sigma                      = sigma
+        self.monoE                      = monoE
 
         # Custom
         self.CustomName                 = self.lineEdit_CustomName
@@ -86,12 +87,41 @@ class AddRoi(QtWidgets.QDialog):
             self.Lbeta.setRoiCount(self.RoiCount)
             self.M.setRoiCount(self.RoiCount)
 
-            # (xraylib limitations)
-            self.Kalpha.setRange(xraylib.SymbolToAtomicNumber("B"), xraylib.SymbolToAtomicNumber("Rf"))
-            self.Kbeta.setRange(xraylib.SymbolToAtomicNumber("Al"), xraylib.SymbolToAtomicNumber("Rf"))
-            self.Lalpha.setRange(xraylib.SymbolToAtomicNumber("Sc"), xraylib.SymbolToAtomicNumber("Rf"))
-            self.Lbeta.setRange(xraylib.SymbolToAtomicNumber("Al"), xraylib.SymbolToAtomicNumber("Cf"))
-            self.M.setRange(xraylib.SymbolToAtomicNumber("Ce"), xraylib.SymbolToAtomicNumber("Rf"))
+            limitations = {
+                "Ka"    : ["B", "Rf"],
+                "Kb"    : ["Al", "Rf"],
+                "La"    : ["Sc", "Rf"],
+                "Lb"    : ["Al", "Cf"],
+                "M"     : ["Ce", "Rf"]
+            }
+            if monoE is not None:
+                findLimitK = True
+                findLimitL = True
+                findLimitM = True
+                for Z in range(1, 119):
+                    try:
+                        if xraylib.EdgeEnergy(Z, xraylib.K_SHELL) > monoE / 1000 and findLimitK: 
+                            limitations["Ka"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                            limitations["Kb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                            findLimitK = False
+                    finally:    
+                        try:
+                            if xraylib.EdgeEnergy(Z, xraylib.L1_SHELL) > monoE / 1000 and findLimitL: 
+                                limitations["La"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                                limitations["Lb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                                findLimitL = False
+                        finally:
+                            try:
+                                if xraylib.EdgeEnergy(Z, xraylib.M1_SHELL) > monoE / 1000 and findLimitM: 
+                                    limitations["M"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                                    findLimitM = False
+                            except:
+                                continue
+            self.Kalpha.setRangeByName(limitations["Ka"][0], limitations["Ka"][1])
+            self.Kbeta.setRangeByName(limitations["Kb"][0], limitations["Kb"][1])
+            self.Lalpha.setRangeByName(limitations["La"][0], limitations["La"][1])
+            self.Lbeta.setRangeByName(limitations["Lb"][0], limitations["Lb"][1])
+            self.M.setRangeByName(limitations["M"][0], limitations["M"][1])
 
             self.Kalpha.setCalibration(self.Calib, self.Sigma)
             self.Kbeta.setCalibration(self.Calib, self.Sigma)

@@ -159,11 +159,20 @@ class PeriodicTable(QtWidgets.QWidget):
         self.ElementsChecked = elementsChecked
         for Z in range(1, 119):
             self.Elements[Z - 1].setChecked(self.ElementsChecked[Z - 1])
-
+    
     def setRange(self, Z_start, Z_stop):
         for Z in range(1, 119):
             if Z >= Z_start and Z <= Z_stop:
                 self.Elements[Z - 1].setEnabled(True)
+
+    def setRangeByName(self, startName, stopName):
+        try:
+            Z_start = xraylib.SymbolToAtomicNumber(startName)
+            Z_stop = xraylib.SymbolToAtomicNumber(stopName)
+        except:
+            print("Wrong element name!")
+        else:
+            self.setRange(Z_start, Z_stop)
 
     # Resetters
     def resetElementsChecked(self):
