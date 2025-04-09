@@ -80,14 +80,11 @@ class StitchWindow(QtWidgets.QWidget):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         canvas = self.TopMapCanvas
         if mode == "top":
-            # canvas = self.TopMapCanvas
             path = pathlib.Path(self.TopMapPath.text())
             offset = self.TopMapOffset
         elif mode == "bottom":
-            # canvas = self.BottomMapCanvas
             path = pathlib.Path(self.BottomMapPath.text())
             offset = self.BottomMapOffset
-
         try:
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
         except:
@@ -96,27 +93,32 @@ class StitchWindow(QtWidgets.QWidget):
             else:
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
         else:
-            # canvas.Axes.cla()
             if mode == "top":
                 sumSignal = numpy.sum(Data[2], axis=2)
                 offset.setMaximum(Data[2].shape[1] - 1)
-                if self.BottomMapSumSignal is not None:
-                    canvas.Axes.cla()
-                    img = canvas.Axes.imshow(self.BottomMapSumSignal.transpose(), extent = [-0.5, self.BottomMapSumSignal.shape[0] - 0.5, -0.5, self.BottomMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
-                    img.set_clim([min(img.get_clim()[0], numpy.min(self.BottomMapSumSignal)), max(img.get_clim()[1], numpy.max(self.BottomMapSumSignal))])
-                img = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -0.5, sumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
-                img.set_clim([min(img.get_clim()[0], numpy.min(sumSignal)), max(img.get_clim()[1], numpy.max(sumSignal))])
+                printBottom = False if self.BottomMapSumSignal is None else True
+                canvas.Axes.cla()
+                imgTop = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -0.5, sumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                if printBottom:
+                    imgBottom = canvas.Axes.imshow(self.BottomMapSumSignal.transpose(), extent = [-0.5, self.BottomMapSumSignal.shape[0] - 0.5, -self.BottomMapSumSignal.shape[1] + 0.5, -0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                    canvas.Axes.set_xlim([0, max(sumSignal.shape[0], self.BottomMapSumSignal.shape[0])])
+                    canvas.Axes.set_ylim([-self.BottomMapSumSignal.shape[1], sumSignal.shape[1]])
+                    imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
+                    imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
                 self.TopMapSumSignal = sumSignal
                 if not self.TopMapOffset.isEnabled(): self.TopMapOffset.setEnabled(True)
             elif mode == "bottom":
                 sumSignal = numpy.sum(Data[2], axis=2)
                 offset.setMaximum(Data[2].shape[1] - 1)
-                if self.TopMapSumSignal is not None:
-                    canvas.Axes.cla()
-                    img = canvas.Axes.imshow(self.TopMapSumSignal.transpose(), extent = [-0.5, self.TopMapSumSignal.shape[0] - 0.5, -0.5, self.TopMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
-                    img.set_clim([min(img.get_clim()[0], numpy.min(self.TopMapSumSignal)), max(img.get_clim()[1], numpy.max(self.TopMapSumSignal))])
-                img = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -sumSignal.shape[1] + 0.5, 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
-                img.set_clim([min(img.get_clim()[0], numpy.min(sumSignal)), max(img.get_clim()[1], numpy.max(sumSignal))])
+                printTop = False if self.TopMapSumSignal is None else True
+                canvas.Axes.cla()
+                imgBottom = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -sumSignal.shape[1] + 0.5, 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                if printTop:
+                    imgTop = canvas.Axes.imshow(self.TopMapSumSignal.transpose(), extent = [-0.5, self.TopMapSumSignal.shape[0] - 0.5, -0.5, self.TopMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                    canvas.Axes.set_xlim([0, max(sumSignal.shape[0], self.TopMapSumSignal.shape[0])])
+                    canvas.Axes.set_ylim([-sumSignal.shape[1], self.TopMapSumSignal.shape[1]])
+                    imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.TopMapSumSignal))])
+                    imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.TopMapSumSignal))])
                 self.BottomMapSumSignal = sumSignal
                 if not self.BottomMapOffset.isEnabled(): self.BottomMapOffset.setEnabled(True)
             canvas.Axes.format_coord = lambda x, y: f'x = {round(x)} px, z = {round(y)} px'
@@ -127,16 +129,35 @@ class StitchWindow(QtWidgets.QWidget):
         canvas = self.TopMapCanvas
         if mode == "top":
             sumSignal = self.TopMapSumSignal
-            canvas.AxesTop.cla()
+            printBottom = False if self.BottomMapSumSignal is None else True
+            canvas.Axes.cla()
             if value:
-                canvas.AxesTop.imshow(sumSignal[:, :-value].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                imgTop = canvas.Axes.imshow(sumSignal[:, :-value].transpose(), extent = [-0.5, sumSignal[:, :-value].shape[0] - 0.5, -0.5, sumSignal[:, :-value].shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
             else:
-                canvas.AxesTop.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                imgTop = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -0.5, sumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            if printBottom:
+                imgBottom = canvas.Axes.imshow(self.BottomMapSumSignal.transpose(), extent = [-0.5, self.BottomMapSumSignal.shape[0] - 0.5, -self.BottomMapSumSignal.shape[1] + 0.5, -0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                if value:
+                    canvas.Axes.set_xlim([0, max(sumSignal[:, :-value].shape[0], self.BottomMapSumSignal.shape[0])])
+                    canvas.Axes.set_ylim([-self.BottomMapSumSignal.shape[1], sumSignal[:, :-value].shape[1]])
+                    imgBottom.set_clim([max(numpy.min(sumSignal[:, :-value]), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal[:, :-value]), numpy.max(self.BottomMapSumSignal))])
+                    imgTop.set_clim([max(numpy.min(sumSignal[:, :-value]), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal[:, :-value]), numpy.max(self.BottomMapSumSignal))])
+                else:
+                    canvas.Axes.set_xlim([0, max(sumSignal.shape[0], self.BottomMapSumSignal.shape[0])])
+                    canvas.Axes.set_ylim([-self.BottomMapSumSignal.shape[1], sumSignal.shape[1]])
+                    imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
+                    imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
         elif mode == "bottom":
-            # canvas = self.BottomMapCanvas
             sumSignal = self.BottomMapSumSignal
-            canvas.AxesBottom.cla()
-            canvas.AxesBottom.imshow(sumSignal[:, value:].transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            printTop = False if self.TopMapSumSignal is None else True
+            canvas.Axes.cla()
+            imgBottom = canvas.Axes.imshow(sumSignal[:, value:].transpose(), extent = [-0.5, sumSignal[:, value:].shape[0] - 0.5, -sumSignal[:, value:].shape[1] + 0.5, 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+            if printTop:
+                imgTop = canvas.Axes.imshow(self.TopMapSumSignal.transpose(), extent = [-0.5, self.TopMapSumSignal.shape[0] - 0.5, -0.5, self.TopMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                canvas.Axes.set_xlim([0, max(sumSignal[:, value:].shape[0], self.TopMapSumSignal.shape[0])])
+                canvas.Axes.set_ylim([-sumSignal[:, value:].shape[1], self.TopMapSumSignal.shape[1]])
+                imgTop.set_clim([max(numpy.min(sumSignal[:, value:]), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal[:, value:]), numpy.max(self.TopMapSumSignal))])
+                imgBottom.set_clim([max(numpy.min(sumSignal[:, value:]), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal[:, value:]), numpy.max(self.TopMapSumSignal))])
         canvas.draw()
 
     def TopMapPathSearch_clicked(self):
