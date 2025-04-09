@@ -1,5 +1,4 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import matplotlib.gridspec
 import sys, matplotlib, numpy, pathlib
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
@@ -21,40 +20,28 @@ class StitchWindow(QtWidgets.QWidget):
         super(StitchWindow, self).__init__(parent)
         uic.loadUi("stitch.ui", self)
 
-        # Top map
-        self.TopMap             = self.widget_TopMap
-        self.TopMapCanvas       = MatplotlibCanvas(self.TopMap)
-        self.TopMapToolbar      = NavigationToolbar2QT(self.TopMapCanvas, self.TopMap)
+        # Map
+        self.Map             = self.widget_Map
+        self.MapCanvas       = MatplotlibCanvas(self.Map)
+        self.MapToolbar      = NavigationToolbar2QT(self.MapCanvas, self.Map)
+        
+        self.MapCanvas.setStyleSheet("background-color:transparent;")
+        topLayout = QtWidgets.QVBoxLayout()
+        topLayout.addWidget(self.MapToolbar)
+        topLayout.addWidget(self.MapCanvas)
+        self.Map.setLayout(topLayout)
+
+        # Maps paths and offsets
         self.TopMapSumSignal    = None
         self.TopMapPath         = self.lineEdit_TopMapPath
         self.TopMapOffset       = self.spinBox_TopMapOffset
-
-        self.TopMapCanvas.setStyleSheet("background-color:transparent;")
-        topLayout = QtWidgets.QVBoxLayout()
-        topLayout.addWidget(self.TopMapToolbar)
-        topLayout.addWidget(self.TopMapCanvas)
-        self.TopMap.setLayout(topLayout)
-
-        self.TopMapPath.editingFinished.connect(lambda mode = "top": self.LoadMap(mode))
-        self.toolButton_TopMapPathSearch.clicked.connect(self.TopMapPathSearch_clicked)
-        self.TopMapOffset.valueChanged.connect(lambda value, mode = "top": self.ReloadMap(value, mode))
-        
-        # Bottom map
-        self.BottomMap          = self.widget_BottomMap
-        self.BottomMapCanvas    = MatplotlibCanvas(self.BottomMap)
-        self.BottomMapToolbar   = NavigationToolbar2QT(self.BottomMapCanvas, self.BottomMap)
         self.BottomMapSumSignal = None
         self.BottomMapPath      = self.lineEdit_BottomMapPath
         self.BottomMapOffset    = self.spinBox_BottomMapOffset
 
-        self.BottomMapCanvas.setStyleSheet("background-color:transparent;")
-        bottomLayout = QtWidgets.QVBoxLayout()
-        bottomLayout.addWidget(self.BottomMapCanvas)
-        bottomLayout.addWidget(self.BottomMapToolbar)
-        self.BottomMap.setLayout(bottomLayout)
-
-        self.BottomMap.hide()
-
+        self.TopMapPath.editingFinished.connect(lambda mode = "top": self.LoadMap(mode))
+        self.toolButton_TopMapPathSearch.clicked.connect(self.TopMapPathSearch_clicked)
+        self.TopMapOffset.valueChanged.connect(lambda value, mode = "top": self.ReloadMap(value, mode))
         self.BottomMapPath.editingFinished.connect(lambda mode = "bottom": self.LoadMap(mode))
         self.toolButton_BottomMapPathSearch.clicked.connect(self.BottomMapPathSearch_clicked)
         self.BottomMapOffset.valueChanged.connect(lambda value, mode = "bottom": self.ReloadMap(value, mode))
@@ -78,7 +65,7 @@ class StitchWindow(QtWidgets.QWidget):
 
     def LoadMap(self, mode):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-        canvas = self.TopMapCanvas
+        canvas = self.MapCanvas
         if mode == "top":
             path = pathlib.Path(self.TopMapPath.text())
             offset = self.TopMapOffset
@@ -126,7 +113,7 @@ class StitchWindow(QtWidgets.QWidget):
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def ReloadMap(self, value, mode):
-        canvas = self.TopMapCanvas
+        canvas = self.MapCanvas
         if mode == "top":
             sumSignal = self.TopMapSumSignal
             printBottom = False if self.BottomMapSumSignal is None else True
