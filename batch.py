@@ -159,9 +159,9 @@ class BatchWindow(QtWidgets.QWidget):
         for item in self.PathsList.selectedItems():
             self.PathsList.takeItem(self.PathsList.row(item))
         self.Paths = []
-        experimentPath = self.ExperimentPath.text()
+        experimentPath = pathlib.Path(self.ExperimentPath.text())
         for row in range(self.PathsList.count()):
-            self.Paths.append(f"{experimentPath}{self.PathsList.item(row).text()}")
+            self.Paths.append(experimentPath / self.PathsList.item(row).text())
 
     def LoadExperiment(self):
         self.Paths = []
@@ -172,13 +172,13 @@ class BatchWindow(QtWidgets.QWidget):
             for mainPath in experimentPath.iterdir():
                 if mainPath != resultsPath and mainPath.is_dir():
                     if self.MapsNesting2.isChecked():
-                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f".{os.sep}{str(mainPath).split(os.sep)[-1]}"))
+                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}"))
                         self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
                         self.Paths.append(experimentPath / mainPath)
                     elif self.MapsNesting3.isChecked():
                         for path in mainPath.iterdir():
                             if path != resultsPath and path.is_dir():
-                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f".{os.sep}{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
+                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
                                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
                                 self.Paths.append(experimentPath / mainPath / path)
         if len(self.Paths): self.Analyse.setEnabled(True)
@@ -221,7 +221,7 @@ class BatchWindow(QtWidgets.QWidget):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
         if path:
             self.ResultsPath.setText(path)
-            self.LoadExperiment()
+            # self.LoadExperiment()
 
     def ImportConfig_clicked(self, checked, fileName):
         if fileName is None:
