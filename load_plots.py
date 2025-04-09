@@ -154,9 +154,11 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         elif pos.shape[0] == 2: spectrum.Axes.set_title(f"pos = [[{widget.AreaX1.value()} mm, {widget.AreaZ1.value()} mm], [{widget.AreaX2.value()} mm, {widget.AreaZ2.value()} mm]]")
 
     if widget.Calib is not None:
-        spectrum.Axes.set_ylim([1, numpy.max(func(func(data[x0:x1, z0:z1, cEmin:cEmax], axis = 0), axis = 0)) * 1.5])
+        if func == numpy.sum: spectrum.Axes.set_ylim([1, numpy.max(sumData[cEmin:cEmax]) * 1.5])
+        else: spectrum.Axes.set_ylim([0, numpy.max(sumData[cEmin:cEmax]) * 1.05])
     else:
-        spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
+        if func == numpy.sum: spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
+        else: spectrum.Axes.set_ylim([0, numpy.max(sumData) * 1.05])
 
     if roi is None and widget.ROIsDefault.isChecked(): roi = ROI
     elif roi is None:

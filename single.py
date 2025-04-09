@@ -250,11 +250,18 @@ class SingleWindow(QtWidgets.QWidget):
             if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
             if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
 
+            self.PointX.blockSignals(True)
+            self.PointZ.blockSignals(True)
+            self.AreaX1.blockSignals(True)
+            self.AreaX2.blockSignals(True)
+            self.AreaZ1.blockSignals(True)
+            self.AreaZ2.blockSignals(True)
+
             self.PointX.setMinimum(min(head["Xpositions"][0, :]))
             self.PointZ.setMinimum(min(head["Zpositions"][0, :]))
             self.PointX.setMaximum(max(head["Xpositions"][0, :]))
             self.PointZ.setMaximum(max(head["Zpositions"][0, :]))
-            
+
             self.AreaX1.setMinimum(min(head["Xpositions"][0, :]))
             self.AreaX2.setMinimum(min(head["Xpositions"][0, :]))
             self.AreaZ1.setMinimum(min(head["Zpositions"][0, :]))
@@ -263,35 +270,30 @@ class SingleWindow(QtWidgets.QWidget):
             self.AreaX2.setMaximum(max(head["Xpositions"][0, :]))
             self.AreaZ1.setMaximum(max(head["Zpositions"][0, :]))
             self.AreaZ2.setMaximum(max(head["Zpositions"][0, :]))
-            
+
             if startLoad or not self.PointChanged:
-                self.PointX.blockSignals(True)
-                self.PointZ.blockSignals(True)
                 self.PointX.setValue(min(head["Xpositions"][0, :]))
                 self.PointZ.setValue(min(head["Zpositions"][0, :]))
-                self.PointX.blockSignals(False)
-                self.PointZ.blockSignals(False)
                 
             if startLoad or not self.AreaChanged:
-                self.AreaX1.blockSignals(True)
-                self.AreaX2.blockSignals(True)
-                self.AreaZ1.blockSignals(True)
-                self.AreaZ2.blockSignals(True)
                 self.AreaX1.setValue(min(head["Xpositions"][0, :]))
                 self.AreaX2.setValue(max(head["Xpositions"][0, :]))
                 self.AreaZ1.setValue(min(head["Zpositions"][0, :]))
                 self.AreaZ2.setValue(max(head["Zpositions"][0, :]))
-                self.AreaX1.blockSignals(False)
-                self.AreaX2.blockSignals(False)
-                self.AreaZ1.blockSignals(False)
-                self.AreaZ2.blockSignals(False)
+
+            self.PointX.blockSignals(False)
+            self.PointZ.blockSignals(False)
+            self.AreaX1.blockSignals(False)
+            self.AreaX2.blockSignals(False)
+            self.AreaZ1.blockSignals(False)
+            self.AreaZ2.blockSignals(False)
 
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def ReloadData(self):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         head = self.Data["head"]
-        if self.ROIsDefault.isChecked(): ROI = None
+        if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
         else:
             ROI = []
             for row in range(self.ROIs.rowCount()):
@@ -460,6 +462,35 @@ class SingleWindow(QtWidgets.QWidget):
         if fileName is None:
             fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+
+            self.PointX.blockSignals(True)
+            self.PointZ.blockSignals(True)
+            self.AreaX1.blockSignals(True)
+            self.AreaX2.blockSignals(True)
+            self.AreaZ1.blockSignals(True)
+            self.AreaZ2.blockSignals(True)
+
+            self.PointX.setMinimum(-100)
+            self.PointZ.setMinimum(-100)
+            self.PointX.setMaximum(100)
+            self.PointZ.setMaximum(100)
+
+            self.AreaX1.setMinimum(-100)
+            self.AreaX2.setMinimum(-100)
+            self.AreaZ1.setMinimum(-100)
+            self.AreaZ2.setMinimum(-100)
+            self.AreaX1.setMaximum(100)
+            self.AreaX2.setMaximum(100)
+            self.AreaZ1.setMaximum(100)
+            self.AreaZ2.setMaximum(100)
+
+            self.PointX.blockSignals(False)
+            self.PointZ.blockSignals(False)
+            self.AreaX1.blockSignals(False)
+            self.AreaX2.blockSignals(False)
+            self.AreaZ1.blockSignals(False)
+            self.AreaZ2.blockSignals(False)
+
             read = False
             file = open(fileName, "r")
             for line in file:
