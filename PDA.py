@@ -213,11 +213,11 @@ def data_load(path, variant = "fast"):
     # head = sio.loadmat(f"{path}/{dataname}_HEADER.mat")
     try:
         for i in range(head["roi_listbins"].shape[0]):
-            ROI.append([head["roi_listbins"][i, 1][0], head["roi_listbins"][i, 2][0][0], head["roi_listbins"][i, 3][0][0]])
+            ROI.append([head["roi_listbins"][i, 1][0], head["roi_listbins"][i, 2][0][0], head["roi_listbins"][i, 3][0][0], 1.0])
     except:
         try:
             for i in range(head["roi_table"].shape[0]):
-                ROI.append([head["roi_table"][i, 0][0], head["roi_table"][i, 1][0][0], head["roi_table"][i, 2][0][0]])
+                ROI.append([head["roi_table"][i, 0][0], head["roi_table"][i, 1][0][0], head["roi_table"][i, 2][0][0], 1.0])
         except:
             print("ROIs are not defined!")
 

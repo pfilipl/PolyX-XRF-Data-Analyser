@@ -222,6 +222,20 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             self.Data = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
 
+            if self.ROIsDefault.isChecked():
+                self.ROIsDeleteAll_clicked()
+                for roi in ROI:
+                    self.ROIs.insertRow(self.ROIs.currentRow() + 1)
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{roi[0]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{roi[1]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
+                    self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
+                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
+                    self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
+                    self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
+                    self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
+
             if self.CurrentDetector == "Be": det = 0
             elif self.CurrentDetector == "ML": det = 1
             else: det = 2
