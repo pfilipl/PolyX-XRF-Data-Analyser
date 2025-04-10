@@ -195,7 +195,7 @@ class BatchWindow(QtWidgets.QWidget):
         fileContent = "## Paths\n"
         for path in self.Paths:
             fileContent += f"\n{path}"
-        file.write(fileContent)
+        file.write(fileContent + "\n")
         file.close()
 
     def PathsImport(self, fileName):
@@ -210,12 +210,15 @@ class BatchWindow(QtWidgets.QWidget):
                 path = pathlib.Path(line[:-1])
                 if path.parents[0] == pathlib.Path(self.ExperimentPath.text()):
                     self.MapsNesting2.setChecked(True)
-                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'.{os.sep}{str(path).split(os.sep)[-1]}'))
+                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'{str(path).split(os.sep)[-1]}'))
                 elif path.parents[1] == pathlib.Path(self.ExperimentPath.text()):
                     self.MapsNesting3.setChecked(True)
-                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'.{os.sep}{str(path.parent).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}'))
+                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f'{str(path.parent).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}'))
                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                self.Paths.append(pathlib.Path(line))
+                self.Paths.append(path)
+        file.close()
+        if len(self.Paths): self.Analyse.setEnabled(True)
+        else: self.Analyse.setEnabled(False)
 
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
