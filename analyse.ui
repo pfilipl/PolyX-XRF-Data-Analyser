@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>418</height>
+    <width>350</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
-    <height>410</height>
+    <width>350</width>
+    <height>550</height>
    </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -200,7 +200,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Total signal</string>
+        <string>Sum</string>
        </property>
       </widget>
      </item>
@@ -226,7 +226,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Max signal spectra</string>
+        <string>Max spectrum</string>
        </property>
       </widget>
      </item>
@@ -246,7 +246,7 @@
      <item row="8" column="1">
       <widget class="QCheckBox" name="checkBox_SpectraMaxROIs">
        <property name="text">
-        <string>Max signal w/ROIs</string>
+        <string>Max with ROIs</string>
        </property>
       </widget>
      </item>
@@ -272,7 +272,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Total signal spectra</string>
+        <string>Sum spectrum</string>
        </property>
       </widget>
      </item>
@@ -298,7 +298,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Total signal w/ROIs</string>
+        <string>Sum with ROIs</string>
        </property>
       </widget>
      </item>
@@ -324,7 +324,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Max signal</string>
+        <string>Max</string>
        </property>
       </widget>
      </item>
@@ -395,6 +395,53 @@
        </property>
        <property name="text">
         <string>Total signal</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_Nesting">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Results' nesting</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_ELMOtO">
+       <property name="text">
+        <string>Experiment/Load &gt; Maps &gt; Output types &gt; Outputs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_ELMO">
+       <property name="text">
+        <string>Experiment/Load &gt; Maps &gt; Outputs</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_ELOtMO">
+       <property name="text">
+        <string>Experiment/Load &gt; Output types &gt; Maps &gt; Outputs</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_ELOtO">
+       <property name="text">
+        <string>Experiment/Load &gt; Output types &gt; Outputs</string>
        </property>
       </widget>
      </item>

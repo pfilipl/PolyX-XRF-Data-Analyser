@@ -4,16 +4,24 @@ import sys
 import main
 
 class Analyse(QtWidgets.QDialog):
-    def __init__(self, parent = None, outputConfig = None):
+    def __init__(self, parent = None, outputConfig = None, detectorsBe = True, detectorsML = True, detectorsSum = False, batch = False):
         super(Analyse, self).__init__(parent)
         uic.loadUi("analyse.ui", self)
         self.setWindowTitle('Choose output data')
 
+        if not batch:
+            self.label_Nesting.hide()
+            self.radioButton_ELMOtO.hide()
+            self.radioButton_ELMO.hide()
+            self.radioButton_ELOtMO.hide()
+            self.radioButton_ELOtO.hide()
+            self.setMinimumHeight(410)
+
         if outputConfig is None:
             self.Output = {
-                "DetectorsBe"       : True,
-                "DetectorsML"       : True,
-                "DetectorsSum"      : False,
+                "DetectorsBe"       : detectorsBe,
+                "DetectorsML"       : detectorsML,
+                "DetectorsSum"      : detectorsSum,
                 "DiagRC"            : True,
                 "DiagTotal"         : True,
                 "DiagMax"           : True,
@@ -31,7 +39,11 @@ class Analyse(QtWidgets.QDialog):
                 "SpectraTotalROIs"  : True,
                 "SpectraMaxROIs"    : False,
                 "SpectraTotal"      : False,
-                "SpectraMax"        : False
+                "SpectraMax"        : False,
+                "ELMOtO"            : True,
+                "ELMO"              : False,
+                "ELOtMO"            : False,
+                "ELOtO"             : False
             }
         else:
             self.Output = outputConfig
@@ -39,6 +51,8 @@ class Analyse(QtWidgets.QDialog):
         for name in self.Output.keys():
             if name[:9] == "Detectors":
                 exec(f'self.pushButton_{name}.setChecked(self.Output["{name}"])')
+            elif name[:2] == "EL":
+                exec(f'self.radioButton_{name}.setChecked(self.Output["{name}"])')
             else:
                 exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
@@ -51,6 +65,8 @@ class Analyse(QtWidgets.QDialog):
             for name in self.Output.keys():
                 if name[:9] == "Detectors":
                     exec(f'self.Output["{name}"] = self.pushButton_{name}.isChecked()')
+                elif name[:2] == "EL":
+                    exec(f'self.Output["{name}"] = self.radioButton_{name}.isChecked()')
                 else:
                     exec(f'self.Output["{name}"] = self.checkBox_{name}.isChecked()')
             self.accept()

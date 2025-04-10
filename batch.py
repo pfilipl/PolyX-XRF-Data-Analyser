@@ -306,7 +306,7 @@ class BatchWindow(QtWidgets.QWidget):
             else:
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{resultPath}")
         else:
-            outputConfig = analyse.Analyse(self, self.OutputConfig)
+            outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), True)
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
@@ -328,6 +328,7 @@ class BatchWindow(QtWidgets.QWidget):
                             # exec(f'analyse.{name}({tempData}, {path})')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
+                QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
