@@ -91,10 +91,16 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastMotionX        = None
         self.LastMotionZ        = None
         self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'k')
-
+        self.SumLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.MaxLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.SumText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.MaxText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxSpectrum.Canvas.Axes.get_xaxis_transform())
+    
         self.TotalSignal.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonPressed(event, canvas))
         self.TotalSignal.Canvas.mpl_connect("button_release_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonReleased(event, canvas))
         self.TotalSignal.Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibMouseMotion(event, canvas))
+        self.SumSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.SumSpectrum.Canvas, mode = "sum": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
+        self.MaxSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.MaxSpectrum.Canvas, mode = "max": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
 
         # Map path
         self.MapPath            = self.lineEdit_MapPath
@@ -149,6 +155,21 @@ class SingleWindow(QtWidgets.QWidget):
     def setCalibration(self, calib, sigma):
         self.Calib = calib
         self.Sigma = sigma
+
+    def MatplotlibButtonPressedSpectrum(self, event, canvas, mode):
+        if mode == "sum":
+            line = self.SumLine
+            text = self.SumText
+        elif mode == "max":
+            line = self.MaxLine
+            text = self.MaxText
+        if event.inaxes == canvas.Axes:
+            line.set(xdata = [event.xdata, event.xdata], ydata = [canvas.Axes.get_ylim()[0], canvas.Axes.get_ylim()[1]])
+            canvas.Axes.add_artist(line)
+            if self.Calib is not None:
+                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)] / 1000:.3f} keV ", horizontalalignment = 'right' if event.xdata > 4096 * 0.8 else 'left')
+                canvas.Axes.add_artist(text)
+            canvas.draw()
 
     def MatplotlibButtonPressed(self, event, canvas):
         if self.MarkPoint.isChecked() or self.SelectArea.isChecked():
