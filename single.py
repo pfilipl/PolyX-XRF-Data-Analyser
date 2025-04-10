@@ -602,20 +602,29 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIsSave_clicked(False, fileName, 'a')
 
     def Analyse_clicked(self):
-        path = pathlib.Path(self.ResultsPath.text())
-        if not path.is_dir():
-            if path == pathlib.Path():
+        resultsPath = pathlib.Path(self.ResultsPath.text())
+        if not resultsPath.is_dir():
+            if resultsPath == pathlib.Path():
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{path}")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{resultsPath}")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), False)
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()))
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 7)
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+                detectors = []
                 for name in self.OutputConfig.keys():
+                    if name[:2] in ["De", "EL"]:
+                        if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(0)
+                        if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(1)
+                        if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
+                        # if name[:2] == "EL": 
+                        continue
+                    if name[:4] == "Diag" and self.OutputConfig[name]:
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "O")')
                     if self.OutputConfig[name]:
                         time.sleep(0.1)
                         # exec(f'analyse.{name}({self.Data}, {path})')

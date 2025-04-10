@@ -192,7 +192,7 @@
       </widget>
      </item>
      <item row="9" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraTotal">
+      <widget class="QCheckBox" name="checkBox_SpectraSum">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -264,7 +264,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagTotal">
+      <widget class="QCheckBox" name="checkBox_DiagSum">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -290,7 +290,7 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraTotalROIs">
+      <widget class="QCheckBox" name="checkBox_SpectraSumROIs">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
