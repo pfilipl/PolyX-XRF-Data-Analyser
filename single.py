@@ -616,6 +616,11 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setMaximum(len(self.OutputConfig.keys()) - 7)
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 detectors = []
+                if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
+                else:
+                    ROI = []
+                    for row in range(self.ROIs.rowCount()):
+                        ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
                 for name in self.OutputConfig.keys():
                     if name[:2] in ["De", "EL"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(0)
@@ -623,8 +628,8 @@ class SingleWindow(QtWidgets.QWidget):
                         if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         # if name[:2] == "EL": 
                         continue
-                    if name[:4] == "Diag" and self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "O")')
+                    if name[:4] in ["Diag", "UNor", "Norm"] and self.OutputConfig[name]:
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "OtO", roi = ROI)')
                     if self.OutputConfig[name]:
                         time.sleep(0.1)
                         # exec(f'analyse.{name}({self.Data}, {path})')

@@ -84,7 +84,7 @@ def getOutputPath(path, resultPath, nestingType, outputType):
     elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep)
     return outputPath
 
-def DiagRC(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagRC(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     RC = Data["RC"]
     dataName = path.stem
@@ -94,7 +94,7 @@ def DiagRC(Data, path, resultPath, detectors = None, nestingType = "OtO", origin
     plt.close('all')
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RC")
 
-def DiagSum(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagSum(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -105,7 +105,7 @@ def DiagSum(Data, path, resultPath, detectors = None, nestingType = "OtO", origi
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck")
 
-def DiagMax(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagMax(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -116,7 +116,7 @@ def DiagMax(Data, path, resultPath, detectors = None, nestingType = "OtO", origi
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck")
 
-def DiagI0(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagI0(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     I0 = Data["I0"]
     dataName = path.stem
@@ -127,7 +127,7 @@ def DiagI0(Data, path, resultPath, detectors = None, nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_I0")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_I0")
 
-def DiagPIN(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagPIN(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     PIN = Data["PIN"]
     dataName = path.stem
@@ -138,7 +138,7 @@ def DiagPIN(Data, path, resultPath, detectors = None, nestingType = "OtO", origi
     PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN")
 
-def DiagLT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagLT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     LT = Data["LT"]
     dataName = path.stem
@@ -149,7 +149,7 @@ def DiagLT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_LT")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_LT")
 
-def DiagDT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagDT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     DT = Data["DT"]
     dataName = path.stem
@@ -160,7 +160,7 @@ def DiagDT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_DT")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_DT")
 
-def DiagRT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagRT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     RT = Data["RT"]
     dataName = path.stem
@@ -171,7 +171,7 @@ def DiagRT(Data, path, resultPath, detectors = None, nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_RT")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RT")
 
-def DiagICR(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagICR(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     ICR = Data["ICR"]
     dataName = path.stem
@@ -182,7 +182,7 @@ def DiagICR(Data, path, resultPath, detectors = None, nestingType = "OtO", origi
     PDA.print_Map(Map, outputPath + f"{dataName}_ICR")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_ICR")
 
-def DiagOCR(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal"):
+def DiagOCR(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
     head = Data["head"]
     OCR = Data["OCR"]
     dataName = path.stem
@@ -192,6 +192,65 @@ def DiagOCR(Data, path, resultPath, detectors = None, nestingType = "OtO", origi
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_OCR")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_OCR")
+
+def UNormTotal(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
+    head = Data["head"]
+    data = Data["Data"]
+    dataName = path.stem
+    outputPath = getOutputPath(path, resultPath, nestingType, "UnNormalised")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = aspect)
+    plt.close('all')
+    PDA.print_Map(Map, outputPath + f"{dataName}_UNormTotal")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormTotal")
+
+def UNormROIs(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
+    head = Data["head"]
+    data = Data["Data"]
+    dataName = path.stem
+    outputPath = getOutputPath(path, resultPath, nestingType, "UnNormalised")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect)
+    plt.close('all')
+    PDA.print_Map(Map, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0])
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0])
+
+def NormTotal(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
+    head = Data["head"]
+    data = Data["Data"]
+    I0 = Data["I0"]
+    LT = Data["LT"]
+    dataName = path.stem
+    outputPath = getOutputPath(path, resultPath, nestingType, "Normalised")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, normalize = [I0, LT], Origin = origin, Aspect = aspect)
+    plt.close('all')
+    PDA.print_Map(Map, outputPath + f"{dataName}_NormTotal")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_NormTotal")
+
+def NormROIs(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
+    head = Data["head"]
+    data = Data["Data"]
+    I0 = Data["I0"]
+    LT = Data["LT"]
+    dataName = path.stem
+    outputPath = getOutputPath(path, resultPath, nestingType, "Normalised")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, normalize = [I0, LT], Origin = origin, Aspect = aspect)
+    plt.close('all')
+    PDA.print_Map(Map, outputPath + f"{dataName}_NormROIs", Name = numpy.array(roi)[:, 0])
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_NormROIs", Name = numpy.array(roi)[:, 0])
+
+# def SpectraSumROIs(Data, path, resultPath, detectors = None, nestingType = "OtO", origin = "upper", aspect = "equal", roi = None):
+#     head = Data["head"]
+#     data = Data["Data"]
+#     dataName = path.stem
+#     outputPath = getOutputPath(path, resultPath, nestingType, "Spectra")
+#     os.makedirs(outputPath, exist_ok = True)
+#     Hist, Fig = PDA.Hist_plot(data, head, f"{dataName}", pos, calib, detectors, Emax = 20, ROI = roi, log = True)
+#     plt.close('all')
+#     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumROIs")
+#     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumROIs")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
