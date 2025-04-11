@@ -98,7 +98,7 @@ def DiagRC(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     os.makedirs(outputPath, exist_ok = True)
     Fig = PDA.Stats1D_plot(RC, head, "ring currert", "I [mA]")
     plt.close('all')
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_RC", detector = detectors)
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_RC")
 
 def DiagSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]
@@ -109,7 +109,7 @@ def DiagSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Sum Signal Check", log = True, func = numpy.sum)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck", detector = detectors)
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck", detector = detectors)
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck")
 
 def DiagMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]
@@ -120,7 +120,7 @@ def DiagMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Max Signal Check", log = False, func = numpy.max)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck", detector = detectors)
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck", detector = detectors)
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck")
 
 def DiagI0(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]
@@ -130,8 +130,8 @@ def DiagI0(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: I0 [V]", Origin = origin, Aspect = aspect)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_I0", detector = detectors)
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_I0", detector = detectors)
+    PDA.print_Map(Map, outputPath + f"{dataName}_I0")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_I0")
 
 def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]
@@ -141,8 +141,8 @@ def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: I1/PIN [V]", Origin = origin, Aspect = aspect)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_PIN", detector = detectors)
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN", detector = detectors)
+    PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN")
 
 def DiagLT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]

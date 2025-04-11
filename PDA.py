@@ -816,7 +816,10 @@ def print_Hist(Hist, filename, Name = None, detector = None):
             else:
                 file = open(filename + f"_{Name[h]}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         else:
-            file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
+            if detector is not None:
+                file = open(filename + f"_SDD-{detectors[h]}.csv", "w")
+            else:
+                file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         for i in Hist[h]:
             file.write(f"{i}\n")
         file.close()
@@ -832,7 +835,10 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
             else:
                 Fig[f].savefig(filename + f"_{Name[f]}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
         else:
-            Fig[f].savefig(filename + f"_{f}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
+            if detector is not None:
+                Fig[f].savefig(filename + f"_SDD-{detectors[f]}" + ext, dpi = dpi)
+            else:
+                Fig[f].savefig(filename + f"_{f}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
 
 def print_Map(Map, filename, Name = None, detector = None):
     for m in range(len(Map)):
@@ -845,7 +851,11 @@ def print_Map(Map, filename, Name = None, detector = None):
             else:
                 file = open(filename + f"_{Name[m]}.csv" if len(Map) > 1 else filename + ".csv", 'w')
         else:
-            file = open(filename + f"_{m}.csv" if len(Map) > 1 else filename + ".csv", 'w')
+            if detector is not None:
+                file = open(filename + f"_SDD-{detectors[m]}.csv", 'w')
+            else:
+                file = open(filename + f"_{m}.csv" if len(Map) > 1 else filename + ".csv", 'w')
+
         for j in range(Map[m].shape[1]):
             if j != 0:
                 file.write("\n")
