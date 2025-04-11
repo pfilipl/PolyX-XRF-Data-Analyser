@@ -1,3 +1,6 @@
+from PyQt6 import QtWidgets
+import sys
+
 import math, os, pathlib
 import scipy.integrate as integrate
 import scipy.stats as stats
@@ -10,6 +13,8 @@ from matplotlib.patches import Rectangle
 import matplotlib.lines as lines
 import matplotlib.scale as scale
 import xraylib as xrl
+
+import main
 
 detectors = {
     0 : "Be",
@@ -800,11 +805,14 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
     Fig.append(fig)
     return Hist, Fig
 
-def print_Hist(Hist, filename, Name = None):
+def print_Hist(Hist, filename, Name = None, detector = None):
     for h in range(len(Hist)):
         if Name is not None:
             if len(Hist) > len(Name):
-                file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
+                if detector is not None:
+                    file = open(filename + f"_SDD-{detectors[h // len(Name)]}_{Name[h % len(Name)]}.csv", "w")
+                else:
+                    file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
             else:
                 file = open(filename + f"_{Name[h]}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         else:
@@ -813,21 +821,27 @@ def print_Hist(Hist, filename, Name = None):
             file.write(f"{i}\n")
         file.close()
 
-def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png"):
+def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = None):
     for f in range(len(Fig)):
         if Name is not None:
             if len(Fig) > len(Name):
-                Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
+                if detector is not None:
+                    Fig[f].savefig(filename + f"_SDD-{detectors[f // len(Name)]}_{Name[f % len(Name)]}" + ext, dpi = dpi)
+                else:
+                    Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
                 Fig[f].savefig(filename + f"_{Name[f]}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
         else:
             Fig[f].savefig(filename + f"_{f}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
 
-def print_Map(Map, filename, Name = None):
+def print_Map(Map, filename, Name = None, detector = None):
     for m in range(len(Map)):
         if Name is not None:
             if len(Map) > len(Name):
-                file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
+                if detector is not None:
+                    file = open(filename + f"_SDD-{detectors[m // len(Name)]}_{Name[m % len(Name)]}.csv", 'w')
+                else:
+                    file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
             else:
                 file = open(filename + f"_{Name[m]}.csv" if len(Map) > 1 else filename + ".csv", 'w')
         else:
@@ -914,3 +928,9 @@ def print_stack_Map(Map, head, ROI, filename):
             for k in range(len(ROI)):
                 file.write(f",{Map[k][i, j]}")
     file.close()
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    window = main.MainWindow()
+    window.show()
+    sys.exit(app.exec())
