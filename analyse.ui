@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>550</height>
+    <height>470</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>350</width>
-    <height>550</height>
+    <height>470</height>
    </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -415,34 +415,66 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioButton_ELMOtO">
-       <property name="text">
-        <string>Experiment/Load &gt; Maps &gt; Output types &gt; Outputs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
+      <widget class="QComboBox" name="comboBox_Single">
+       <item>
+        <property name="text">
+         <string>Output type &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Output</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioButton_ELMO">
-       <property name="text">
-        <string>Experiment/Load &gt; Maps &gt; Outputs</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="radioButton_ELOtMO">
-       <property name="text">
-        <string>Experiment/Load &gt; Output types &gt; Maps &gt; Outputs</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="radioButton_ELOtO">
-       <property name="text">
-        <string>Experiment/Load &gt; Output types &gt; Outputs</string>
-       </property>
+      <widget class="QComboBox" name="comboBox_Batch">
+       <item>
+        <property name="text">
+         <string>Experiment/Load &gt; Map &gt; Output type &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Experiment/Load &gt; Map &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Map &gt; Output type &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Map &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Output type &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Output type &gt; Map &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Output type &gt; Experiment/Load &gt; Map &gt; Output</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Experiment/Load &gt; Output type &gt; Map &gt; Output</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

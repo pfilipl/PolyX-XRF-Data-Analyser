@@ -615,24 +615,29 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setValue(0)
                 self.Progress.setMaximum(len(self.OutputConfig.keys()) - 7)
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-                detectors = []
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
                     ROI = []
                     for row in range(self.ROIs.rowCount()):
                         ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+                if self.AreaChanged or self.PointChanged:
+                    if self.LastChanged == "Area":
+                        POS = PDA.real_pos([[self.AreaX1.value(), self.AreaZ1.value()], [self.AreaX2.value(), self.AreaZ2.value()]], self.Data["head"])
+                    elif self.LastChanged == "Point":
+                        POS = PDA.real_pos([[self.PointX.value(), self.PointZ.value()]], self.Data["head"])
+                else:
+                    POS = [[0, 0], [1000, 1000]]
+                detectors = []
+                nestingType = None
                 for name in self.OutputConfig.keys():
-                    if name[:2] in ["De", "EL"]:
+                    if name[:2] in ["De", "Si", "Ba"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(0)
-                        if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(1)
-                        if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
-                        # if name[:2] == "EL": 
+                        elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(1)
+                        elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
+                        elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         continue
-                    if name[:4] in ["Diag", "UNor", "Norm"] and self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "OtO", roi = ROI)')
                     if self.OutputConfig[name]:
-                        time.sleep(0.1)
-                        # exec(f'analyse.{name}({self.Data}, {path})')
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!")
