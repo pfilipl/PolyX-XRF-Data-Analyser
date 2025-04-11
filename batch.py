@@ -149,11 +149,13 @@ class BatchWindow(QtWidgets.QWidget):
         rows.sort(reverse = True)
         for row in rows:
             self.ROIs.removeRow(row)
+        if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def ROIsDeleteAll_clicked(self):
         self.ROIs.setCurrentCell(0, 0)
         while self.ROIs.rowCount() > 0:
             self.ROIs.removeRow(self.ROIs.currentRow())
+        if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def PathsListExcept_clicked(self):
         for item in self.PathsList.selectedItems():

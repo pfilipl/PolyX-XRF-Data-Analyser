@@ -814,7 +814,10 @@ def print_Hist(Hist, filename, Name = None, detector = None):
                 else:
                     file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
             else:
-                file = open(filename + f"_{Name[h]}.csv" if len(Hist) > 1 else filename + ".csv", "w")
+                if detector is not None:
+                    file = open(filename + f"_SDD-{detectors[h]}_{Name[h]}.csv", "w")
+                else:
+                    file = open(filename + f"_{Name[h]}.csv", "w")
         else:
             if detector is not None:
                 file = open(filename + f"_SDD-{detectors[h]}.csv", "w")
@@ -833,7 +836,10 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
                 else:
                     Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
-                Fig[f].savefig(filename + f"_{Name[f]}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
+                if detector is not None:
+                    Fig[f].savefig(filename + f"_SDD-{detectors[f]}_{Name[f]}" + ext, dpi = dpi)
+                else:
+                    Fig[f].savefig(filename + f"_{Name[f]}" + ext, dpi = dpi)
         else:
             if detector is not None:
                 Fig[f].savefig(filename + f"_SDD-{detectors[f]}" + ext, dpi = dpi)
@@ -849,7 +855,10 @@ def print_Map(Map, filename, Name = None, detector = None):
                 else:
                     file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
             else:
-                file = open(filename + f"_{Name[m]}.csv" if len(Map) > 1 else filename + ".csv", 'w')
+                if detector is not None:
+                    file = open(filename + f"_SDD-{detectors[m]}_{Name[m]}.csv", 'w')
+                else:
+                    file = open(filename + f"_{Name[m]}.csv", 'w')
         else:
             if detector is not None:
                 file = open(filename + f"_SDD-{detectors[m]}.csv", 'w')

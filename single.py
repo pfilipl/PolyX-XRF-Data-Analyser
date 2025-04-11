@@ -473,6 +473,7 @@ class SingleWindow(QtWidgets.QWidget):
         for row in rows:
             self.tabWidget.removeTab(7 + row)
             self.ROIs.removeRow(row)
+        if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def ROIsDeleteAll_clicked(self):
         self.ROIs.setCurrentCell(0, 0)
@@ -480,6 +481,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.ROIs.removeRow(self.ROIs.currentRow())
         while self.tabWidget.count() > 7:
                 self.tabWidget.removeTab(7)
+        if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
