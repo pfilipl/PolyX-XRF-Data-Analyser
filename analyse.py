@@ -207,7 +207,7 @@ def UNormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", ori
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = aspect)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = aspect, pos = pos)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormTotal", detector = detectors)
@@ -218,7 +218,7 @@ def UNormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", orig
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect, pos = pos)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
@@ -262,7 +262,7 @@ def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", orig
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Normalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, normalize = [I0, LT], Origin = origin, Aspect = aspect)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, normalize = [I0, LT], Origin = origin, Aspect = aspect, pos = pos)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_NormTotal", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_NormTotal", detector = detectors)
@@ -275,7 +275,7 @@ def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origi
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Normalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, normalize = [I0, LT], Origin = origin, Aspect = aspect)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, normalize = [I0, LT], Origin = origin, Aspect = aspect, pos = pos)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_NormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_NormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
