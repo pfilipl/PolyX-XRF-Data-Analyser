@@ -329,6 +329,10 @@ class SingleWindow(QtWidgets.QWidget):
             self.AreaZ1.blockSignals(False)
             self.AreaZ2.blockSignals(False)
 
+        if startLoad:
+            self.PointChanged = False
+            self.AreaChanged = False
+
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def ReloadData(self):
@@ -505,7 +509,6 @@ class SingleWindow(QtWidgets.QWidget):
         if fileName is None:
             fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
-
             self.PointX.blockSignals(True)
             self.PointZ.blockSignals(True)
             self.AreaX1.blockSignals(True)
@@ -628,7 +631,7 @@ class SingleWindow(QtWidgets.QWidget):
                     elif self.LastChanged == "Point":
                         POS = PDA.real_pos([[self.PointX.value(), self.PointZ.value()]], self.Data["head"])
                 else:
-                    POS = [[0, 0], [1000, 1000]]
+                    POS = None
                 detectors = []
                 nestingType = None
                 for name in self.OutputConfig.keys():
