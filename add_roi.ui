@@ -571,6 +571,12 @@
        </item>
        <item>
         <widget class="QTableWidget" name="tableWidget_CustomROIs">
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>150</number>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Name</string>
@@ -588,7 +594,7 @@
          </column>
          <column>
           <property name="text">
-           <string>Sum factor</string>
+           <string>Sum factor [Be/ML3.3]</string>
           </property>
          </column>
         </widget>

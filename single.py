@@ -19,7 +19,7 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
         super().__init__(self.Figure)
 
 class PreviewTab(QtWidgets.QWidget):
-    def __init__(self, parent = None, roiStart = 1, roiStop = 4096):
+    def __init__(self, parent = None, roiStart = 1, roiStop = 4096, roiFactor = 1.0):
         super(PreviewTab, self).__init__(parent)
         self.Canvas = MatplotlibCanvas(self)
         self.Toolbar = NavigationToolbar2QT(self.Canvas, self)
@@ -30,6 +30,7 @@ class PreviewTab(QtWidgets.QWidget):
         self.setLayout(layout)
         self.RoiStart = roiStart
         self.RoiStop = roiStop
+        self.RoiFactor = roiFactor
 
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
@@ -68,6 +69,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.ROIsDefault        = self.pushButton_ROIsDefault
         self.RoiCount           = 0
 
+        self.ROIs.cellChanged.connect(self.ROIsChanged)
         self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
         self.pushButton_ROIsAdd.clicked.connect(self.ROIsAdd_clicked)
         self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None, mode = 'w': self.ROIsSave_clicked(checked, fileName, mode))
@@ -231,6 +233,17 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastDetector = None
                 self.CurrentDetector = None
 
+    def ROIsChanged(self):
+        table = self.ROIs
+        tabs = self.tabWidget
+        while tabs.count() > 7:
+            tabs.removeTab(7)
+        for row in range(table.rowCount()):
+            i = tabs.addTab(PreviewTab(self, int(table.item(row, 1).text()), int(table.item(row, 2).text()), float(table.item(row, 3).text())), table.item(row, 0).text())
+            tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
+            tabs.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonReleased(event, canvas))
+            tabs.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibMouseMotion(event, canvas))
+        
     def LoadData(self, startLoad = True, importLoad = False):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         path = pathlib.Path(self.MapPath.text())
@@ -258,7 +271,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
-                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
+                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2]), float(roi[3])), roi[0])
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
@@ -411,6 +424,7 @@ class SingleWindow(QtWidgets.QWidget):
         if fileName:
             self.ROIsDeleteAll_clicked()
             if changeROIsDefault: self.ROIsDefault.setChecked(False)
+            self.ROIs.blockSignals(True)
             self.ROIs.setCurrentCell(0, 0)
             while self.tabWidget.count() > 7:
                 self.tabWidget.removeTab(7)
@@ -428,11 +442,12 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
-                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2])), roi[0])
+                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2]), float(roi[3])), roi[0])
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
             file.close()
+            self.ROIs.blockSignals(False)
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -462,7 +477,7 @@ class SingleWindow(QtWidgets.QWidget):
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
-            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor\n"
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [Be/ML3.3]\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)

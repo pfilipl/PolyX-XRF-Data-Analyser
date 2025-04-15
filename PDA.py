@@ -307,8 +307,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 break
         if ROI != "max":
             if ROI is None or ROI == "sum":
-                ROI = [['Total signal', 1, head["bins"][0, 0]]]
+                ROI = [['Total signal', 1, head["bins"][0, 0], 1.0]]
             for i in range(len(ROI)):
+                if d == 2:
+                    data = Data[0] + ROI[i][3] * Data[1]
                 fig = plt.figure(layout = 'compressed')
                 ax1 = fig.add_subplot()
                 sum_signal = np.sum(data[:, :, ROI[i][1]:ROI[i][2]], axis=2)
@@ -914,7 +916,7 @@ def print_Hist(Hist, filename, Name = None, detector = None):
                     file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[h]]}_{Name[h]}.csv", "w")
+                    file = open(filename + f"_SDD-{detectors[detector[h // len(Name)]]}_{Name[h]}.csv", "w")
                 else:
                     file = open(filename + f"_{Name[h]}.csv", "w")
         else:
@@ -936,7 +938,7 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
                     Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f]]}_{Name[f]}" + ext, dpi = dpi)
+                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f // len(Name)]]}_{Name[f]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f]}" + ext, dpi = dpi)
         else:
@@ -955,7 +957,7 @@ def print_Map(Map, filename, Name = None, detector = None):
                     file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[m]]}_{Name[m]}.csv", 'w')
+                    file = open(filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m]}.csv", 'w')
                 else:
                     file = open(filename + f"_{Name[m]}.csv", 'w')
         else:

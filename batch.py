@@ -135,7 +135,7 @@ class BatchWindow(QtWidgets.QWidget):
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
-            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor\n"
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [Be/ML3.3]\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)

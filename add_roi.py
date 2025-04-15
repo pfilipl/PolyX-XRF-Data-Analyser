@@ -210,10 +210,10 @@ class AddRoi(QtWidgets.QDialog):
             self.accept()
         else:
             table = self.parent().findChild(QtWidgets.QTableWidget, "tableWidget_ROIs")
+            table.blockSignals(True)
             table.setCurrentCell(0, 0)
             while table.rowCount() > 0:
                 table.removeRow(table.currentRow())
-
             try:
                 tabs = self.parent().findChild(QtWidgets.QTabWidget, "tabWidget")
                 while tabs.count() > 7:
@@ -221,7 +221,6 @@ class AddRoi(QtWidgets.QDialog):
                 singleParent = True
             except:
                 signleParent = False
-
             for row in range(self.CustomROIs.rowCount()):
                 table.insertRow(table.currentRow() + 1)
                 table.setItem(table.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 0).text()}"))
@@ -229,13 +228,12 @@ class AddRoi(QtWidgets.QDialog):
                 table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 2).text()}"))
                 table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 3).text()}"))
                 table.setCurrentCell(table.currentRow() + 1, 0)
-
                 if singleParent:
-                    i = tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text())), self.CustomROIs.item(row, 0).text())
+                    i = tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text()), float(self.CustomROIs.item(row, 3).text())), self.CustomROIs.item(row, 0).text())
                     tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
                     tabs.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonReleased(event, canvas))
                     tabs.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibMouseMotion(event, canvas))
-            
+            table.blockSignals(False)
             self.accept()
 
 if __name__ == "__main__":

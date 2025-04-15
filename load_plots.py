@@ -6,7 +6,10 @@ import main, PDA
 def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False):
     map = tab.Canvas
     head = widget.Data["head"]
-    data = widget.Data["Data"][detector]
+    if detector == 2:
+        data = widget.Data["Data"][0] + tab.RoiFactor * widget.Data["Data"][1]
+    else:
+        data = widget.Data["Data"][detector]
     roiStart = tab.RoiStart
     roiStop = tab.RoiStop
 
