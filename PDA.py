@@ -935,18 +935,34 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "lower
     Fig.append(fig)
     return Fig
 
-def print_stack_Map(Map, head, ROI, filename):
-    file = open(filename + ".csv", 'w')
-    file.write("X,Z,real_X,real_Z")
-    for k in range(len(ROI)):
-        file.write(f",{ROI[k][0]}")
-    for i in range(Map[0].shape[0]):
-        for j in range(Map[0].shape[1]):
-            file.write("\n")
-            file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+def print_stack_Map(Map, head, ROI, filename, detector = None):
+    if detector is None:
+        file = open(filename + ".csv", 'w')
+        file.write("X,Z,real_X,real_Z")
+        for k in range(len(ROI)):
+            file.write(f",{ROI[k][0]}")
+        for i in range(Map[0].shape[0]):
+            for j in range(Map[0].shape[1]):
+                file.write("\n")
+                file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+                for k in range(len(ROI)):
+                    file.write(f",{Map[k][i, j]}")
+        file.close()
+    else:
+        didx = 0
+        for d in detector:
+            file = open(filename + f"_SDD-{detectors[d]}.csv", 'w')
+            file.write("X,Z,real_X,real_Z")
             for k in range(len(ROI)):
-                file.write(f",{Map[k][i, j]}")
-    file.close()
+                file.write(f",{ROI[k][0]}")
+            for i in range(Map[0].shape[0]):
+                for j in range(Map[0].shape[1]):
+                    file.write("\n")
+                    file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+                    for k in range(len(ROI)):
+                        file.write(f",{Map[didx * len(ROI) + k][i, j]}")
+            file.close()
+            didx += 1
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
