@@ -440,16 +440,16 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         Fig.append(fig)
     return Map, Fig
 
-def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, normalize = None, Aspect = 'auto'):
+def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, normalize = None, Aspect = 'auto'):
     if normalize is not None:
         I0 = normalize[0]
         LT = normalize[1]
-    if pos is None:
-        print("Invalid position!")
-        return None
+    Hist = []
+    Fig = []
+    if POS is None:
+        pos = [[0, 0], [1000, 1000]]
     else:
-        Hist = []
-        Fig = []
+        pos = POS
         for d in (range(len(Data)) if detector is None else detector):
             data = Data[d].copy()       # [x, z, c]
             if calib is not None:
@@ -482,10 +482,16 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
                     ax1.set_ylim([1 if log else 0, np.max(data[x0, z0, :]) * 1.5 if log else np.max(data[x0, z0, :]) * 1.05])
                 x0r = np.round(head["Xpositions"][0, x0], 2)
                 z0r = np.round(head["Zpositions"][0, z0], 2)
-                if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
+                if POS is not None:
+                    if normalize is not None:
+                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
+                    else:
+                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
                 else:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                    if normalize is not None:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    else:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}")
                 hist = data[x0, z0, :]
                 if ROI is not None:
                     for i in range(len(ROI)):
@@ -603,10 +609,16 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
                 z0r = np.round(head["Zpositions"][0, z0], 2)
                 x1r = np.round(head["Xpositions"][0, x1], 2)
                 z1r = np.round(head["Zpositions"][0, z1], 2)
-                if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
+                if POS is not None:
+                    if normalize is not None:
+                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
+                    else:
+                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
                 else:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                    if normalize is not None:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    else:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}")
                 hist = sum_data
                 if ROI is not None:
                     for i in range(len(ROI)):
@@ -694,94 +706,181 @@ def Hist_plot(Data, head, title, pos, calib = None, detector = None, log = False
             ax1.set_aspect(Aspect)
             Hist.append(hist)
             Fig.append(fig)
-        return Hist, Fig
+    return Hist, Fig
     
-def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, Aspect = 'auto'):
+def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, Aspect = 'auto', POS = None):
     Hist = []
     Fig = []
-    for d in (range(len(Data)) if detector is None else detector):
-        data = Data[d].copy()       # [x, z, c]
-        if calib is not None:
-            cEmin = (np.abs(calib - Emin * 1000)).argmin() - 1
-            if Emax is None:
-                Emax = calib[-1] / 1000
-                cEmax = head["bins"][0, 0] - 1
+    if POS is None:
+        pos = [[0, 0], [1000, 1000]]
+    else:
+        pos = POS
+        for d in (range(len(Data)) if detector is None else detector):
+            data = Data[d].copy()       # [x, z, c]
+            if calib is not None:
+                cEmin = (np.abs(calib - Emin * 1000)).argmin() - 1
+                if Emax is None:
+                    Emax = calib[-1] / 1000
+                    cEmax = head["bins"][0, 0] - 1
+                else:
+                    cEmax = (np.abs(calib - Emax * 1000)).argmin() + 1
+            if isinstance(pos, list):
+                pos = np.array(pos)     # [[x0, z0], [x1, z1]]
+            if pos.shape[0] == 1:
+                fig = plt.figure(layout = 'compressed')
+                ax1 = fig.add_subplot()
+                check_pos(pos, [data.shape[0], data.shape[1]])
+                x0 = pos[0, 0]
+                z0 = pos[0, 1]
+                max_data = np.max(np.max(data, axis = 0), axis = 0)
+                # img = ax1.plot(max_data / np.max(max_data))
+                img = ax1.plot(max_data)
+                if calib is not None:
+                    # ax1.set_ylim([1/np.max(sum_data[cEmin:cEmax]) if log else 0, np.max(sum_data[cEmin:cEmax]) / np.max(sum_data)])
+                    # ax1.set_ylim([1/np.max(sum_data) if log else 0, np.max(sum_data)])
+                    ax1.set_ylim([1 if log else 0, np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.5 if log else np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.05])
+                else:
+                    # ax1.set_ylim([1/np.max(sum_data) if log else 0, 1])
+                    ax1.set_ylim([1 if log else 0, np.max(max_data) * 1.5 if log else np.max(max_data) * 1.05])
+                x0r = np.round(head["Xpositions"][0, x0], 2)
+                z0r = np.round(head["Zpositions"][0, z0], 2)
+                if POS is not None:
+                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                else:
+                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                hist = max_data
+                if ROI is not None:
+                    for i in range(len(ROI)):
+                        if ROI[i][0] != 'Total signal':
+                            ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
+                            if calib is not None:
+                                if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                    ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            else:
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                if peaks is not None:
+                    if isinstance(peaks, bool):
+                        if peaks:
+                            xP = sig.find_peaks(max_data, height = 0.01 * np.max(max_data), width = 10)
+                            for xp in xP[0]:
+                                if calib is not None and xp > (np.abs(calib - Emin * 1000)).argmin() + 10:
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                else:
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                    elif calib is not None:
+                        for name in peaks:
+                            if name != 'Total signal':
+                                try: 
+                                    element = xrl.SymbolToAtomicNumber(name.split("-")[-2])
+                                except:
+                                    print("Unknown element symbol!")
+                                    continue
+                                line = name.split("-")[-1]
+                                if line == "Ka":
+                                    line = xrl.KA_LINE
+                                elif line == "Kb":
+                                    line = xrl.KB_LINE
+                                elif line == "La":
+                                    line = xrl.LA_LINE
+                                elif line == "Lb":
+                                    line = xrl.LB_LINE
+                                else:
+                                    print("Unknown line symbol!")
+                                    continue
+                                xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                                if xp > cEmin and xp < cEmax:
+                                    ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
+            elif pos.shape[0] == 2:
+                fig = plt.figure(layout = 'compressed')
+                ax1 = fig.add_subplot()
+                check_pos(pos, [data.shape[0], data.shape[1]])
+                x0 = min(pos[0, 0], pos[1, 0])
+                z0 = min(pos[0, 1], pos[1, 1])
+                x1 = max(pos[0, 0], pos[1, 0])
+                z1 = max(pos[0, 1], pos[1, 1])
+                max_data = np.max(np.max(data, axis = 0), axis = 0)
+                # img = ax1.plot(max_data / np.max(max_data))
+                img = ax1.plot(max_data)
+                if calib is not None:
+                    # ax1.set_ylim([1/np.max(sum_data[cEmin:cEmax]) if log else 0, np.max(sum_data[cEmin:cEmax]) / np.max(sum_data)])
+                    # ax1.set_ylim([1/np.max(sum_data) if log else 0, np.max(sum_data)])
+                    ax1.set_ylim([1 if log else 0, np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.5 if log else np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.05])
+                else:
+                    # ax1.set_ylim([1/np.max(sum_data) if log else 0, 1])
+                    ax1.set_ylim([1 if log else 0, np.max(max_data) * 1.5 if log else np.max(max_data) * 1.05])
+                x0r = np.round(head["Xpositions"][0, x0], 2)
+                z0r = np.round(head["Zpositions"][0, z0], 2)
+                x1r = np.round(head["Xpositions"][0, x1], 2)
+                z1r = np.round(head["Zpositions"][0, z1], 2)
+                if POS is not None:
+                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                else:
+                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                hist = max_data
+                if ROI is not None:
+                    for i in range(len(ROI)):
+                        if ROI[i][0] != 'Total signal':
+                            ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
+                            if calib is not None:
+                                if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                    ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            else:
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                if peaks is not None:
+                    if isinstance(peaks, bool):
+                        if peaks:
+                            xP = sig.find_peaks(max_data, height = 0.01 * np.max(max_data), width = 10)
+                            for xp in xP[0]:
+                                if calib is not None and xp > (np.abs(calib - Emin * 1000)).argmin() + 10:
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                else:
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                    elif calib is not None:
+                        for name in peaks:
+                            if name != 'Total signal':
+                                try: 
+                                    element = xrl.SymbolToAtomicNumber(name.split("-")[-2])
+                                except:
+                                    print("Unknown element symbol!")
+                                    continue
+                                line = name.split("-")[-1]
+                                if line == "Ka":
+                                    line = xrl.KA_LINE
+                                elif line == "Kb":
+                                    line = xrl.KB_LINE
+                                elif line == "La":
+                                    line = xrl.LA_LINE
+                                elif line == "Lb":
+                                    line = xrl.LB_LINE
+                                else:
+                                    print("Unknown line symbol!")
+                                    continue
+                                xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                                if xp > cEmin and xp < cEmax:
+                                    ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
             else:
-                cEmax = (np.abs(calib - Emax * 1000)).argmin() + 1
-        fig = plt.figure(layout = 'compressed')
-        ax1 = fig.add_subplot()
-        max_data = np.max(np.max(data, axis = 0), axis = 0)
-        # img = ax1.plot(max_data / np.max(max_data))
-        img = ax1.plot(max_data)
-        if calib is not None:
-            # ax1.set_ylim([1/np.max(sum_data[cEmin:cEmax]) if log else 0, np.max(sum_data[cEmin:cEmax]) / np.max(sum_data)])
-            # ax1.set_ylim([1/np.max(sum_data) if log else 0, np.max(sum_data)])
-            ax1.set_ylim([1 if log else 0, np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.5 if log else np.max(np.max(np.max(data[:, :, cEmin:cEmax], axis = 0), axis = 0)) * 1.05])
-        else:
-            # ax1.set_ylim([1/np.max(sum_data) if log else 0, 1])
-            ax1.set_ylim([1 if log else 0, np.max(max_data) * 1.5 if log else np.max(max_data) * 1.05])
-        ax1.set_title(f"{title}, SDD {detectors[d]}")
-        hist = max_data
-        if ROI is not None:
-            for i in range(len(ROI)):
-                if ROI[i][0] != 'Total signal':
-                    ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
-                    if calib is not None:
-                        if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
-                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
-                    else:
-                        ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
-        if peaks is not None:
-            if isinstance(peaks, bool):
-                if peaks:
-                    xP = sig.find_peaks(max_data, height = 0.01 * np.max(max_data), width = 10)
-                    for xp in xP[0]:
-                        if calib is not None and xp > (np.abs(calib - Emin * 1000)).argmin() + 10:
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
-                        else:
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
-            elif calib is not None:
-                for name in peaks:
-                    if name != 'Total signal':
-                        try: 
-                            element = xrl.SymbolToAtomicNumber(name.split("-")[-2])
-                        except:
-                            print("Unknown element symbol!")
-                            continue
-                        line = name.split("-")[-1]
-                        if line == "Ka":
-                            line = xrl.KA_LINE
-                        elif line == "Kb":
-                            line = xrl.KB_LINE
-                        elif line == "La":
-                            line = xrl.LA_LINE
-                        elif line == "Lb":
-                            line = xrl.LB_LINE
-                        else:
-                            print("Unknown line symbol!")
-                            continue
-                        xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
-                        ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
-                        if xp > cEmin and xp < cEmax:
-                            ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
-        if log:
-            ax1.set_yscale('log')
-        if calib is None:
-            ax1.set_xlim([0, head["bins"][0, 0]])
-            ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-            ax1.set_xlabel("channel")
-        else:
-            ax1.set_xlim([cEmin, cEmax])
-            Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
-            E = []
-            for eval in Eval:
-                E.append((np.abs(calib - eval)).argmin())
-            ax1.set_xticks(E)
-            ax1.set_xticklabels(np.abs(np.round(calib[E] / 1000, 2)))
-            ax1.set_xlabel("E [keV]")
-        ax1.set_aspect(Aspect)
-        Hist.append(hist)
-        Fig.append(fig)
+                print("Invalid position!")
+                break
+            if log:
+                ax1.set_yscale('log')
+            if calib is None:
+                ax1.set_xlim([0, head["bins"][0, 0]])
+                ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
+                ax1.set_xlabel("channel")
+            else:
+                ax1.set_xlim([cEmin, cEmax])
+                Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
+                E = []
+                for eval in Eval:
+                    E.append((np.abs(calib - eval)).argmin())
+                ax1.set_xticks(E)
+                ax1.set_xticklabels(np.abs(np.round(calib[E] / 1000, 2)))
+                ax1.set_xlabel("E [keV]")
+            ax1.set_aspect(Aspect)
+            Hist.append(hist)
+            Fig.append(fig)
     return Hist, Fig
     
 def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto'):

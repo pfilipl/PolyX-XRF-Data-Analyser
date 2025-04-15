@@ -309,7 +309,7 @@ def SpectraMaxROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = 20, ROI = roi, log = False)
+    Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = 20, ROI = roi, log = False, POS = pos)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxROIs", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxROIs", detector = detectors)
@@ -331,7 +331,7 @@ def SpectraMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", ori
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = 20, ROI = None, log = False)
+    Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = 20, ROI = None, log = False, POS = pos)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_Max", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_Max", detector = detectors)

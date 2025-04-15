@@ -615,7 +615,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 7)
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 5) # 3 detectors buttons + 2 nesting combos
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
