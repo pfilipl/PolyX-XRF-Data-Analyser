@@ -263,8 +263,8 @@ class SingleWindow(QtWidgets.QWidget):
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
 
-            if self.CurrentDetector == "Be": det = 0
-            elif self.CurrentDetector == "ML": det = 1
+            if self.CurrentDetector == "Be": det = 1
+            elif self.CurrentDetector == "ML": det = 0
             else: det = 2
             load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad)
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
@@ -347,8 +347,8 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
-        if self.CurrentDetector == "Be": det = 0
-        elif self.CurrentDetector == "ML": det = 1
+        if self.CurrentDetector == "Be": det = 1
+        elif self.CurrentDetector == "ML": det = 0
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS)
         load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
@@ -633,8 +633,8 @@ class SingleWindow(QtWidgets.QWidget):
                 nestingType = None
                 for name in self.OutputConfig.keys():
                     if name[:2] in ["De", "Si", "Ba"]:
-                        if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(0)
-                        elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(1)
+                        if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
+                        elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
                         elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         continue

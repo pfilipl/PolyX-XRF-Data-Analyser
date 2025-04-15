@@ -17,8 +17,8 @@ import xraylib as xrl
 import main
 
 detectors = {
-    0 : "Be",
-    1 : "ML3",
+    0 : "ML3",
+    1 : "Be",
     2 : "Be+ML3"
 }
 
