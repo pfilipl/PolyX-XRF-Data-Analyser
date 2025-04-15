@@ -203,7 +203,7 @@ def UNormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", ori
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "UnNormalised")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "UnNormalized")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = aspect)
     plt.close('all')
@@ -214,7 +214,7 @@ def UNormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", orig
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "UnNormalised")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "UnNormalized")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect)
     plt.close('all')
@@ -227,7 +227,7 @@ def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", orig
     I0 = Data["I0"]
     LT = Data["LT"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "Normalised")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "Normalized")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, normalize = [I0, LT], Origin = origin, Aspect = aspect)
     plt.close('all')
@@ -240,7 +240,7 @@ def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origi
     I0 = Data["I0"]
     LT = Data["LT"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "Normalised")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "Normalized")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, normalize = [I0, LT], Origin = origin, Aspect = aspect)
     plt.close('all')

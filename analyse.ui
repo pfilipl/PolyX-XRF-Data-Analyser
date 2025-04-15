@@ -109,7 +109,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Unnormalised maps</string>
+        <string>Unnormalized maps</string>
        </property>
       </widget>
      </item>
@@ -381,7 +381,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Normalised maps</string>
+        <string>Normalized maps</string>
        </property>
       </widget>
      </item>
