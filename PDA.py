@@ -394,7 +394,7 @@ def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto'):
     Fig.append(fig)
     return Fig
 
-def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = None, Vmax = None, clabel = None, Origin = "lower", Aspect = 'auto'):
+def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = None, Vmax = None, clabel = None, Origin = "upper", Aspect = 'auto'):
     Map = []
     Fig = []
     if isinstance(Data, list):
@@ -810,17 +810,17 @@ def print_Hist(Hist, filename, Name = None, detector = None):
         if Name is not None:
             if len(Hist) > len(Name):
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[h // len(Name)]}_{Name[h % len(Name)]}.csv", "w")
+                    file = open(filename + f"_SDD-{detectors[detector[h // len(Name)]]}_{Name[h % len(Name)]}.csv", "w")
                 else:
                     file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[h]}_{Name[h]}.csv", "w")
+                    file = open(filename + f"_SDD-{detectors[detector[h]]}_{Name[h]}.csv", "w")
                 else:
                     file = open(filename + f"_{Name[h]}.csv", "w")
         else:
             if detector is not None:
-                file = open(filename + f"_SDD-{detectors[h]}.csv", "w")
+                file = open(filename + f"_SDD-{detectors[detector[h]]}.csv", "w")
             else:
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         for i in Hist[h]:
@@ -832,17 +832,17 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
         if Name is not None:
             if len(Fig) > len(Name):
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_SDD-{detectors[f // len(Name)]}_{Name[f % len(Name)]}" + ext, dpi = dpi)
+                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f // len(Name)]]}_{Name[f % len(Name)]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_SDD-{detectors[f]}_{Name[f]}" + ext, dpi = dpi)
+                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f]]}_{Name[f]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f]}" + ext, dpi = dpi)
         else:
             if detector is not None:
-                Fig[f].savefig(filename + f"_SDD-{detectors[f]}" + ext, dpi = dpi)
+                Fig[f].savefig(filename + f"_SDD-{detectors[detector[f]]}" + ext, dpi = dpi)
             else:
                 Fig[f].savefig(filename + f"_{f}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
 
@@ -851,17 +851,17 @@ def print_Map(Map, filename, Name = None, detector = None):
         if Name is not None:
             if len(Map) > len(Name):
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[m // len(Name)]}_{Name[m % len(Name)]}.csv", 'w')
+                    file = open(filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.csv", 'w')
                 else:
                     file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[m]}_{Name[m]}.csv", 'w')
+                    file = open(filename + f"_SDD-{detectors[detector[m]]}_{Name[m]}.csv", 'w')
                 else:
                     file = open(filename + f"_{Name[m]}.csv", 'w')
         else:
             if detector is not None:
-                file = open(filename + f"_SDD-{detectors[m]}.csv", 'w')
+                file = open(filename + f"_SDD-{detectors[detector[m]]}.csv", 'w')
             else:
                 file = open(filename + f"_{m}.csv" if len(Map) > 1 else filename + ".csv", 'w')
 
@@ -872,20 +872,7 @@ def print_Map(Map, filename, Name = None, detector = None):
                 file.write(f"{Map[m][i, j]}" if i == 0 else f",{Map[m][i, j]}")
         file.close()
 
-# def print_stack_Map(Map, head, ROI, filename):
-#     file = open(filename + ".csv", 'w')
-#     file.write("X,Z,real_X,real_Z")
-#     for k in range(len(ROI)):
-#         file.write(f",{ROI[k][0]}")
-#     for i in range(Map[0].shape[0]):
-#         file.write("\n")
-#         for j in range(Map[0].shape[1]):
-#             file.write(f"{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}")
-#             for k in range(len(ROI)):
-#                 file.write(f",{Map[k][i, j]}")
-#     file.close()
-
-def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "lower", Aspect = 'auto'):
+def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper", Aspect = 'auto'):
     if len(Map) > 3:
         print("Too many maps to stack!")
         return
@@ -906,13 +893,11 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "lower
                 data.append(Map[m] / np.max(Map[m]))
     data = np.array(data).transpose(1, 2, 0)
     ax1.imshow(data.transpose(1, 0, 2), origin=Origin)
-    X = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-    if data.shape[0] % 6 == 0:
-        X[-1] -= 1
-    Z = list(range(0, data.shape[0] + 1, math.floor(data.shape[0]/6) if math.floor(data.shape[0]/6) > 0 else 1))
-    if data.shape[1] % 6 == 0:
-        Z[-1] -= 1
+    ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
+    ax1.set_xticklabels(np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
     ax1.set_xlabel("X [mm]")
+    ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
+    ax1.set_yticklabels(np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
     ax1.set_ylabel("Z [mm]")
     if Label is not None:
         if lightmode:
@@ -927,10 +912,6 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "lower
             ax1.set_title(f"{title}\n {colors}=({Label[0]}, 0.0, 0.0)")
     else:
         ax1.set_title(f"{title}")
-    ax1.set_xticks(X)
-    ax1.set_yticks(Z)
-    ax1.set_xticklabels(np.round(head["Xpositions"][0, X], 2))
-    ax1.set_yticklabels(np.round(head["Zpositions"][0, Z], 2))
     ax1.set_aspect(Aspect)
     Fig.append(fig)
     return Fig

@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtCore, uic
-import sys, os, numpy
+import sys, os, numpy, itertools
 import matplotlib.pyplot as plt
 
 import main, PDA
@@ -33,13 +33,9 @@ class Analyse(QtWidgets.QDialog):
                 "UNormTotal"        : True,
                 "UNormROIs"         : True,
                 "UNormTabular"      : False,
-                "UNormRGB"          : False,
-                "UNormCMY"          : False,
                 "NormTotal"         : True,
                 "NormROIs"          : True,
                 "NormTabular"       : False,
-                "NormRGB"           : False,
-                "NormCMY"           : False,
                 "SpectraSumROIs"    : True,
                 "SpectraMaxROIs"    : False,
                 "SpectraSum"        : False,
@@ -236,6 +232,27 @@ def UNormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", o
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect)
     plt.close('all')
     PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_UNormTabular", detectors)
+
+# def UNormRGB(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
+#     head = Data["head"]
+#     data = Data["Data"]
+#     dataName = path.stem
+#     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
+#     os.makedirs(outputPath, exist_ok = True)
+#     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = aspect)
+#     plt.close('all')
+#     # stackLabels = list(itertools.permutations(numpy.array(roi)[:, 0], 3))
+#     stackLabels = list(itertools.combinations(numpy.array(roi)[:, 0], 3))
+#     didx = 0
+#     for d in detectors:
+#         # stackData = list(itertools.permutations(Map[didx * len(detectors):didx * len(detectors) + len(roi)], 3))
+#         stackData = list(itertools.combinations(Map[didx * len(detectors):didx * len(detectors) + len(roi)], 3))
+#         for i in range(len(stackData)):
+#             sD = stackData[i]
+#             sL = stackLabels[i]
+#             stackFig = PDA.stack_Map(sD, head, f"{dataName}", sL, lightmode = False, Origin = origin)
+#             PDA.print_Fig(stackFig, outputPath + f"{dataName}_UNormRGB", Name = [f"{sL[0]}_{sL[1]}_{sL[2]}"], detector = [d])
+#         didx += 1
 
 def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None):
     head = Data["head"]
