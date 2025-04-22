@@ -214,7 +214,7 @@ class StitchWindow(QtWidgets.QWidget):
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", self.TopMap.Data[i])
             elif self.BottomMap is not None and self.TopMap is None:
                 dataName = resultPath.stem
-                self.BottomMap = MatData(pathlib.Path(self.BottomMapPath.text())) # why do I have to do this?!
+                self.BottomMap = MatData(pathlib.Path(self.BottomMapPath.text()))
                 head = self.BottomMap.Head.copy()
                 head["Zstartpos"] = head["Zpositions"][0, self.BottomMapOffset.value()]
                 head["Znpoints"] = self.BottomMap.NumberOfFiles - self.BottomMapOffset.value()
@@ -235,9 +235,42 @@ class StitchWindow(QtWidgets.QWidget):
                         data["stats1line"][1, :, 1] = data["stats1line"][1, :, 1][::-1]
                         data["PIN_map"][i, :]       = data["PIN_map"][i, :][::-1]
                         data["I0_map"][i, :]        = data["I0_map"][i, :][::-1]
+                    data["PIN_map"] = data["PIN_map"][self.BottomMapOffset.value():, :]
+                    data["I0_map"] = data["I0_map"][self.BottomMapOffset.value():, :]
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+1:04}.mat", data)
             else:
-                print(resultPath)
+                dataName = resultPath.stem
+                self.TopMap = MatData(pathlib.Path(self.TopMapPath.text()))
+                self.BottomMap = MatData(pathlib.Path(self.BottomMapPath.text()))
+                head = self.BottomMap.Head.copy()
+                head["Zstartpos"] = self.TopMap.Head["Zpositions"][0, 0]
+                head["Zstoppos"] = head["Zpositions"][0, self.BottomMap.NumberOfFiles - 1]
+                head["Znpoints"] = self.TopMap.NumberOfFiles - self.TopMapOffset.value() + self.BottomMap.NumberOfFiles - self.BottomMapOffset.value()
+                head["Zpositions"] = numpy.concatenate((self.TopMap.Head["Zpositions"][0, :self.TopMap.NumberOfFiles - self.TopMapOffset.value()], head["Zpositions"][0, self.BottomMapOffset.value():]))
+                scipy.io.savemat(f"{resultPath}/{dataName}_HEADER.mat", head)
+                for i in range(self.TopMap.NumberOfFiles - self.TopMapOffset.value()):
+                    data = self.TopMap.Data[i].copy()
+                    data["PIN_map"] = numpy.concatenate((data["PIN_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value()], numpy.zeros((self.BottomMap.NumberOfFiles - self.BottomMapOffset.value(), head["XscanPulses"][0][0]))))
+                    data["I0_map"] = numpy.concatenate((data["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value()], numpy.zeros((self.BottomMap.NumberOfFiles - self.BottomMapOffset.value(), head["XscanPulses"][0][0]))))
+                    scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", data)
+                for i in range(self.BottomMapOffset.value(), self.BottomMap.NumberOfFiles):
+                    data = self.BottomMap.Data[i].copy()
+                    if self.BottomMapOffset.value() + self.TopMap.NumberOfFiles - self.TopMapOffset.value() % 2 == 1:
+                        data["dane1line"][0, :, :]  = data["dane1line"][0, :, :][::-1]
+                        data["dane1line"][1, :, :]  = data["dane1line"][1, :, :][::-1]
+                        data["stats1line"][0, :, 2] = data["stats1line"][0, :, 2][::-1]
+                        data["stats1line"][1, :, 2] = data["stats1line"][1, :, 2][::-1]
+                        data["stats1line"][0, :, 3] = data["stats1line"][0, :, 3][::-1]
+                        data["stats1line"][1, :, 3] = data["stats1line"][1, :, 3][::-1]
+                        data["stats1line"][0, :, 0] = data["stats1line"][0, :, 0][::-1]
+                        data["stats1line"][1, :, 0] = data["stats1line"][1, :, 0][::-1]
+                        data["stats1line"][0, :, 1] = data["stats1line"][0, :, 1][::-1]
+                        data["stats1line"][1, :, 1] = data["stats1line"][1, :, 1][::-1]
+                        data["PIN_map"][i, :]       = data["PIN_map"][i, :][::-1]
+                        data["I0_map"][i, :]        = data["I0_map"][i, :][::-1]
+                    data["PIN_map"] = numpy.concatenate((self.TopMap.Data[-1]["PIN_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["PIN_map"][self.BottomMapOffset.value():, :]))
+                    data["I0_map"] = numpy.concatenate((self.TopMap.Data[-1]["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["I0_map"][self.BottomMapOffset.value():, :]))
+                    scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+self.TopMap.NumberOfFiles-self.TopMapOffset.value():04}.mat", data)
             QtGui.QGuiApplication.restoreOverrideCursor()
             QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!")
 
