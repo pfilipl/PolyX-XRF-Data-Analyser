@@ -1,9 +1,19 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, matplotlib, numpy, pathlib
+import sys, matplotlib, numpy, pathlib, os, scipy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
 import main, PDA
+
+class MatData():
+    def __init__(self, path, parent = None):
+        self.Path = path
+        self.numberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        self.Data = []
+        if self.numberOfFiles > 0:
+            for i in range(0, self.numberOfFiles):
+                self.Data.append(scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_{i+1:04}.mat"))
+        self.Head = scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_HEADER.mat")
 
 class MatplotlibCanvas(FigureCanvasQTAgg):
     def __init__(self, parent = None):
@@ -21,9 +31,11 @@ class StitchWindow(QtWidgets.QWidget):
         uic.loadUi("stitch.ui", self)
 
         # Map
-        self.Map             = self.widget_Map
-        self.MapCanvas       = MatplotlibCanvas(self.Map)
-        self.MapToolbar      = NavigationToolbar2QT(self.MapCanvas, self.Map)
+        self.Map                = self.widget_Map
+        self.MapCanvas          = MatplotlibCanvas(self.Map)
+        self.MapToolbar         = NavigationToolbar2QT(self.MapCanvas, self.Map)
+        self.TopMap             = None
+        self.BottomMap          = None
         
         self.MapCanvas.setStyleSheet("background-color:transparent;")
         topLayout = QtWidgets.QVBoxLayout()
@@ -81,6 +93,7 @@ class StitchWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
         else:
             if mode == "top":
+                self.TopMap = MatData(path)
                 sumSignal = numpy.sum(Data[2], axis=2)
                 offset.setMaximum(Data[2].shape[1] - 1)
                 printBottom = False if self.BottomMapSumSignal is None else True
@@ -93,8 +106,10 @@ class StitchWindow(QtWidgets.QWidget):
                     imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
                     imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
                 self.TopMapSumSignal = sumSignal
+                self.TopMapOffset.setValue(0)
                 if not self.TopMapOffset.isEnabled(): self.TopMapOffset.setEnabled(True)
             elif mode == "bottom":
+                self.BottomMap = MatData(path)
                 sumSignal = numpy.sum(Data[2], axis=2)
                 offset.setMaximum(Data[2].shape[1] - 1)
                 printTop = False if self.TopMapSumSignal is None else True
@@ -107,9 +122,11 @@ class StitchWindow(QtWidgets.QWidget):
                     imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.TopMapSumSignal))])
                     imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.TopMapSumSignal))])
                 self.BottomMapSumSignal = sumSignal
+                self.BottomMapOffset.setValue(0)
                 if not self.BottomMapOffset.isEnabled(): self.BottomMapOffset.setEnabled(True)
             canvas.Axes.format_coord = lambda x, y: f'x = {round(x)} px, z = {round(y)} px'
             canvas.draw()
+        if not self.StitchMaps.isEnabled(): self.StitchMaps.setEnabled(True)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def ReloadMap(self, value, mode):
@@ -123,15 +140,18 @@ class StitchWindow(QtWidgets.QWidget):
             else:
                 imgTop = canvas.Axes.imshow(sumSignal.transpose(), extent = [-0.5, sumSignal.shape[0] - 0.5, -0.5, sumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
             if printBottom:
-                imgBottom = canvas.Axes.imshow(self.BottomMapSumSignal.transpose(), extent = [-0.5, self.BottomMapSumSignal.shape[0] - 0.5, -self.BottomMapSumSignal.shape[1] + 0.5, -0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                if self.BottomMapOffset.value():
+                    imgBottom = canvas.Axes.imshow(self.BottomMapSumSignal[:, self.BottomMapOffset.value():].transpose(), extent = [-0.5, self.BottomMapSumSignal[:, self.BottomMapOffset.value():].shape[0] - 0.5, -self.BottomMapSumSignal[:, self.BottomMapOffset.value():].shape[1] + 0.5, -0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                else:
+                    imgBottom = canvas.Axes.imshow(self.BottomMapSumSignal.transpose(), extent = [-0.5, self.BottomMapSumSignal.shape[0] - 0.5, -self.BottomMapSumSignal.shape[1] + 0.5, -0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
                 if value:
                     canvas.Axes.set_xlim([0, max(sumSignal[:, :-value].shape[0], self.BottomMapSumSignal.shape[0])])
-                    canvas.Axes.set_ylim([-self.BottomMapSumSignal.shape[1], sumSignal[:, :-value].shape[1]])
+                    canvas.Axes.set_ylim([-self.BottomMapSumSignal[:, self.BottomMapOffset.value():].shape[1] if self.BottomMapOffset.value() else -self.BottomMapSumSignal.shape[1], sumSignal[:, :-value].shape[1]])
                     imgBottom.set_clim([max(numpy.min(sumSignal[:, :-value]), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal[:, :-value]), numpy.max(self.BottomMapSumSignal))])
                     imgTop.set_clim([max(numpy.min(sumSignal[:, :-value]), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal[:, :-value]), numpy.max(self.BottomMapSumSignal))])
                 else:
                     canvas.Axes.set_xlim([0, max(sumSignal.shape[0], self.BottomMapSumSignal.shape[0])])
-                    canvas.Axes.set_ylim([-self.BottomMapSumSignal.shape[1], sumSignal.shape[1]])
+                    canvas.Axes.set_ylim([-self.BottomMapSumSignal[:, self.BottomMapOffset.value():].shape[1] if self.BottomMapOffset.value() else -self.BottomMapSumSignal.shape[1], sumSignal.shape[1]])
                     imgBottom.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
                     imgTop.set_clim([max(numpy.min(sumSignal), numpy.min(self.BottomMapSumSignal)), min(numpy.max(sumSignal), numpy.max(self.BottomMapSumSignal))])
         elif mode == "bottom":
@@ -140,9 +160,12 @@ class StitchWindow(QtWidgets.QWidget):
             canvas.Axes.cla()
             imgBottom = canvas.Axes.imshow(sumSignal[:, value:].transpose(), extent = [-0.5, sumSignal[:, value:].shape[0] - 0.5, -sumSignal[:, value:].shape[1] + 0.5, 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
             if printTop:
-                imgTop = canvas.Axes.imshow(self.TopMapSumSignal.transpose(), extent = [-0.5, self.TopMapSumSignal.shape[0] - 0.5, -0.5, self.TopMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                if self.TopMapOffset.value():
+                    imgTop = canvas.Axes.imshow(self.TopMapSumSignal[:, :-self.TopMapOffset.value()].transpose(), extent = [-0.5, self.TopMapSumSignal[:, :-self.TopMapOffset.value()].shape[0] - 0.5, -0.5, self.TopMapSumSignal[:, :-self.TopMapOffset.value()].shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
+                else:    
+                    imgTop = canvas.Axes.imshow(self.TopMapSumSignal.transpose(), extent = [-0.5, self.TopMapSumSignal.shape[0] - 0.5, -0.5, self.TopMapSumSignal.shape[1] - 0.5], origin = 'upper', cmap = 'viridis', aspect = 'equal')
                 canvas.Axes.set_xlim([0, max(sumSignal[:, value:].shape[0], self.TopMapSumSignal.shape[0])])
-                canvas.Axes.set_ylim([-sumSignal[:, value:].shape[1], self.TopMapSumSignal.shape[1]])
+                canvas.Axes.set_ylim([-sumSignal[:, value:].shape[1], self.TopMapSumSignal[:, :-self.TopMapOffset.value()].shape[1] if self.TopMapOffset.value() else self.TopMapSumSignal.shape[1]])
                 imgTop.set_clim([max(numpy.min(sumSignal[:, value:]), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal[:, value:]), numpy.max(self.TopMapSumSignal))])
                 imgBottom.set_clim([max(numpy.min(sumSignal[:, value:]), numpy.min(self.TopMapSumSignal)), min(numpy.max(sumSignal[:, value:]), numpy.max(self.TopMapSumSignal))])
         canvas.draw()
@@ -169,7 +192,20 @@ class StitchWindow(QtWidgets.QWidget):
             self.ResultPath.setText(path)
     
     def StitchMaps_clicked(self):
-        return
+        resultPath = pathlib.Path(self.ResultPath.text())
+        if not resultPath.is_dir():
+            if resultPath == pathlib.Path():
+                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from empty path.")
+            else:
+                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from path:\n{resultPath}")
+        elif self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
+            QtWidgets.QMessageBox.warning(self, "Stitch", f'It is impossible to stitch maps of various X dimensions ({self.TopMap.Head["XscanPulses"][0][0]} vs {self.BottomMap.Head["XscanPulses"][0][0]}).')
+        elif self.TopMap is not None and self.BottomMap is None:
+            print(resultPath)
+        elif self.BottomMap is not None and self.TopMap is None:
+            print(resultPath)
+        else:
+            print(resultPath)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
