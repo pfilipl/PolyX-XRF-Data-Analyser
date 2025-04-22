@@ -307,9 +307,9 @@ class BatchWindow(QtWidgets.QWidget):
         resultPath = self.ResultsPath.text()
         if not os.path.isdir(resultPath):
             if resultPath == "":
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from empty path.")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{resultPath}")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultPath}")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), True)
             if outputConfig.exec():

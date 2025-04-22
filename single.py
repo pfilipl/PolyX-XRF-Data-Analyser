@@ -627,9 +627,9 @@ class SingleWindow(QtWidgets.QWidget):
         resultsPath = pathlib.Path(self.ResultsPath.text())
         if not resultsPath.is_dir():
             if resultsPath == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from empty path.")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files from path:\n{resultsPath}")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), False)
             if outputConfig.exec():

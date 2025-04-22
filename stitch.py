@@ -195,15 +195,16 @@ class StitchWindow(QtWidgets.QWidget):
         resultPath = pathlib.Path(self.ResultPath.text())
         if not resultPath.is_dir():
             if resultPath == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from empty path.")
+                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on an empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from path:\n{resultPath}")
+                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on the path:\n{resultPath}")
         else:
             QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
             if self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
                 QtWidgets.QMessageBox.warning(self, "Stitch", f'It is impossible to stitch maps of various X dimensions ({self.TopMap.Head["XscanPulses"][0][0]} vs {self.BottomMap.Head["XscanPulses"][0][0]}).')
             elif self.TopMap is not None and self.BottomMap is None:
                 dataName = resultPath.stem
+                self.TopMap = MatData(pathlib.Path(self.TopMapPath.text()))
                 head = self.TopMap.Head.copy()
                 head["Zendpos"] = head["Zpositions"][0, self.TopMap.NumberOfFiles - self.TopMapOffset.value() - 1]
                 head["Znpoints"] = self.TopMap.NumberOfFiles - self.TopMapOffset.value()
@@ -212,7 +213,29 @@ class StitchWindow(QtWidgets.QWidget):
                 for i in range(self.TopMap.NumberOfFiles - self.TopMapOffset.value()):
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", self.TopMap.Data[i])
             elif self.BottomMap is not None and self.TopMap is None:
-                dataName = resultPath.stem  
+                dataName = resultPath.stem
+                self.BottomMap = MatData(pathlib.Path(self.BottomMapPath.text())) # why do I have to do this?!
+                head = self.BottomMap.Head.copy()
+                head["Zstartpos"] = head["Zpositions"][0, self.BottomMapOffset.value()]
+                head["Znpoints"] = self.BottomMap.NumberOfFiles - self.BottomMapOffset.value()
+                head["Zpositions"] = head["Zpositions"][0, self.BottomMapOffset.value():]
+                scipy.io.savemat(f"{resultPath}/{dataName}_HEADER.mat", head)
+                for i in range(self.BottomMapOffset.value(), self.BottomMap.NumberOfFiles):
+                    data = self.BottomMap.Data[i].copy()
+                    if self.BottomMapOffset.value() % 2 == 1:
+                        data["dane1line"][0, :, :]  = data["dane1line"][0, :, :][::-1]
+                        data["dane1line"][1, :, :]  = data["dane1line"][1, :, :][::-1]
+                        data["stats1line"][0, :, 2] = data["stats1line"][0, :, 2][::-1]
+                        data["stats1line"][1, :, 2] = data["stats1line"][1, :, 2][::-1]
+                        data["stats1line"][0, :, 3] = data["stats1line"][0, :, 3][::-1]
+                        data["stats1line"][1, :, 3] = data["stats1line"][1, :, 3][::-1]
+                        data["stats1line"][0, :, 0] = data["stats1line"][0, :, 0][::-1]
+                        data["stats1line"][1, :, 0] = data["stats1line"][1, :, 0][::-1]
+                        data["stats1line"][0, :, 1] = data["stats1line"][0, :, 1][::-1]
+                        data["stats1line"][1, :, 1] = data["stats1line"][1, :, 1][::-1]
+                        data["PIN_map"][i, :]       = data["PIN_map"][i, :][::-1]
+                        data["I0_map"][i, :]        = data["I0_map"][i, :][::-1]
+                    scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+1:04}.mat", data)
             else:
                 print(resultPath)
             QtGui.QGuiApplication.restoreOverrideCursor()
