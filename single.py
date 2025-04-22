@@ -662,8 +662,10 @@ class SingleWindow(QtWidgets.QWidget):
                         exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
-                QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!")
-    
+                dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
+                if dialog == QtWidgets.QMessageBox.StandardButton.Open:
+                    analyse.OpenDirectory(resultsPath)
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = main.MainWindow()

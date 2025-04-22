@@ -304,12 +304,12 @@ class BatchWindow(QtWidgets.QWidget):
             self.PathsSave(fileName, 'a')
     
     def Analyse_clicked(self):
-        resultPath = self.ResultsPath.text()
-        if not os.path.isdir(resultPath):
-            if resultPath == "":
+        resultsPath = self.ResultsPath.text()
+        if not os.path.isdir(resultsPath):
+            if resultsPath == "":
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
             else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultPath}")
+                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), True)
             if outputConfig.exec():
@@ -333,7 +333,9 @@ class BatchWindow(QtWidgets.QWidget):
                             # exec(f'analyse.{name}({tempData}, {path})')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
-                QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!")
+                dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
+                if dialog == QtWidgets.QMessageBox.StandardButton.Open:
+                    analyse.OpenDirectory(resultsPath)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

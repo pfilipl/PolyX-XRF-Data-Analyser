@@ -1,8 +1,12 @@
 from PyQt6 import QtWidgets, QtCore, uic
-import sys, os, numpy, itertools
+import sys, os, numpy, itertools, subprocess
 import matplotlib.pyplot as plt
 
 import main, PDA
+
+def OpenDirectory(path):
+    try: os.startfile(path)
+    except: subprocess.Popen(['xdg-open', path])
 
 class Analyse(QtWidgets.QDialog):
     def __init__(self, parent = None, outputConfig = None, detectorsBe = True, detectorsML = True, detectorsSum = False, batch = False):

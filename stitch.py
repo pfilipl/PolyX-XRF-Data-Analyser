@@ -3,7 +3,7 @@ import sys, matplotlib, numpy, pathlib, os, scipy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
-import main, PDA
+import main, PDA, analyse
 
 class MatData():
     def __init__(self, path, parent = None):
@@ -272,7 +272,9 @@ class StitchWindow(QtWidgets.QWidget):
                     data["I0_map"] = numpy.concatenate((self.TopMap.Data[-1]["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["I0_map"][self.BottomMapOffset.value():, :]))
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+self.TopMap.NumberOfFiles-self.TopMapOffset.value():04}.mat", data)
             QtGui.QGuiApplication.restoreOverrideCursor()
-            QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!")
+            dialog = QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
+            if dialog == QtWidgets.QMessageBox.StandardButton.Open:
+                analyse.OpenDirectory(resultPath)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
