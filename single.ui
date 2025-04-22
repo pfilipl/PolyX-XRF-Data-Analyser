@@ -417,7 +417,7 @@
           </column>
           <column>
            <property name="text">
-            <string>Sum factor [Be/ML3.3]</string>
+            <string>Sum factor [ML3.3/Be]</string>
            </property>
           </column>
          </widget>
