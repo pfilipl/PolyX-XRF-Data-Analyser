@@ -8,10 +8,10 @@ import main, PDA
 class MatData():
     def __init__(self, path, parent = None):
         self.Path = path
-        self.numberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        self.NumberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
         self.Data = []
-        if self.numberOfFiles > 0:
-            for i in range(0, self.numberOfFiles):
+        if self.NumberOfFiles > 0:
+            for i in range(0, self.NumberOfFiles):
                 self.Data.append(scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_{i+1:04}.mat"))
         self.Head = scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_HEADER.mat")
 
@@ -198,14 +198,25 @@ class StitchWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from empty path.")
             else:
                 QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files from path:\n{resultPath}")
-        elif self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
-            QtWidgets.QMessageBox.warning(self, "Stitch", f'It is impossible to stitch maps of various X dimensions ({self.TopMap.Head["XscanPulses"][0][0]} vs {self.BottomMap.Head["XscanPulses"][0][0]}).')
-        elif self.TopMap is not None and self.BottomMap is None:
-            print(resultPath)
-        elif self.BottomMap is not None and self.TopMap is None:
-            print(resultPath)
         else:
-            print(resultPath)
+            QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+            if self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
+                QtWidgets.QMessageBox.warning(self, "Stitch", f'It is impossible to stitch maps of various X dimensions ({self.TopMap.Head["XscanPulses"][0][0]} vs {self.BottomMap.Head["XscanPulses"][0][0]}).')
+            elif self.TopMap is not None and self.BottomMap is None:
+                dataName = resultPath.stem
+                head = self.TopMap.Head.copy()
+                head["Zendpos"] = head["Zpositions"][0, self.TopMap.NumberOfFiles - self.TopMapOffset.value() - 1]
+                head["Znpoints"] = self.TopMap.NumberOfFiles - self.TopMapOffset.value()
+                head["Zpositions"] = head["Zpositions"][0, :self.TopMap.NumberOfFiles - self.TopMapOffset.value()]
+                scipy.io.savemat(f"{resultPath}/{dataName}_HEADER.mat", head)
+                for i in range(self.TopMap.NumberOfFiles - self.TopMapOffset.value()):
+                    scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", self.TopMap.Data[i])
+            elif self.BottomMap is not None and self.TopMap is None:
+                dataName = resultPath.stem  
+            else:
+                print(resultPath)
+            QtGui.QGuiApplication.restoreOverrideCursor()
+            QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

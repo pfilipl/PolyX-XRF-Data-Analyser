@@ -263,6 +263,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.monoE = None
 
             if self.ROIsDefault.isChecked():
+                self.ROIs.blockSignals(True)
                 self.ROIsDeleteAll_clicked()
                 for roi in ROI:
                     self.ROIs.insertRow(self.ROIs.currentRow() + 1)
@@ -275,6 +276,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
+                self.ROIs.blockSignals(False)
 
             if self.CurrentDetector == "Be": det = 1
             elif self.CurrentDetector == "ML": det = 0
