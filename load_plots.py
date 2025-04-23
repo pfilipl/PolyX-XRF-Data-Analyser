@@ -22,12 +22,12 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
 
     map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
     map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
-    map.Axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
+    map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
     map.Axes2x.set_xlabel("X [mm]")
 
     map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
     map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
-    map.Axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
+    map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
     map.Axes2y.set_ylabel("Z [mm]")
 
     map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
@@ -68,7 +68,7 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
 
     plot.Axes2x = plot.Axes.secondary_xaxis('bottom', transform = plot.Axes.transData)
     plot.Axes2x.set_xticks(numpy.linspace(0, len(data) - 1, len(plot.Axes.get_xticks()) - 2))
-    plot.Axes2x.set_xticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(plot.Axes2x.get_xticks())))
+    plot.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(plot.Axes2x.get_xticks())))
     plot.Axes2x.set_xlabel("Z [mm]")
 
     plot.Axes.format_coord = lambda x, y: f'z = {head["Zpositions"][0, round(x)]:.3f} mm, I = {y:.3f} mA'
@@ -93,12 +93,12 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
 
     map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
     map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
-    map.Axes2x.set_xticklabels(numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
+    map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
     map.Axes2x.set_xlabel("X [mm]")
 
     map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
     map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
-    map.Axes2y.set_yticklabels(numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
+    map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
     map.Axes2y.set_ylabel("Z [mm]")
 
     map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
