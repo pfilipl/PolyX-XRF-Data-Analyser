@@ -67,7 +67,6 @@ class BatchWindow(QtWidgets.QWidget):
 
         # Results
         self.ResultsPath                = self.lineEdit_ResultsPath
-        self.ResultsNested              = self.checkBox_ResultsNested
 
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
@@ -289,8 +288,6 @@ class BatchWindow(QtWidgets.QWidget):
             fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
             fileContent += f"\nMapsNesting2\tChecked\t{self.MapsNesting2.isChecked()}"
             fileContent += f"\nMapsNesting3\tChecked\t{self.MapsNesting3.isChecked()}"
-            
-            fileContent += f"\n\nResultsNested\tChecked\t{self.ResultsNested.isChecked()}"
 
             file.write(fileContent + "\n\n# -----\n\n")
             file.close()
