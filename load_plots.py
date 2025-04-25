@@ -3,7 +3,7 @@ import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis'):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -16,7 +16,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
     sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
     if map.ColorBar: map.ColorBar.remove()
     map.Axes.cla()
-    imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+    imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
 
@@ -33,7 +33,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
     map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
 
     map.ColorBar = map.figure.colorbar(imgMap)
-    map.ColorBar.set_ticks(numpy.linspace(numpy.min(sumSignal), numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
+    map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(sumSignal), Vmin) if Vmin is not None else numpy.min(sumSignal), min(numpy.max(sumSignal), Vmax) if Vmax is not None else numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
 
     if (widget.AreaChanged or widget.PointChanged) and not importLoad:
         if isinstance(pos, list):
@@ -75,7 +75,7 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
 
     plot.draw()
 
-def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False):
+def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis'):
     map = tab.Canvas
     head = widget.Data["head"]
     Data = widget.Data[dataName]
@@ -87,7 +87,7 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
 
     if map.ColorBar: map.ColorBar.remove()
     map.Axes.cla()
-    imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = 'viridis', aspect = 'equal')
+    imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
 
@@ -104,12 +104,12 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
     map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
 
     map.ColorBar = map.figure.colorbar(imgMap)
-    map.ColorBar.set_ticks(numpy.linspace(numpy.min(data), numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
+    map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(data), Vmin) if Vmin is not None else numpy.min(data), min(numpy.max(data), Vmax) if Vmax is not None else numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
     if clabel: map.ColorBar.set_label(clabel)
 
     map.draw()
 
-def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False):
+def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False, Aspect = 'auto'):
     spectrum = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data["Data"][detector]
@@ -246,6 +246,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         spectrum.Axes2x.set_xlabel("E [keV]")
         spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)] / 1000:.3f} keV, y = {y:.3e}'
 
+    spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()
 
 if __name__ == "__main__":

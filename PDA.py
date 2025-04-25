@@ -921,7 +921,8 @@ def print_Hist(Hist, filename, Name = None, detector = None):
                     file = open(filename + f"_{Name[h]}.csv", "w")
         else:
             if detector is not None:
-                file = open(filename + f"_SDD-{detectors[detector[h]]}.csv", "w")
+                file = open(filename + f"_SDD-{detectors[h]}.csv", "w")
+                # file = open(filename + f"_SDD-{detectors[detector[h]]}.csv", "w")
             else:
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         for i in Hist[h]:

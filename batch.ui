@@ -22,7 +22,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_8">
+  <layout class="QHBoxLayout" name="horizontalLayout_5">
    <item>
     <widget class="QFrame" name="frame">
      <property name="sizePolicy">
@@ -680,6 +680,9 @@
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <widget class="QPushButton" name="pushButton_SpectraConfigEnergyAuto">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -721,6 +724,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_SpectraConfigEnergyStart">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -759,6 +765,9 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_SpectraConfigEnergyStop">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
@@ -840,77 +849,6 @@
               </property>
               <property name="value">
                <double>1.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="4" column="1">
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QPushButton" name="pushButton_MapsConfigColormapDefault">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="mouseTracking">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>Default</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_18">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="mouseTracking">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>or</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineEdit_MapsConfigColormapValue">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="mouseTracking">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>viridis</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="toolButton_MapsConfigColormapSearch">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="mouseTracking">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>...</string>
               </property>
              </widget>
             </item>
@@ -1198,6 +1136,61 @@
             <property name="orientation">
              <enum>Qt::Orientation::Vertical</enum>
             </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="comboBox_MapsConfigColormap">
+            <property name="mouseTracking">
+             <bool>false</bool>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text">
+              <string>viridis</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>plasma</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>inferno</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>magma</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>cividis</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>gist_rainbow</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>rainbow</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>jet</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>turbo</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -1591,9 +1584,6 @@
   <tabstop>doubleSpinBox_MapsConfigValuesStop</tabstop>
   <tabstop>pushButton_MapsConfigAspectAuto</tabstop>
   <tabstop>doubleSpinBox_MapsConfigAspectValue</tabstop>
-  <tabstop>pushButton_MapsConfigColormapDefault</tabstop>
-  <tabstop>lineEdit_MapsConfigColormapValue</tabstop>
-  <tabstop>toolButton_MapsConfigColormapSearch</tabstop>
   <tabstop>pushButton_SpectraConfigEnergyAuto</tabstop>
   <tabstop>doubleSpinBox_SpectraConfigEnergyStart</tabstop>
   <tabstop>doubleSpinBox_SpectraConfigEnergyStop</tabstop>

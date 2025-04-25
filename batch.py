@@ -23,15 +23,16 @@ class BatchWindow(QtWidgets.QWidget):
         self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
 
         # Maps configuration
-        self.MapsConfigValuesAuto        = self.pushButton_MapsConfigValuesAuto
-        self.MapsConfigValuesStart       = self.doubleSpinBox_MapsConfigValuesStart
-        self.MapsConfigValuesStop        = self.doubleSpinBox_MapsConfigValuesStop
-        self.MapsConfigAspectAuto        = self.pushButton_MapsConfigAspectAuto
-        self.MapsConfigAspectValue       = self.doubleSpinBox_MapsConfigAspectValue
-        self.MapsConfigColormapDefault   = self.pushButton_MapsConfigColormapDefault
-        self.MapsConfigColormapValue     = self.lineEdit_MapsConfigColormapValue
+        self.MapsConfigValuesAuto       = self.pushButton_MapsConfigValuesAuto
+        self.MapsConfigValuesStart      = self.doubleSpinBox_MapsConfigValuesStart
+        self.MapsConfigValuesStop       = self.doubleSpinBox_MapsConfigValuesStop
+        self.MapsConfigAspectAuto       = self.pushButton_MapsConfigAspectAuto
+        self.MapsConfigAspectValue      = self.doubleSpinBox_MapsConfigAspectValue
+        self.MapsConfigColormap         = self.comboBox_MapsConfigColormap
 
-        self.toolButton_MapsConfigColormapSearch.clicked.connect(self.MapsConfigColormapSearch_clicked)
+        self.MapsConfigValuesStart.valueChanged.connect(self.MapsConfigValue_changed)
+        self.MapsConfigValuesStop.valueChanged.connect(self.MapsConfigValue_changed)
+        self.MapsConfigAspectValue.valueChanged.connect(self.MapsConfigAspect_changed)
         
         # Spectra configuration
         self.SpectraConfigEnergyAuto    = self.pushButton_SpectraConfigEnergyAuto
@@ -39,6 +40,10 @@ class BatchWindow(QtWidgets.QWidget):
         self.SpectraConfigEnergyStop    = self.doubleSpinBox_SpectraConfigEnergyStop
         self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto
         self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue
+
+        self.SpectraConfigEnergyStart.valueChanged.connect(self.SpectraConfigEnergy_changed)
+        self.SpectraConfigEnergyStop.valueChanged.connect(self.SpectraConfigEnergy_changed)
+        self.SpectraConfigAspectValue.valueChanged.connect(self.SpectraConfigAspect_changed)
 
         # Regions of interest (ROIs)
         self.ROIs                       = self.tableWidget_ROIs
@@ -156,6 +161,18 @@ class BatchWindow(QtWidgets.QWidget):
             self.ROIs.removeRow(self.ROIs.currentRow())
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
+    def MapsConfigValue_changed(self):
+        if self.MapsConfigValuesAuto.isChecked(): self.MapsConfigValuesAuto.setChecked(False)
+
+    def MapsConfigAspect_changed(self):
+        if self.MapsConfigAspectAuto.isChecked(): self.MapsConfigAspectAuto.setChecked(False)
+
+    def SpectraConfigEnergy_changed(self):
+        if self.SpectraConfigEnergyAuto.isChecked(): self.SpectraConfigEnergyAuto.setChecked(False)
+        
+    def SpectraConfigAspect_changed(self):
+        if self.SpectraConfigAspectAuto.isChecked(): self.SpectraConfigAspectAuto.setChecked(False)
+
     def PathsListExcept_clicked(self):
         for item in self.PathsList.selectedItems():
             self.PathsList.takeItem(self.PathsList.row(item))
@@ -243,8 +260,13 @@ class BatchWindow(QtWidgets.QWidget):
                     value = None
                     if len(data) > 2:
                         value = " ".join(data[2:])
-                    if property == "Text": exec(f'self.{variableName}.set{property}("{value if value else ""}")')
-                    else: exec(f'self.{variableName}.set{property}({value})')
+                    if property == "Text": 
+                        if variableName == "MapsConfigColormap":
+                            exec(f'self.comboBox_{variableName}.setCurrentIndex(self.comboBox_{variableName}.findText("{value}", QtCore.Qt.MatchFlag.MatchExactly))')
+                        else:
+                            exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                    else: 
+                        exec(f'self.{variableName}.set{property}({value})')
             file.close()
             self.ROIsImport_clicked(False, fileName)
             self.PathsImport(fileName)
@@ -266,6 +288,21 @@ class BatchWindow(QtWidgets.QWidget):
             fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
 
             fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+
+            if not self.MapsConfigValuesAuto.isChecked():
+                fileContent += f"\n\nMapsConfigValuesStart\tValue\t{self.MapsConfigValuesStart.value()}"
+                fileContent += f"\nMapsConfigValuesStop\tValue\t{self.MapsConfigValuesStop.value()}"
+            if self.MapsConfigAspectAuto.isChecked():
+                fileContent += f"\nMapsConfigAspectAuto\tChecked\tTrue"
+            else: fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
+            fileContent += f"\nMapsConfigColormap\tCurrentText\t{self.MapsConfigColormap.currentText()}"
+
+            if not self.SpectraConfigEnergyAuto.isChecked():
+                fileContent += f"\n\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"
+                fileContent += f"\nSpectraConfigEnergyStop\tValue\t{self.SpectraConfigEnergyStop.value()}"
+            if self.SpectraConfigAspectAuto.isChecked():
+                fileContent += f"\nSpectraConfigAspectAuto\tChecked\tTrue"
+            else: fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
 
             fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
 

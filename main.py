@@ -37,7 +37,25 @@ class MainWindow(QtWidgets.QMainWindow):
         noise = self.Single.doubleSpinBox_CalibrationNoise.value()
         fano = self.Single.doubleSpinBox_CalibrationFano.value()
         self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
+        
+        self.Single.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
 
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+
+        self.Batch.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+        
         self.Single.setCalibration(self.Calib, self.Sigma)
         self.Batch.setCalibration(self.Calib, self.Sigma)
 
@@ -62,6 +80,24 @@ class MainWindow(QtWidgets.QMainWindow):
         noise = self.Batch.doubleSpinBox_CalibrationNoise.value()
         fano = self.Batch.doubleSpinBox_CalibrationFano.value()
         self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
+
+        self.Batch.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+
+        self.Single.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
 
         self.Batch.setCalibration(self.Calib, self.Sigma)
         self.Single.setCalibration(self.Calib, self.Sigma)

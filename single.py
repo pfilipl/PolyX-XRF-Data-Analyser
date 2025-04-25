@@ -37,33 +37,6 @@ class SingleWindow(QtWidgets.QWidget):
         super(SingleWindow, self).__init__(parent)
         uic.loadUi("single.ui", self)
 
-        # Spectrum from map region
-        self.MarkPoint          = self.pushButton_MarkPoint
-        self.PointX             = self.doubleSpinBox_PointX
-        self.PointZ             = self.doubleSpinBox_PointZ
-        self.PointEnabled       = False
-        self.PointChanged       = False
-        
-        self.SelectArea         = self.pushButton_SelectArea
-        self.AreaX1             = self.doubleSpinBox_AreaX1
-        self.AreaZ1             = self.doubleSpinBox_AreaZ1
-        self.AreaX2             = self.doubleSpinBox_AreaX2
-        self.AreaZ2             = self.doubleSpinBox_AreaZ2
-        self.AreaEnabled        = False
-        self.AreaChanged        = False
-        
-        self.LastChanged        = "Area"
-
-        self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
-        self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
-        self.AreaX1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
-        self.AreaZ1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
-        self.AreaX2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
-        self.AreaZ2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
-
-        self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
-        self.SelectArea.toggled.connect(self.SelectArea_toggled)
-
         # Regions of interest (ROIs)
         self.ROIs               = self.tableWidget_ROIs
         self.ROIsDefault        = self.pushButton_ROIsDefault
@@ -75,6 +48,29 @@ class SingleWindow(QtWidgets.QWidget):
         self.pushButton_ROIsSave.clicked.connect(lambda checked, fileName = None, mode = 'w': self.ROIsSave_clicked(checked, fileName, mode))
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
+
+        # Maps configuration
+        self.MapsConfigValuesAuto       = self.pushButton_MapsConfigValuesAuto
+        self.MapsConfigValuesStart      = self.doubleSpinBox_MapsConfigValuesStart
+        self.MapsConfigValuesStop       = self.doubleSpinBox_MapsConfigValuesStop
+        self.MapsConfigAspectAuto       = self.pushButton_MapsConfigAspectAuto
+        self.MapsConfigAspectValue      = self.doubleSpinBox_MapsConfigAspectValue
+        self.MapsConfigColormap         = self.comboBox_MapsConfigColormap
+
+        self.MapsConfigValuesStart.valueChanged.connect(self.MapsConfigValue_changed)
+        self.MapsConfigValuesStop.valueChanged.connect(self.MapsConfigValue_changed)
+        self.MapsConfigAspectValue.valueChanged.connect(self.MapsConfigAspect_changed)
+        
+        # Spectra configuration
+        self.SpectraConfigEnergyAuto    = self.pushButton_SpectraConfigEnergyAuto
+        self.SpectraConfigEnergyStart   = self.doubleSpinBox_SpectraConfigEnergyStart
+        self.SpectraConfigEnergyStop    = self.doubleSpinBox_SpectraConfigEnergyStop
+        self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto
+        self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue
+
+        self.SpectraConfigEnergyStart.valueChanged.connect(self.SpectraConfigEnergy_changed)
+        self.SpectraConfigEnergyStop.valueChanged.connect(self.SpectraConfigEnergy_changed)
+        self.SpectraConfigAspectValue.valueChanged.connect(self.SpectraConfigAspect_changed)
 
         # Tabs
         self.TotalSignal        = self.tab_TotalSignal
@@ -103,6 +99,33 @@ class SingleWindow(QtWidgets.QWidget):
         self.TotalSignal.Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibMouseMotion(event, canvas))
         self.SumSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.SumSpectrum.Canvas, mode = "sum": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
         self.MaxSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.MaxSpectrum.Canvas, mode = "max": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
+
+        # Spectrum from map region
+        self.MarkPoint          = self.pushButton_MarkPoint
+        self.PointX             = self.doubleSpinBox_PointX
+        self.PointZ             = self.doubleSpinBox_PointZ
+        self.PointEnabled       = False
+        self.PointChanged       = False
+        
+        self.SelectArea         = self.pushButton_SelectArea
+        self.AreaX1             = self.doubleSpinBox_AreaX1
+        self.AreaZ1             = self.doubleSpinBox_AreaZ1
+        self.AreaX2             = self.doubleSpinBox_AreaX2
+        self.AreaZ2             = self.doubleSpinBox_AreaZ2
+        self.AreaEnabled        = False
+        self.AreaChanged        = False
+        
+        self.LastChanged        = "Area"
+
+        self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
+        self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
+        self.AreaX1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaZ1.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaX2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+        self.AreaZ2.valueChanged.connect(lambda value, mode = "Area": self.RegionChanged(value, mode))
+
+        self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
+        self.SelectArea.toggled.connect(self.SelectArea_toggled)
 
         # Map path
         self.MapPath            = self.lineEdit_MapPath
@@ -208,10 +231,6 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
                 canvas.draw()
 
-    def RegionChanged(self, value, mode):
-        exec(f"self.{mode}Changed = True")
-        exec(f'self.LastChanged = "{mode}"')
-
     def DetectorChanged(self, checked, mode):
         if checked:
             self.CurrentDetector = mode
@@ -278,18 +297,36 @@ class SingleWindow(QtWidgets.QWidget):
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
                 self.ROIs.blockSignals(False)
 
+            self.MapsConfigValuesStop.blockSignals(True)
+            self.MapsConfigValuesStop.setMaximum(numpy.max(numpy.sum(Data[2], axis = 2)))
+            if not self.MapsConfigValuesAuto.isChecked():
+                self.MapsConfigValuesStop.setValue(numpy.max(numpy.sum(Data[2], axis = 2)))
+            self.MapsConfigValuesStop.blockSignals(False)
+
+            vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
+            vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()
+            mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
+            if self.Calib is not None:
+                eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
+                eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+            else:
+                eMin = 0.0
+                eMax = None
+            spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
+            cMap = self.MapsConfigColormap.currentText()
+
             if self.CurrentDetector == "Be": det = 1
             elif self.CurrentDetector == "ML": det = 0
             else: det = 2
-            load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad)
-            load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad)
-            load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None)
-            load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad)
-            load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]", importLoad = importLoad)
-            load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", importLoad = importLoad)
+            load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap)
+            load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+            load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+            load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
+            load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
+            load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.PlotStats1D(self, self.RC, "RC", "I [mA]", importLoad = importLoad)
             for i in range(7, self.tabWidget.count()):
-                load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad)
+                load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap)
 
             if not self.Reload.isEnabled(): self.Reload.setEnabled(True)
             if not self.Analyse.isEnabled(): self.Analyse.setEnabled(True)
@@ -366,59 +403,43 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             POS = [[0, 0], [1000, 1000]]
         
+        vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
+        vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()
+        mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
+        if self.Calib is not None:
+            eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
+            eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+        else:
+            eMin = 0.0
+            eMax = None
+        spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
+        cMap = self.MapsConfigColormap.currentText()
+
         if self.CurrentDetector == "Be": det = 1
         elif self.CurrentDetector == "ML": det = 0
         else: det = 2
-        load_plots.MapData(self, self.TotalSignal, det, pos = POS)
-        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False)
-        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None)
-        load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]")
-        load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]")
-        load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]")
+        load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap)
+        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
         # load_plots.PlotStats1D(self, self.RC, "RC")
         for i in range(7, self.tabWidget.count()):
-            load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS)
+            load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
-    def MarkPoint_toggled(self, checked):
-        head = self.Data["head"]
-        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        if not checked:
-            if self.LastPressedX is not None and self.LastPressedZ is not None:
-                self.PointX.setValue(head["Xpositions"][0, round(self.LastPressedX)])
-                self.PointZ.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
-                self.LastPressedX = None
-                self.LastPressedZ = None
-                # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
-        else:
-            if self.SelectArea.isChecked(): 
-                self.SelectArea.blockSignals(True)
-                self.SelectArea.setChecked(False)
-                self.SelectArea.blockSignals(False)
+    def MapsConfigValue_changed(self):
+        if self.MapsConfigValuesAuto.isChecked(): self.MapsConfigValuesAuto.setChecked(False)
 
-    def SelectArea_toggled(self, checked):
-        head = self.Data["head"]
-        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        if not checked:
-            if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
-                self.AreaX1.setValue(head["Xpositions"][0, round(self.LastPressedX)])
-                self.AreaZ1.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
-                self.AreaX2.setValue(head["Xpositions"][0, round(self.LastReleasedX)])
-                self.AreaZ2.setValue(head["Zpositions"][0, round(self.LastReleasedZ)])
-                self.LastPressedX = None
-                self.LastPressedZ = None
-                self.LastReleasedX = None
-                self.LastReleasedZ = None
-                # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
-        else:
-            if self.MarkPoint.isChecked(): 
-                self.MarkPoint.blockSignals(True)
-                self.MarkPoint.setChecked(False)
-                self.MarkPoint.blockSignals(False)
+    def MapsConfigAspect_changed(self):
+        if self.MapsConfigAspectAuto.isChecked(): self.MapsConfigAspectAuto.setChecked(False)
+
+    def SpectraConfigEnergy_changed(self):
+        if self.SpectraConfigEnergyAuto.isChecked(): self.SpectraConfigEnergyAuto.setChecked(False)
+        
+    def SpectraConfigAspect_changed(self):
+        if self.SpectraConfigAspectAuto.isChecked(): self.SpectraConfigAspectAuto.setChecked(False)
 
     def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:
@@ -504,6 +525,50 @@ class SingleWindow(QtWidgets.QWidget):
                 self.tabWidget.removeTab(7)
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
+    def RegionChanged(self, value, mode):
+        exec(f"self.{mode}Changed = True")
+        exec(f'self.LastChanged = "{mode}"')
+
+    def MarkPoint_toggled(self, checked):
+        head = self.Data["head"]
+        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        if not checked:
+            if self.LastPressedX is not None and self.LastPressedZ is not None:
+                self.PointX.setValue(head["Xpositions"][0, round(self.LastPressedX)])
+                self.PointZ.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
+                self.LastPressedX = None
+                self.LastPressedZ = None
+                # QtGui.QGuiApplication.restoreOverrideCursor()
+                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+        else:
+            if self.SelectArea.isChecked(): 
+                self.SelectArea.blockSignals(True)
+                self.SelectArea.setChecked(False)
+                self.SelectArea.blockSignals(False)
+
+    def SelectArea_toggled(self, checked):
+        head = self.Data["head"]
+        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        if not checked:
+            if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
+                self.AreaX1.setValue(head["Xpositions"][0, round(self.LastPressedX)])
+                self.AreaZ1.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
+                self.AreaX2.setValue(head["Xpositions"][0, round(self.LastReleasedX)])
+                self.AreaZ2.setValue(head["Zpositions"][0, round(self.LastReleasedZ)])
+                self.LastPressedX = None
+                self.LastPressedZ = None
+                self.LastReleasedX = None
+                self.LastReleasedZ = None
+                # QtGui.QGuiApplication.restoreOverrideCursor()
+                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+        else:
+            if self.MarkPoint.isChecked(): 
+                self.MarkPoint.blockSignals(True)
+                self.MarkPoint.setChecked(False)
+                self.MarkPoint.blockSignals(False)
+    
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
         if path:
@@ -575,7 +640,10 @@ class SingleWindow(QtWidgets.QWidget):
                     if variableName in ["MapPath"]:
                         exec(f'self.{variableName}.blockSignals(True)')
                     if property == "Text": 
-                        exec(f'self.{variableName}.set{property}("{value if value else ""}")')
+                        if variableName == "MapsConfigColormap":
+                            exec(f'self.comboBox_{variableName}.setCurrentIndex(self.comboBox_{variableName}.findText("{value}", QtCore.Qt.MatchFlag.MatchExactly))')
+                        else:
+                            exec(f'self.{variableName}.set{property}("{value if value else ""}")')
                     else: 
                         exec(f'self.{variableName}.set{property}({value})')
                     if variableName in ["MapPath"]:
@@ -593,6 +661,21 @@ class SingleWindow(QtWidgets.QWidget):
             fileContent = "## General configuration\n# Element name\tProperty\tValue"
 
             fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
+
+            if not self.MapsConfigValuesAuto.isChecked():
+                fileContent += f"\n\nMapsConfigValuesStart\tValue\t{self.MapsConfigValuesStart.value()}"
+                fileContent += f"\nMapsConfigValuesStop\tValue\t{self.MapsConfigValuesStop.value()}"
+            if self.MapsConfigAspectAuto.isChecked():
+                fileContent += f"\nMapsConfigAspectAuto\tChecked\tTrue"
+            else: fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
+            fileContent += f"\nMapsConfigColormap\tCurrentText\t{self.MapsConfigColormap.currentText()}"
+
+            if not self.SpectraConfigEnergyAuto.isChecked():
+                fileContent += f"\n\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"
+                fileContent += f"\nSpectraConfigEnergyStop\tValue\t{self.SpectraConfigEnergyStop.value()}"
+            if self.SpectraConfigAspectAuto.isChecked():
+                fileContent += f"\nSpectraConfigAspectAuto\tChecked\tTrue"
+            else: fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
 
             fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
@@ -649,6 +732,17 @@ class SingleWindow(QtWidgets.QWidget):
                         POS = PDA.real_pos([[self.PointX.value(), self.PointZ.value()]], self.Data["head"])
                 else:
                     POS = None
+                vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
+                vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()
+                mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
+                if self.Calib is not None:
+                    eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
+                    eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+                else:
+                    eMin = 0.0
+                    eMax = None
+                spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
+                cMap = self.MapsConfigColormap.currentText()
                 detectors = []
                 nestingType = None
                 for name in self.OutputConfig.keys():
@@ -659,7 +753,7 @@ class SingleWindow(QtWidgets.QWidget):
                         elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         continue
                     if self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib)')
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
