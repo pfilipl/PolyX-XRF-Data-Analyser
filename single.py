@@ -315,6 +315,11 @@ class SingleWindow(QtWidgets.QWidget):
             spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
             cMap = self.MapsConfigColormap.currentText()
 
+            if startLoad:
+                if self.CurrentDetector == "Be": self.DetectorsBe.setChecked(True)
+                elif self.CurrentDetector == "ML": self.DetectorsML.setChecked(True)
+                else: self.DetectorsSum.setChecked(True)
+
             if self.CurrentDetector == "Be": det = 1
             elif self.CurrentDetector == "ML": det = 0
             else: det = 2

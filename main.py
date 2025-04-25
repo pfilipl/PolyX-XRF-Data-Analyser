@@ -15,107 +15,71 @@ class MainWindow(QtWidgets.QMainWindow):
         # Single
         self.Single = self.tab_Single
 
-        self.Single.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationSingle)
-        self.Single.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationSingle)
-        self.Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(self.setCalibrationSingle)
-        self.Single.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationSingle)
+        self.Single.doubleSpinBox_CalibrationGain.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
+        self.Single.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
+        self.Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
+        self.Single.doubleSpinBox_CalibrationFano.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
 
         # Batch
         self.Batch  = self.tab_Batch
 
-        self.Batch.doubleSpinBox_CalibrationGain.valueChanged.connect(self.setCalibrationBatch)
-        self.Batch.doubleSpinBox_CalibrationZero.valueChanged.connect(self.setCalibrationBatch)
-        self.Batch.doubleSpinBox_CalibrationNoise.valueChanged.connect(self.setCalibrationBatch)
-        self.Batch.doubleSpinBox_CalibrationFano.valueChanged.connect(self.setCalibrationBatch)
+        self.Batch.doubleSpinBox_CalibrationGain.valueChanged.connect (lambda value, mode = "Batch": self.setCalibration(value, mode))
+        self.Batch.doubleSpinBox_CalibrationZero.valueChanged.connect (lambda value, mode = "Batch": self.setCalibration(value, mode))
+        self.Batch.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Batch": self.setCalibration(value, mode))
+        self.Batch.doubleSpinBox_CalibrationFano.valueChanged.connect (lambda value, mode = "Batch": self.setCalibration(value, mode))
 
         # Stitch
         self.Stitch = self.tab_Stitch
 
-    def setCalibrationSingle(self):
-        gain = self.Single.doubleSpinBox_CalibrationGain.value() / 1000
-        zero = self.Single.doubleSpinBox_CalibrationZero.value() / 1000
-        noise = self.Single.doubleSpinBox_CalibrationNoise.value()
-        fano = self.Single.doubleSpinBox_CalibrationFano.value()
-        self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
-        
-        self.Single.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+    def setCalibration(self, value, mode):
+        if mode == "Single": 
+            child = self.Single
+            child2 = self.Batch
+        elif mode == "Batch": 
+            child = self.Batch
+            child2 = self.Single
 
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
-
-        self.Batch.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
-
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
-        
-        self.Single.setCalibration(self.Calib, self.Sigma)
-        self.Batch.setCalibration(self.Calib, self.Sigma)
-
-        self.Batch.doubleSpinBox_CalibrationGain.blockSignals(True)
-        self.Batch.doubleSpinBox_CalibrationZero.blockSignals(True)
-        self.Batch.doubleSpinBox_CalibrationNoise.blockSignals(True)
-        self.Batch.doubleSpinBox_CalibrationFano.blockSignals(True)
-
-        self.Batch.doubleSpinBox_CalibrationGain.setValue(gain * 1000)
-        self.Batch.doubleSpinBox_CalibrationZero.setValue(zero * 1000)
-        self.Batch.doubleSpinBox_CalibrationNoise.setValue(noise)
-        self.Batch.doubleSpinBox_CalibrationFano.setValue(fano)
-
-        self.Batch.doubleSpinBox_CalibrationGain.blockSignals(False)
-        self.Batch.doubleSpinBox_CalibrationZero.blockSignals(False)
-        self.Batch.doubleSpinBox_CalibrationNoise.blockSignals(False)
-        self.Batch.doubleSpinBox_CalibrationFano.blockSignals(False)
-
-    def setCalibrationBatch(self):
-        gain = self.Batch.doubleSpinBox_CalibrationGain.value() / 1000
-        zero = self.Batch.doubleSpinBox_CalibrationZero.value() / 1000
-        noise = self.Batch.doubleSpinBox_CalibrationNoise.value()
-        fano = self.Batch.doubleSpinBox_CalibrationFano.value()
+        gain  = child.doubleSpinBox_CalibrationGain.value() / 1000
+        zero  = child.doubleSpinBox_CalibrationZero.value() / 1000
+        noise = child.doubleSpinBox_CalibrationNoise.value()
+        fano  = child.doubleSpinBox_CalibrationFano.value()
         self.Calib, self.Sigma  = PDA.gen_calib(4096, gain, zero, noise, fano)
 
-        self.Batch.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+        child.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        child.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        child.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
 
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
-        self.Batch.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+        child.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        child.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        child.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        child.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
 
-        self.Single.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
+        child2.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
+        child2.doubleSpinBox_SpectraConfigEnergyStart.setEnabled(True)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.setEnabled(True)
 
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
-        self.Single.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
+        
+        child.setCalibration(self.Calib, self.Sigma)
+        child2.setCalibration(self.Calib, self.Sigma)
 
-        self.Batch.setCalibration(self.Calib, self.Sigma)
-        self.Single.setCalibration(self.Calib, self.Sigma)
+        child2.doubleSpinBox_CalibrationGain.blockSignals(True)
+        child2.doubleSpinBox_CalibrationZero.blockSignals(True)
+        child2.doubleSpinBox_CalibrationNoise.blockSignals(True)
+        child2.doubleSpinBox_CalibrationFano.blockSignals(True)
 
-        self.Single.doubleSpinBox_CalibrationGain.blockSignals(True)
-        self.Single.doubleSpinBox_CalibrationZero.blockSignals(True)
-        self.Single.doubleSpinBox_CalibrationNoise.blockSignals(True)
-        self.Single.doubleSpinBox_CalibrationFano.blockSignals(True)
+        child2.doubleSpinBox_CalibrationGain.setValue(gain * 1000)
+        child2.doubleSpinBox_CalibrationZero.setValue(zero * 1000)
+        child2.doubleSpinBox_CalibrationNoise.setValue(noise)
+        child2.doubleSpinBox_CalibrationFano.setValue(fano)
 
-        self.Single.doubleSpinBox_CalibrationGain.setValue(gain * 1000)
-        self.Single.doubleSpinBox_CalibrationZero.setValue(zero * 1000)
-        self.Single.doubleSpinBox_CalibrationNoise.setValue(noise)
-        self.Single.doubleSpinBox_CalibrationFano.setValue(fano)
-
-        self.Single.doubleSpinBox_CalibrationGain.blockSignals(False)
-        self.Single.doubleSpinBox_CalibrationZero.blockSignals(False)
-        self.Single.doubleSpinBox_CalibrationNoise.blockSignals(False)
-        self.Single.doubleSpinBox_CalibrationFano.blockSignals(False)
+        child2.doubleSpinBox_CalibrationGain.blockSignals(False)
+        child2.doubleSpinBox_CalibrationZero.blockSignals(False)
+        child2.doubleSpinBox_CalibrationNoise.blockSignals(False)
+        child2.doubleSpinBox_CalibrationFano.blockSignals(False)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
