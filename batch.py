@@ -91,6 +91,8 @@ class BatchWindow(QtWidgets.QWidget):
         self.Help.hide()
         self.HelpDescription.hide()
 
+        self.pushButton_ResetAll.clicked.connect(self.ResetAll_clicked)
+
     def setCalibration(self, calib, sigma):
         self.Calib = calib
         self.Sigma = sigma
@@ -370,6 +372,13 @@ class BatchWindow(QtWidgets.QWidget):
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
                 if dialog == QtWidgets.QMessageBox.StandardButton.Open:
                     analyse.OpenDirectory(resultsPath)
+
+    def ResetAll_clicked(self):
+        if QtWidgets.QMessageBox.question(self, "Single", f"Do you surely want to reset entire BATCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
+            parent = self.parent()
+            self.setParent(None)
+            idx = parent.parent().insertTab(1, BatchWindow(), "BATCH")
+            parent.parent().setCurrentIndex(idx)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

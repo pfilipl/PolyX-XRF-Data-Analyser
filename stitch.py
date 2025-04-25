@@ -75,6 +75,8 @@ class StitchWindow(QtWidgets.QWidget):
         self.Help.hide()
         self.HelpDescription.hide()
 
+        self.pushButton_ResetAll.clicked.connect(self.ResetAll_clicked)
+
     def LoadMap(self, mode):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         canvas = self.MapCanvas
@@ -275,6 +277,13 @@ class StitchWindow(QtWidgets.QWidget):
             dialog = QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
             if dialog == QtWidgets.QMessageBox.StandardButton.Open:
                 analyse.OpenDirectory(resultPath)
+
+    def ResetAll_clicked(self):
+        if QtWidgets.QMessageBox.question(self, "Single", f"Do you surely want to reset entire STITCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
+            parent = self.parent()
+            self.setParent(None)
+            idx = parent.parent().insertTab(2, StitchWindow(), "STITCH")
+            parent.parent().setCurrentIndex(idx)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
