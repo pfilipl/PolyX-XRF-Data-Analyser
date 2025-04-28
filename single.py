@@ -675,7 +675,7 @@ class SingleWindow(QtWidgets.QWidget):
             if self.MapsConfigAspectAuto.isChecked():
                 fileContent += f"\nMapsConfigAspectAuto\tChecked\tTrue"
             else: fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
-            fileContent += f"\nMapsConfigColormap\tCurrentText\t{self.MapsConfigColormap.currentText()}"
+            fileContent += f"\nMapsConfigColormap\tText\t{self.MapsConfigColormap.currentText()}"
 
             if not self.SpectraConfigEnergyAuto.isChecked():
                 fileContent += f"\n\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"

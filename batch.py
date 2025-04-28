@@ -297,7 +297,7 @@ class BatchWindow(QtWidgets.QWidget):
             if self.MapsConfigAspectAuto.isChecked():
                 fileContent += f"\nMapsConfigAspectAuto\tChecked\tTrue"
             else: fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
-            fileContent += f"\nMapsConfigColormap\tCurrentText\t{self.MapsConfigColormap.currentText()}"
+            fileContent += f"\nMapsConfigColormap\tText\t{self.MapsConfigColormap.currentText()}"
 
             if not self.SpectraConfigEnergyAuto.isChecked():
                 fileContent += f"\n\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"
@@ -310,23 +310,8 @@ class BatchWindow(QtWidgets.QWidget):
 
             fileContent += "\n\n# -----\n\n## Batch configuration\n# Element name\tProperty\tValue"            
 
-            fileContent += f"\n\nMapsConfigValuesAuto\tChecked\t{self.MapsConfigValuesAuto.isChecked()}"
-            fileContent += f"\nMapsConfigValuesStart\tValue\t{self.MapsConfigValuesStart.value()}"
-            fileContent += f"\nMapsConfigValuesStop\tValue\t{self.MapsConfigValuesStop.value()}"
-            fileContent += f"\nMapsConfigAspectAuto\tChecked\t{self.MapsConfigAspectAuto.isChecked()}"
-            fileContent += f"\nMapsConfigAspectValue\tValue\t{self.MapsConfigAspectValue.value()}"
-            fileContent += f"\nMapsConfigColormapDefault\tChecked\t{self.MapsConfigColormapDefault.isChecked()}"
-            fileContent += f"\nMapsConfigColormapValue\tText\t{self.MapsConfigColormapValue.text()}"
-
-            fileContent += f"\n\nSpectraConfigEnergyAuto\tChecked\t{self.SpectraConfigEnergyAuto.isChecked()}"
-            fileContent += f"\nSpectraConfigEnergyStart\tValue\t{self.SpectraConfigEnergyStart.value()}"
-            fileContent += f"\nSpectraConfigEnergyStop\tValue\t{self.SpectraConfigEnergyStop.value()}"
-            fileContent += f"\nSpectraConfigAspectAuto\tChecked\t{self.SpectraConfigAspectAuto.isChecked()}"
-            fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
-
             fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
-            fileContent += f"\nMapsNesting2\tChecked\t{self.MapsNesting2.isChecked()}"
-            fileContent += f"\nMapsNesting3\tChecked\t{self.MapsNesting3.isChecked()}"
+            fileContent += f'\nMapsNesting{"2" if self.MapsNesting2.isChecked() else "3"}\tChecked\tTrue'
 
             file.write(fileContent + "\n\n# -----\n\n")
             file.close()
@@ -351,7 +336,7 @@ class BatchWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) * len(self.Paths))
+                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 5) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
                     try:
@@ -363,10 +348,36 @@ class BatchWindow(QtWidgets.QWidget):
                             QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
                     else:
                         tempData = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
+                    
+                    if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
+                    else:
+                        ROI = []
+                        for row in range(self.ROIs.rowCount()):
+                            ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+                    POS = None
+                    vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
+                    vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()
+                    mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
+                    if self.Calib is not None:
+                        eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
+                        eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+                    else:
+                        eMin = 0.0
+                        eMax = None
+                    spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
+                    cMap = self.MapsConfigColormap.currentText()
+                    detectors = []
+                    nestingType = None
+                    
                     for name in self.OutputConfig.keys():
+                        if name[:2] in ["De", "Si", "Ba"]:
+                            if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
+                            elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
+                            elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
+                            elif name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
+                            continue
                         if self.OutputConfig[name]:
-                            time.sleep(0.1)\
-                            # exec(f'analyse.{name}({tempData}, {path})')
+                            exec(f'analyse.{name}(tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap)')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
