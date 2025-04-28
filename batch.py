@@ -387,7 +387,7 @@ class BatchWindow(QtWidgets.QWidget):
                     analyse.OpenDirectory(resultsPath)
 
     def ResetAll_clicked(self):
-        if QtWidgets.QMessageBox.question(self, "Single", f"Do you surely want to reset entire BATCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
+        if QtWidgets.QMessageBox.question(self, "Batch", f"Do you surely want to reset entire BATCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
             parent = self.parent()
             self.setParent(None)
             idx = parent.parent().insertTab(1, BatchWindow(), "BATCH")

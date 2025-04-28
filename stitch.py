@@ -281,7 +281,7 @@ class StitchWindow(QtWidgets.QWidget):
                 analyse.OpenDirectory(resultPath)
 
     def ResetAll_clicked(self):
-        if QtWidgets.QMessageBox.question(self, "Single", f"Do you surely want to reset entire STITCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
+        if QtWidgets.QMessageBox.question(self, "Stitch", f"Do you surely want to reset entire STITCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
             parent = self.parent()
             self.setParent(None)
             idx = parent.parent().insertTab(2, StitchWindow(), "STITCH")
