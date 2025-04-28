@@ -1,13 +1,13 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
 import sys, os, xraylib, matplotlib, time, pathlib, numpy
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
+import matplotlib.backends.backend_qtagg as backend
 matplotlib.use('QtAgg')
 
 import main, add_roi, PDA, analyse, load_plots
 
 basedir = pathlib.Path(os.path.dirname(__file__))
 
-class MatplotlibCanvas(FigureCanvasQTAgg):
+class MatplotlibCanvas(backend.FigureCanvasQTAgg):
     def __init__(self, parent = None):
         self.Figure = matplotlib.figure.Figure(layout = 'compressed', dpi = 100)
         self.Axes = self.Figure.add_subplot(facecolor = "None")
@@ -24,7 +24,7 @@ class PreviewTab(QtWidgets.QWidget):
     def __init__(self, parent = None, roiStart = 1, roiStop = 4096, roiFactor = 1.0):
         super(PreviewTab, self).__init__(parent)
         self.Canvas = MatplotlibCanvas(self)
-        self.Toolbar = NavigationToolbar2QT(self.Canvas, self)
+        self.Toolbar = backend.NavigationToolbar2QT(self.Canvas, self)
         self.Canvas.setStyleSheet("background-color:transparent;")
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.Canvas)

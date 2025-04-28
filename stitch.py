@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
 import sys, matplotlib, numpy, pathlib, os, scipy
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
+import matplotlib.backends.backend_qtagg as backend
 matplotlib.use('QtAgg')
 
 import main, PDA, analyse
@@ -17,7 +17,7 @@ class MatData():
                 self.Data.append(scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_{i+1:04}.mat"))
         self.Head = scipy.io.loadmat(f"{path.as_posix()}/{path.stem}_HEADER.mat")
 
-class MatplotlibCanvas(FigureCanvasQTAgg):
+class MatplotlibCanvas(backend.FigureCanvasQTAgg):
     def __init__(self, parent = None):
         self.Figure = matplotlib.figure.Figure(layout = "compressed", dpi = 100)
         self.Axes = self.Figure.add_subplot(facecolor = "None")
@@ -35,7 +35,7 @@ class StitchWindow(QtWidgets.QWidget):
         # Map
         self.Map                = self.widget_Map
         self.MapCanvas          = MatplotlibCanvas(self.Map)
-        self.MapToolbar         = NavigationToolbar2QT(self.MapCanvas, self.Map)
+        self.MapToolbar         = backend.NavigationToolbar2QT(self.MapCanvas, self.Map)
         self.TopMap             = None
         self.BottomMap          = None
         
