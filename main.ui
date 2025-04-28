@@ -19,6 +19,10 @@
   <property name="mouseTracking">
    <bool>true</bool>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
     <bool>false</bool>
