@@ -1,8 +1,10 @@
 from PyQt6 import QtWidgets, QtCore, uic
-import sys, os, numpy, itertools, subprocess
+import sys, os, numpy, itertools, subprocess, pathlib
 import matplotlib.pyplot as plt
 
 import main, PDA
+
+basedir = pathlib.Path(os.path.dirname(__file__))
 
 def OpenDirectory(path):
     try: os.startfile(path)
@@ -11,7 +13,7 @@ def OpenDirectory(path):
 class Analyse(QtWidgets.QDialog):
     def __init__(self, parent = None, outputConfig = None, detectorsBe = True, detectorsML = True, detectorsSum = False, batch = False):
         super(Analyse, self).__init__(parent)
-        uic.loadUi("analyse.ui", self)
+        uic.loadUi(basedir / "analyse.ui", self)
         self.setWindowTitle('Choose output data')
 
         if batch: self.comboBox_Single.hide()

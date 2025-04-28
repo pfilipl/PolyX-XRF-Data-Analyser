@@ -1,19 +1,21 @@
 from PyQt6 import QtWidgets, uic
-import sys
+import sys, os, pathlib
 
 import PDA
 
 try:
     from ctypes import windll
-    myappid = 'PolyX.PDA.20250428'
+    myappid = 'SOLARIS.PolyX.PDA.20250428'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError:
     pass
 
+basedir = pathlib.Path(os.path.dirname(__file__))
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        uic.loadUi("main.ui", self)
+        uic.loadUi(basedir / "main.ui", self)
         self.setWindowTitle('PolyX Data Analyser')
 
         self.Calib  = None

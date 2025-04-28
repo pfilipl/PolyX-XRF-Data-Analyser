@@ -1,9 +1,11 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, xraylib, matplotlib, time, pathlib, numpy
+import sys, os, xraylib, matplotlib, time, pathlib, numpy
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 matplotlib.use('QtAgg')
 
 import main, add_roi, PDA, analyse, load_plots
+
+basedir = pathlib.Path(os.path.dirname(__file__))
 
 class MatplotlibCanvas(FigureCanvasQTAgg):
     def __init__(self, parent = None):
@@ -35,7 +37,7 @@ class PreviewTab(QtWidgets.QWidget):
 class SingleWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(SingleWindow, self).__init__(parent)
-        uic.loadUi("single.ui", self)
+        uic.loadUi(basedir / "single.ui", self)
 
         # Regions of interest (ROIs)
         self.ROIs               = self.tableWidget_ROIs

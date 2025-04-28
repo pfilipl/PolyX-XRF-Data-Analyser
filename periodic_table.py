@@ -1,7 +1,9 @@
 from PyQt6 import QtCore, QtWidgets, uic
-import sys, xraylib, numpy
+import sys, os, xraylib, numpy, pathlib
 
 import main, PDA
+
+basedir = pathlib.Path(os.path.dirname(__file__))
 
 ElementNames = {
     "H" : "Hydrogen", "He" : "Helium", "Li" : "Lithium", "Be" : "Beryllium", "B" : "Boron", 
@@ -81,7 +83,7 @@ class HoverableButton(QtWidgets.QPushButton):
 class PeriodicTable(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(PeriodicTable, self).__init__(parent)
-        uic.loadUi("periodic_table.ui", self)
+        uic.loadUi(basedir / "periodic_table.ui", self)
 
         # Elements info
         self.ElementKedge       = self.label_ElementKedge

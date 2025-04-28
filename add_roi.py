@@ -1,12 +1,14 @@
 from PyQt6 import QtWidgets, QtCore, uic
-import sys, numpy, xraylib, math
+import sys, os, numpy, xraylib, math, pathlib
 
 import main, single
+
+basedir = pathlib.Path(os.path.dirname(__file__))
 
 class AddRoi(QtWidgets.QDialog):
     def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0, monoE = None):
         super(AddRoi, self).__init__(parent)
-        uic.loadUi("add_roi.ui", self)
+        uic.loadUi(basedir / "add_roi.ui", self)
         self.setWindowTitle('Add Regions of Interest (ROIs)')
 
         self.Calib                      = calib

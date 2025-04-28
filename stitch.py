@@ -5,6 +5,8 @@ matplotlib.use('QtAgg')
 
 import main, PDA, analyse
 
+basedir = pathlib.Path(os.path.dirname(__file__))
+
 class MatData():
     def __init__(self, path, parent = None):
         self.Path = path
@@ -28,7 +30,7 @@ class MatplotlibCanvas(FigureCanvasQTAgg):
 class StitchWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(StitchWindow, self).__init__(parent)
-        uic.loadUi("stitch.ui", self)
+        uic.loadUi(basedir / "stitch.ui", self)
 
         # Map
         self.Map                = self.widget_Map

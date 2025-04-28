@@ -3,10 +3,12 @@ import sys, os, time, pathlib
 
 import main, add_roi, analyse, PDA
 
+basedir = pathlib.Path(os.path.dirname(__file__))
+
 class BatchWindow(QtWidgets.QWidget):
     def __init__(self, parent = None):
         super(BatchWindow, self).__init__(parent)
-        uic.loadUi("batch.ui", self)
+        uic.loadUi(basedir / "batch.ui", self)
 
         # Detectors
         self.DetectorsBe                = self.pushButton_DetectorsBe
