@@ -3,6 +3,13 @@ import sys
 
 import PDA
 
+try:
+    from ctypes import windll
+    myappid = 'PolyX.PDA.20250428'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
