@@ -774,6 +774,13 @@ class SingleWindow(QtWidgets.QWidget):
             idx = parent.parent().insertTab(0, SingleWindow(), "SINGLE")
             parent.parent().setCurrentIndex(idx)
 
+            parent.parent().parent().parent().Single = parent.parent().currentWidget()
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationGain.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationFano.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().setCalibration(None, "Batch")
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = main.MainWindow()

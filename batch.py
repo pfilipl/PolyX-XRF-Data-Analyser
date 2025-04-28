@@ -391,6 +391,13 @@ class BatchWindow(QtWidgets.QWidget):
             idx = parent.parent().insertTab(1, BatchWindow(), "BATCH")
             parent.parent().setCurrentIndex(idx)
 
+            parent.parent().parent().parent().Batch = parent.parent().currentWidget()
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationGain.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationFano.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().setCalibration(None, "Single")
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = main.MainWindow()
