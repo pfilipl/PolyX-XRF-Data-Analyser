@@ -146,7 +146,7 @@ def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: I1/PIN [V]", Origin = origin, Aspect = maspect, Cmap = cmap)
+    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: I1 v PIN [V]", Origin = origin, Aspect = maspect, Cmap = cmap)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN")

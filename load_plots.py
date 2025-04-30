@@ -3,7 +3,7 @@ import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis'):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -14,6 +14,11 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
     roiStop = tab.RoiStop
 
     sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
+    if Norm is not None:
+        I0 = Norm[0]
+        LT = Norm[1]
+        sumSignal = sumSignal / I0 / (LT[detector] * 1e-6)
+
     if map.ColorBar: map.ColorBar.remove()
     map.Axes.cla()
     imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
