@@ -38,29 +38,10 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QGridLayout" name="gridLayout_9">
-         <item row="1" column="7">
-          <widget class="QLabel" name="label_11">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
+         <item row="4" column="4">
+          <widget class="QSpinBox" name="spinBox_CustomStop">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>around</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QSpinBox" name="spinBox_CustomStart">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -76,47 +57,6 @@
            </property>
            <property name="stepType">
             <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" rowspan="2">
-          <widget class="QLabel" name="label_5">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Range by energy:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" rowspan="2">
-          <widget class="QLabel" name="label_12">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Range by channels:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -126,7 +66,7 @@
             <bool>false</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -148,341 +88,13 @@
            </property>
            <property name="stepType">
             <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5" colspan="3">
-          <widget class="QLabel" name="label_CustomWarning">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Energy calibration needed!</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="label_8">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>to</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLabel" name="label_9">
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Channel</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="label_3">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>and</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="label_7">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>or from</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item row="3" column="2">
           <widget class="QSpinBox" name="spinBox_CustomLine">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> ch</string>
-           </property>
-           <property name="maximum">
-            <number>4096</number>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QLabel" name="label_13">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>and</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyWidth">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> keV</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>20.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.001000000000000</double>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-           <property name="value">
-            <double>0.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyStart">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> keV</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>20.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.001000000000000</double>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="label_15">
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>or from</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="5" colspan="3">
-          <widget class="QLabel" name="label_14">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>around</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="label_6">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>Line</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="4">
-          <widget class="QSpinBox" name="spinBox_CustomWidth">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> ch</string>
-           </property>
-           <property name="maximum">
-            <number>2000</number>
-           </property>
-           <property name="singleStep">
-            <number>2</number>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="QLabel" name="label_16">
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>to</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <widget class="QLabel" name="label_10">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>or</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="4">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyStop">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="mouseTracking">
-            <bool>true</bool>
-           </property>
-           <property name="suffix">
-            <string> keV</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>20.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.001000000000000</double>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-           <property name="value">
-            <double>0.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="4">
-          <widget class="QSpinBox" name="spinBox_CustomStop">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -535,6 +147,28 @@
            </item>
           </layout>
          </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="label_8">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0" colspan="8">
           <widget class="QLineEdit" name="lineEdit_CustomName">
            <property name="mouseTracking">
@@ -545,16 +179,335 @@
            </property>
           </widget>
          </item>
+         <item row="4" column="2">
+          <widget class="QSpinBox" name="spinBox_CustomStart">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> ch</string>
+           </property>
+           <property name="maximum">
+            <number>4096</number>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QRadioButton" name="radioButton_CustomEnergyRange">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LayoutDirection::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Range</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QRadioButton" name="radioButton_CustomEnergyLine">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LayoutDirection::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Line</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" rowspan="2">
+          <widget class="QRadioButton" name="radioButton_CustomEnergy">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>By energy</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QRadioButton" name="radioButton_CustomRange">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LayoutDirection::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Range</string>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QRadioButton" name="radioButton_CustomLine">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LayoutDirection::RightToLeft</enum>
+           </property>
+           <property name="text">
+            <string>Line</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3">
+          <widget class="QLabel" name="label_16">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4">
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyStop">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> keV</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>20.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.001000000000000</double>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+           <property name="value">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyStart">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> keV</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>20.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.001000000000000</double>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" rowspan="2">
+          <widget class="QRadioButton" name="radioButton_CustomChannel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>By channels</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="5" colspan="3">
+          <widget class="QLabel" name="label_CustomWarning">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Energy calibration needed!</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3" colspan="2">
+          <widget class="QSpinBox" name="spinBox_CustomWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="suffix">
+            <string> ch</string>
+           </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
+           <property name="maximum">
+            <number>2000</number>
+           </property>
+           <property name="singleStep">
+            <number>2</number>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="6">
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergyWidth">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="mouseTracking">
+            <bool>true</bool>
+           </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
+           <property name="suffix">
+            <string> keV</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>20.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.001000000000000</double>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+           <property name="value">
+            <double>0.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3" colspan="2">
           <widget class="QDoubleSpinBox" name="doubleSpinBox_CustomEnergySigmaWidth">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="prefix">
+            <string>± </string>
            </property>
            <property name="suffix">
             <string> σ</string>
            </property>
            <property name="maximum">
-            <double>5.000000000000000</double>
+            <double>2.000000000000000</double>
            </property>
            <property name="singleStep">
             <double>0.010000000000000</double>
@@ -563,7 +516,48 @@
             <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
            </property>
            <property name="value">
-            <double>1.000000000000000</double>
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QRadioButton" name="radioButton_CustomEnergySigmaWidth">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="7">
+          <widget class="QRadioButton" name="radioButton_CustomEnergyWidth">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -639,11 +633,14 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
            <property name="suffix">
             <string> σ</string>
            </property>
            <property name="maximum">
-            <double>5.000000000000000</double>
+            <double>2.000000000000000</double>
            </property>
            <property name="singleStep">
             <double>0.010000000000000</double>
@@ -652,23 +649,26 @@
             <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
            </property>
            <property name="value">
-            <double>1.000000000000000</double>
+            <double>0.500000000000000</double>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_4">
+          <widget class="QRadioButton" name="radioButton_XRFSigmaWidth">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="text">
-            <string>or</string>
+            <string/>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -683,6 +683,9 @@
            <property name="suffix">
             <string> ch</string>
            </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
            <property name="maximum">
             <number>2000</number>
            </property>
@@ -691,6 +694,22 @@
            </property>
            <property name="value">
             <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_XRFWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
            </property>
           </widget>
          </item>

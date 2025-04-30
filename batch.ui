@@ -660,6 +660,9 @@
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
+              <property name="suffix">
+               <string> c/ch</string>
+              </property>
               <property name="decimals">
                <number>3</number>
               </property>
@@ -844,6 +847,9 @@
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
+              <property name="suffix">
+               <string> dy/dx</string>
+              </property>
               <property name="decimals">
                <number>3</number>
               </property>
@@ -876,13 +882,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1037,13 +1043,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1068,13 +1074,13 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>80</width>
+              <width>90</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1082,7 +1088,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Values range:</string>
+             <string>Intensity range:</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -1109,7 +1115,7 @@
              <enum>Qt::LayoutDirection::LeftToRight</enum>
             </property>
             <property name="text">
-             <string>Maps configuration</string>
+             <string>Maps display</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -1136,7 +1142,7 @@
              <enum>Qt::LayoutDirection::LeftToRight</enum>
             </property>
             <property name="text">
-             <string>Spectra configuration</string>
+             <string>Spectra display</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

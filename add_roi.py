@@ -27,11 +27,26 @@ class AddRoi(QtWidgets.QDialog):
         self.CustomEnergyStop           = self.doubleSpinBox_CustomEnergyStop
         self.CustomWarning              = self.label_CustomWarning
 
-        self.CustomEnergyLine.valueChanged.connect(lambda value: self.setLastCustom(value, "energy line"))
-        self.CustomEnergyWidth.valueChanged.connect(lambda value: self.setLastCustom(value, "energy line"))
-        self.CustomEnergySigmaWidth.valueChanged.connect(lambda value: self.setLastCustom(value, "energy line"))
-        self.CustomEnergyStart.valueChanged.connect(lambda value: self.setLastCustom(value, "energy range"))
-        self.CustomEnergyStop.valueChanged.connect(lambda value: self.setLastCustom(value, "energy range"))
+        self.radioButton_CustomEnergy.toggled.connect(lambda checked: self.radioButton_CustomChannel.setChecked(not(checked)))
+        self.radioButton_CustomEnergyLine.toggled.connect(lambda checked: self.radioButton_CustomEnergyRange.setChecked(not(checked)))
+        self.radioButton_CustomEnergyRange.toggled.connect(lambda checked: self.radioButton_CustomEnergyLine.setChecked(not(checked)))
+        self.radioButton_CustomEnergyWidth.toggled.connect(lambda checked: self.radioButton_CustomEnergySigmaWidth.setChecked(not(checked)))
+        self.radioButton_CustomEnergySigmaWidth.toggled.connect(lambda checked: self.radioButton_CustomEnergyWidth.setChecked(not(checked)))
+        
+        self.CustomEnergyLine.valueChanged.connect(lambda value: self.radioButton_CustomEnergy.setChecked(True))
+        self.CustomEnergyWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergy.setChecked(True))
+        self.CustomEnergySigmaWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergy.setChecked(True))
+        self.CustomEnergyStart.valueChanged.connect(lambda value: self.radioButton_CustomEnergy.setChecked(True))
+        self.CustomEnergyStop.valueChanged.connect(lambda value: self.radioButton_CustomEnergy.setChecked(True))
+        
+        self.CustomEnergyLine.valueChanged.connect(lambda value: self.radioButton_CustomEnergyLine.setChecked(True))
+        self.CustomEnergyWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergyLine.setChecked(True))
+        self.CustomEnergySigmaWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergyLine.setChecked(True))
+        self.CustomEnergyStart.valueChanged.connect(lambda value: self.radioButton_CustomEnergyRange.setChecked(True))
+        self.CustomEnergyStop.valueChanged.connect(lambda value: self.radioButton_CustomEnergyRange.setChecked(True))
+
+        self.CustomEnergyWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergyWidth.setChecked(True))
+        self.CustomEnergySigmaWidth.valueChanged.connect(lambda value: self.radioButton_CustomEnergySigmaWidth.setChecked(True))
         
         # - Channel
         self.CustomLine                 = self.spinBox_CustomLine
@@ -39,10 +54,20 @@ class AddRoi(QtWidgets.QDialog):
         self.CustomStart                = self.spinBox_CustomStart
         self.CustomStop                 = self.spinBox_CustomStop
 
-        self.CustomLine.valueChanged.connect(lambda value: self.setLastCustom(value, "channel line"))
-        self.CustomWidth.valueChanged.connect(lambda value: self.setLastCustom(value, "channel line"))
-        self.CustomStart.valueChanged.connect(lambda value: self.setLastCustom(value, "channel range"))
-        self.CustomStop.valueChanged.connect(lambda value: self.setLastCustom(value, "channel range"))
+        self.radioButton_CustomLine.toggled.connect(lambda checked: self.radioButton_CustomRange.setChecked(not(checked)))
+        self.radioButton_CustomRange.toggled.connect(lambda checked: self.radioButton_CustomLine.setChecked(not(checked)))
+        if self.Calib is not None: self.radioButton_CustomChannel.toggled.connect(lambda checked: self.radioButton_CustomEnergy.setChecked(not(checked)))
+        else: self.radioButton_CustomChannel.toggled.connect(lambda checked: self.radioButton_CustomChannel.setChecked(True))
+
+        self.CustomLine.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomWidth.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomStart.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomStop.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+
+        self.CustomLine.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
+        self.CustomWidth.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
+        self.CustomStart.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
+        self.CustomStop.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
 
         # - Regions of interest (ROIs)
         self.CustomROIs                 = self.tableWidget_CustomROIs
@@ -60,6 +85,12 @@ class AddRoi(QtWidgets.QDialog):
         self.XRFSigmaWidth              = self.doubleSpinBox_XRFSigmaWidth
         self.XRFWidth                   = self.spinBox_XRFWidth
 
+        self.radioButton_XRFWidth.toggled.connect(lambda checked: self.radioButton_XRFSigmaWidth.setChecked(not(checked)))
+        self.radioButton_XRFSigmaWidth.toggled.connect(lambda checked: self.radioButton_XRFWidth.setChecked(not(checked)))
+
+        self.XRFSigmaWidth.valueChanged.connect(lambda value: self.radioButton_XRFSigmaWidth.setChecked(True))
+        self.XRFWidth.valueChanged.connect(lambda value: self.radioButton_XRFWidth.setChecked(True))
+
         self.Kalpha                     = self.tab_Kalpha
         self.Kbeta                      = self.tab_Kbeta
         self.Lalpha                     = self.tab_Lalpha
@@ -73,6 +104,11 @@ class AddRoi(QtWidgets.QDialog):
             self.CustomEnergyStart.setEnabled(True)
             self.CustomEnergyStop.setEnabled(True)
             self.CustomWarning.hide()
+            self.radioButton_CustomEnergy.setEnabled(True)
+            self.radioButton_CustomEnergyLine.setEnabled(True)
+            self.radioButton_CustomEnergyRange.setEnabled(True)
+            self.radioButton_CustomEnergyWidth.setEnabled(True)
+            self.radioButton_CustomEnergySigmaWidth.setEnabled(True)
             
             self.XRFLines.setEnabled(True)
             self.XRFWarning.hide()
@@ -136,8 +172,8 @@ class AddRoi(QtWidgets.QDialog):
 
         self.ButtonBox.clicked.connect(self.ButtonBox_clicked)
 
-    def setLastCustom(self, value, lastCustom):
-        self.LastCustom = lastCustom
+    # def setLastCustom(self, value, lastCustom):
+    #     self.LastCustom = lastCustom
 
     def SelectionChanged(self):
         self.RoiCount = max(self.RoiCount, self.Kalpha.RoiCount, self.Kbeta.RoiCount, self.Lalpha.RoiCount, self.Lbeta.RoiCount, self.M.RoiCount)
@@ -148,23 +184,28 @@ class AddRoi(QtWidgets.QDialog):
         if len(self.CustomROIs.findItems(name, QtCore.Qt.MatchFlag.MatchExactly)) > 0:
             name = f"{name}_{self.RoiCount}"
 
-        if self.LastCustom == "energy line":
+        # if self.LastCustom == "energy line":
+        if self.radioButton_CustomEnergy.isChecked() and self.radioButton_CustomEnergyLine.isChecked():
             idx = (numpy.abs(self.Calib - self.CustomEnergyLine.value() * 1000)).argmin()
             sigma_width = math.floor((self.CustomEnergySigmaWidth.value() * self.Sigma[idx]) / 2 + 1)
             idx_minus = (numpy.abs(self.Calib - (self.CustomEnergyLine.value() * 1000 - self.CustomEnergyWidth.value() * 1000 / 2))).argmin()
             idx_plus = (numpy.abs(self.Calib - (self.CustomEnergyLine.value() * 1000 + self.CustomEnergyWidth.value() * 1000 / 2))).argmin()
-            width = max(sigma_width, idx - idx_minus, idx - idx_plus)
+            # width = max(sigma_width, idx - idx_minus, idx - idx_plus)
+            width = sigma_width if self.radioButton_CustomEnergySigmaWidth.isChecked() else max(idx - idx_minus, idx - idx_plus)
             start = idx - width
             stop = idx + width
-        elif self.LastCustom == "energy range":
+        # elif self.LastCustom == "energy range":
+        elif self.radioButton_CustomEnergy.isChecked() and self.radioButton_CustomEnergyRange.isChecked():
             start = (numpy.abs(self.Calib - self.CustomEnergyStart.value() * 1000)).argmin()
             stop = (numpy.abs(self.Calib - self.CustomEnergyStop.value() * 1000)).argmin()
-        elif self.LastCustom == "channel line":
+        # elif self.LastCustom == "channel line":
+        elif self.radioButton_CustomChannel.isChecked() and self.radioButton_CustomLine.isChecked():
             idx = self.CustomLine.value()
             width = math.floor(self.CustomWidth.value() / 2)
             start = idx - width
             stop = idx + width
-        elif self.LastCustom == "channel range":
+        # elif self.LastCustom == "channel range":
+        elif self.radioButton_CustomChannel.isChecked() and self.radioButton_CustomRange.isChecked():
             start = self.CustomStart.value()
             stop = self.CustomStop.value()
 
