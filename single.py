@@ -264,9 +264,11 @@ class SingleWindow(QtWidgets.QWidget):
             else:
                 self.LastDetector = None
                 self.CurrentDetector = None
+        if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def NormTypeChanged(self, mode = None):
         self.NormType = mode
+        if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def ROIsChanged(self):
         table = self.ROIs
@@ -514,6 +516,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
             file.close()
             self.ROIs.blockSignals(False)
+            if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
@@ -537,6 +540,7 @@ class SingleWindow(QtWidgets.QWidget):
                 continue
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
+            if self.AutoReload.isChecked(): self.Reload_clicked()
         
     def ROIsSave_clicked(self, checked, fileName, mode):
         if fileName is None:
