@@ -90,7 +90,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastReleasedZ      = None
         self.LastMotionX        = None
         self.LastMotionZ        = None
-        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'k')
+        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r')
         self.SumLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.MaxLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.SumText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
@@ -214,13 +214,15 @@ class SingleWindow(QtWidgets.QWidget):
             if event.inaxes == canvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
-                self.Rectangle.set_facecolor('k')
+                self.Rectangle.set_facecolor('r')
                 self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
                 self.Rectangle.set_height(0.25)
                 self.Rectangle.set_width(0.25)
                 canvas.Axes.add_patch(self.Rectangle)
                 canvas.draw()
                 self.MarkPoint.setChecked(False)
+            if not self.SelectArea.isChecked():
+                if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def MatplotlibButtonReleased(self, event, canvas):
         if self.SelectArea.isChecked():
@@ -233,6 +235,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastMotionX = None
                 self.LastMotionZ = None
             self.SelectArea.setChecked(False)
+            if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def MatplotlibMouseMotion(self, event, canvas):
         if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
