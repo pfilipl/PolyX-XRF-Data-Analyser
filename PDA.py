@@ -333,10 +333,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
                 ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
                 ax1.set_ylabel("Z [mm]")
-                if normalize is not None:
-                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}, normalized")
-                else:
-                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                # if normalize is not None:
+                #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}, normalized")
+                # else:
+                #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
                 if pos is not None:
                     if pos.shape[0] == 1:
                         ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
@@ -367,10 +368,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
             ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
-            if normalize is not None:
-                ax1.set_title(f"{title}\n SDD {detectors[d]}, normalized")
-            else:
-                ax1.set_title(f"{title}\n SDD {detectors[d]}")
+            # if normalize is not None:
+            #     ax1.set_title(f"{title}\n SDD {detectors[d]}, normalized")
+            # else:
+            #     ax1.set_title(f"{title}\n SDD {detectors[d]}")
+            ax1.set_title(f"{title}\n SDD {detectors[d]}")
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)

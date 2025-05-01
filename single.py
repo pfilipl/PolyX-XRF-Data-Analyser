@@ -337,6 +337,13 @@ class SingleWindow(QtWidgets.QWidget):
                 else: self.DetectorsSum.setChecked(True)
 
             if self.NormType is None: norm = None
+            elif self.NormType == "I0":
+                lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
+                lt = [lt, lt, lt]
+                norm = [self.Data["I0"], lt]
+            elif self.NormType == "LT":
+                i0 = numpy.ones(self.Data["I0"].shape)
+                norm = [i0, self.Data["LT"]]
             else: norm = [self.Data["I0"], self.Data["LT"]]
 
             if self.CurrentDetector == "Be": det = 1
@@ -442,6 +449,13 @@ class SingleWindow(QtWidgets.QWidget):
         cMap = self.MapsConfigColormap.currentText()
 
         if self.NormType is None: norm = None
+        elif self.NormType == "I0":
+            lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
+            lt = [lt, lt, lt]
+            norm = [self.Data["I0"], lt]
+        elif self.NormType == "LT":
+            i0 = numpy.ones(self.Data["I0"].shape)
+            norm = [i0, self.Data["LT"]]
         else: norm = [self.Data["I0"], self.Data["LT"]]
 
         if self.CurrentDetector == "Be": det = 1
@@ -747,7 +761,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 5) # 3 detectors buttons + 2 nesting combos
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 8) # 3 detectors buttons + 2 nesting combos + 3 normalization types
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -774,6 +788,7 @@ class SingleWindow(QtWidgets.QWidget):
                 cMap = self.MapsConfigColormap.currentText()
                 detectors = []
                 nestingType = None
+                normType = []
                 for name in self.OutputConfig.keys():
                     if name[:2] in ["De", "Si", "Ba"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
@@ -781,8 +796,11 @@ class SingleWindow(QtWidgets.QWidget):
                         elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         continue
+                    if name[:8] == "NormType":
+                        if self.OutputConfig[name]: normType.append(name[8:])
+                        continue
                     if self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap)')
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)

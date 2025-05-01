@@ -412,6 +412,39 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Normalization</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTypeI0LT">
+       <property name="text">
+        <string>I0 * LT</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTypeI0">
+       <property name="text">
+        <string>I0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTypeLT">
+       <property name="text">
+        <string>LT</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
