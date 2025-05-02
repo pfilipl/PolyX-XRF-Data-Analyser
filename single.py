@@ -91,6 +91,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.LastMotionX        = None
         self.LastMotionZ        = None
         self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r')
+        self.HLine              = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.VLine              = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.SumLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.MaxLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.SumText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
@@ -214,11 +216,25 @@ class SingleWindow(QtWidgets.QWidget):
             if event.inaxes == canvas.Axes:
                 self.LastPressedX = event.xdata
                 self.LastPressedZ = event.ydata
-                self.Rectangle.set_facecolor('r')
-                self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
-                self.Rectangle.set_height(0.25)
-                self.Rectangle.set_width(0.25)
-                canvas.Axes.add_patch(self.Rectangle)
+                if self.SelectArea.isChecked():
+                    self.Rectangle.set_visible(True)
+                    self.HLine.set_visible(False)
+                    self.VLine.set_visible(False)
+                    self.Rectangle.set_facecolor('r')
+                    self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
+                    self.Rectangle.set_height(0.25)
+                    self.Rectangle.set_width(0.25)
+                    canvas.Axes.add_patch(self.Rectangle)
+                else:
+                    self.Rectangle.set_visible(False)
+                    self.HLine.set_visible(True)
+                    self.VLine.set_visible(True)
+                    h = 0.05 * (canvas.Axes.get_xlim()[1] - canvas.Axes.get_xlim()[0])
+                    v = 0.05 * (canvas.Axes.get_ylim()[1] - canvas.Axes.get_ylim()[0])
+                    self.HLine.set(xdata = [self.LastPressedX - h, self.LastPressedX + h], ydata = [self.LastPressedZ, self.LastPressedZ])
+                    self.VLine.set(xdata = [self.LastPressedX, self.LastPressedX], ydata = [self.LastPressedZ - v, self.LastPressedZ + v])
+                    canvas.Axes.add_artist(self.HLine)
+                    canvas.Axes.add_artist(self.VLine)
                 canvas.draw()
                 self.MarkPoint.setChecked(False)
             if not self.SelectArea.isChecked():
@@ -768,7 +784,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 8) # 3 detectors buttons + 2 nesting combos + 3 normalization types
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 9) # 3 detectors buttons + 2 nesting combos + 3 normalization types + show
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -797,17 +813,18 @@ class SingleWindow(QtWidgets.QWidget):
                 nestingType = None
                 normType = []
                 for name in self.OutputConfig.keys():
-                    if name[:2] in ["De", "Si", "Ba"]:
+                    if name[:2] in ["De", "Si", "Ba", "Sh"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
                         elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
                         elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
+                        elif name == "Show": showing = self.OutputConfig[name]
                         continue
                     if name[:8] == "NormType":
                         if self.OutputConfig[name]: normType.append(name[8:])
                         continue
                     if self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType)')
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, show = showing)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)

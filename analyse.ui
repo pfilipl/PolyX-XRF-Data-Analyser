@@ -445,6 +445,25 @@
        </property>
       </widget>
      </item>
+     <item row="10" column="1" colspan="2">
+      <widget class="QCheckBox" name="checkBox_Show">
+       <property name="text">
+        <string>Show selected point/area on output maps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Display</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

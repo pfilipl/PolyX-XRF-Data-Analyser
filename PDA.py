@@ -340,7 +340,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
                 if pos is not None:
                     if pos.shape[0] == 1:
-                        ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+                        # ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+                        h = 0.05 * (ax1.get_xlim()[1] - ax1.get_xlim()[0])
+                        v = 0.05 * (ax1.get_ylim()[1] - ax1.get_ylim()[0])
+                        ax1.add_artist(lines.Line2D([x0 - h, x0 + h], [z0, z0], linewidth = 1, linestyle = '--', color = 'r'))
+                        ax1.add_artist(lines.Line2D([x0, x0], [z0 - v, z0 + v], linewidth = 1, linestyle = '--', color = 'r'))
                     elif pos.shape[0] == 2:
                         ax1.add_patch(Rectangle((x0 - 1, z0 - 1), x1 - x0 + 2, z1 - z0 + 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
                     else:

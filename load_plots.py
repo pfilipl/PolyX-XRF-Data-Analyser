@@ -1,4 +1,5 @@
 from PyQt6 import QtWidgets
+import matplotlib.patches
 import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
@@ -47,7 +48,11 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
         if pos.shape[0] == 1:
             x0 = pos[0, 0]
             z0 = pos[0, 1]
-            map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+            # map.Axes.add_patch(matplotlib.patches.Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
+            h = 0.05 * (map.Axes.get_xlim()[1] - map.Axes.get_xlim()[0])
+            v = 0.05 * (map.Axes.get_ylim()[1] - map.Axes.get_ylim()[0])
+            map.Axes.add_artist(matplotlib.lines.Line2D([x0 - h, x0 + h], [z0, z0], linewidth = 1, linestyle = '--', color = 'r'))
+            map.Axes.add_artist(matplotlib.lines.Line2D([x0, x0], [z0 - v, z0 + v], linewidth = 1, linestyle = '--', color = 'r'))
         elif pos.shape[0] == 2:
             x0 = min(pos[0, 0], pos[1, 0])
             z0 = min(pos[0, 1], pos[1, 1])

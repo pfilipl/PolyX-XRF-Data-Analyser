@@ -338,7 +338,7 @@ class BatchWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 8) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types
+                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 9) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + show
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
                     try:
@@ -373,17 +373,18 @@ class BatchWindow(QtWidgets.QWidget):
                     normType = []
                     
                     for name in self.OutputConfig.keys():
-                        if name[:2] in ["De", "Si", "Ba"]:
+                        if name[:2] in ["De", "Si", "Ba", "Sh"]:
                             if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
                             elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
                             elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             elif name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
+                            elif name == "Show": showing = self.OutputConfig[name]
                             continue
                         if name[:8] == "NormType":
                             if self.OutputConfig[name]: normType.append(name[8:])
                             continue
                         if self.OutputConfig[name]:
-                            exec(f'analyse.{name}(tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType)')
+                            exec(f'analyse.{name}(tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, show = showing)')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
