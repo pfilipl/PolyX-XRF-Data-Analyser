@@ -59,9 +59,12 @@ class SingleWindow(QtWidgets.QWidget):
         self.MapsConfigAspectValue      = self.doubleSpinBox_MapsConfigAspectValue
         self.MapsConfigColormap         = self.comboBox_MapsConfigColormap
 
+        self.MapsConfigValuesAuto.toggled.connect(self.ConfigReload)
         self.MapsConfigValuesStart.valueChanged.connect(self.MapsConfigValue_changed)
         self.MapsConfigValuesStop.valueChanged.connect(self.MapsConfigValue_changed)
+        self.MapsConfigAspectAuto.toggled.connect(self.ConfigReload)
         self.MapsConfigAspectValue.valueChanged.connect(self.MapsConfigAspect_changed)
+        self.MapsConfigColormap.currentTextChanged.connect(self.ConfigReload)
         
         # Spectra configuration
         self.SpectraConfigEnergyAuto    = self.pushButton_SpectraConfigEnergyAuto
@@ -70,8 +73,10 @@ class SingleWindow(QtWidgets.QWidget):
         self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto
         self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue
 
+        self.SpectraConfigEnergyAuto.toggled.connect(self.ConfigReload)
         self.SpectraConfigEnergyStart.valueChanged.connect(self.SpectraConfigEnergy_changed)
         self.SpectraConfigEnergyStop.valueChanged.connect(self.SpectraConfigEnergy_changed)
+        self.SpectraConfigAspectAuto.toggled.connect(self.ConfigReload)
         self.SpectraConfigAspectValue.valueChanged.connect(self.SpectraConfigAspect_changed)
 
         # Tabs
@@ -316,6 +321,9 @@ class SingleWindow(QtWidgets.QWidget):
         self.NormType = mode
         if self.AutoReload.isChecked(): self.Reload_clicked()
 
+    def ConfigReload(self, variable):
+        if self.AutoReload.isChecked(): self.Reload_clicked()
+
     def ROIsChanged(self):
         table = self.ROIs
         tabs = self.tabWidget
@@ -511,13 +519,13 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.CurrentDetector == "ML": det = 0
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
-        # load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        # load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        # load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
-        # load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1 or PIN [V]", Aspect = mapAspect, Cmap = cMap)
-        # load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1 or PIN [V]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
         # load_plots.PlotStats1D(self, self.RC, "RC")
         for i in range(9, self.tabWidget.count()):
             load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
@@ -525,15 +533,19 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MapsConfigValue_changed(self):
         if self.MapsConfigValuesAuto.isChecked(): self.MapsConfigValuesAuto.setChecked(False)
+        if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def MapsConfigAspect_changed(self):
         if self.MapsConfigAspectAuto.isChecked(): self.MapsConfigAspectAuto.setChecked(False)
+        if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def SpectraConfigEnergy_changed(self):
         if self.SpectraConfigEnergyAuto.isChecked(): self.SpectraConfigEnergyAuto.setChecked(False)
+        if self.AutoReload.isChecked(): self.Reload_clicked()
         
     def SpectraConfigAspect_changed(self):
         if self.SpectraConfigAspectAuto.isChecked(): self.SpectraConfigAspectAuto.setChecked(False)
+        if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:

@@ -132,6 +132,8 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
             cEmax = head["bins"][0, 0] - 1
         else:
             cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
+    if pos is None:
+        pos = [[0, 0], [1000, 1000]]
     if isinstance(pos, list):
         pos = numpy.array(pos)
     PDA.check_pos(pos, [data.shape[0], data.shape[1]])
