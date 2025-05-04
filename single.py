@@ -120,6 +120,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.AreaChanged        = False
         
         self.LastChanged        = "Area"
+        self.ClearSelection     = self.pushButton_ClearSelection
 
         self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
         self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
@@ -130,6 +131,7 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
         self.SelectArea.toggled.connect(self.SelectArea_toggled)
+        self.ClearSelection.clicked.connect(self.ClearSelection_clicked)
 
         # Map path
         self.MapPath            = self.lineEdit_MapPath
@@ -394,8 +396,9 @@ class SingleWindow(QtWidgets.QWidget):
                 self.AreaX2.setEnabled(True)
                 self.AreaZ2.setEnabled(True)
                 self.AreaEnabled = True
-            if not self.pushButton_MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
-            if not self.pushButton_SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
+            if not self.MarkPoint.isEnabled(): self.pushButton_MarkPoint.setEnabled(True)
+            if not self.SelectArea.isEnabled(): self.pushButton_SelectArea.setEnabled(True)
+            if not self.ClearSelection.isEnabled(): self.pushButton_ClearSelection.setEnabled(True)
 
             self.PointX.blockSignals(True)
             self.PointZ.blockSignals(True)
@@ -634,6 +637,51 @@ class SingleWindow(QtWidgets.QWidget):
                 self.MarkPoint.blockSignals(True)
                 self.MarkPoint.setChecked(False)
                 self.MarkPoint.blockSignals(False)
+
+    def ClearSelection_clicked(self):
+        head = self.Data["head"]
+        self.Rectangle.set_visible(False)
+        self.HLine.set_visible(False)
+        self.VLine.set_visible(False)
+        self.TotalSignal.Canvas.draw()
+        self.SumSpectrum.Canvas.draw()
+        self.MaxSpectrum.Canvas.draw()
+        for i in range(7, self.tabWidget.count()):
+            self.tabWidget.widget(i).Canvas.draw()
+        
+        self.PointX.blockSignals(True)
+        self.PointZ.blockSignals(True)
+        self.AreaX1.blockSignals(True)
+        self.AreaX2.blockSignals(True)
+        self.AreaZ1.blockSignals(True)
+        self.AreaZ2.blockSignals(True)
+
+        self.PointX.setValue(min(head["Xpositions"][0, :]))
+        self.PointZ.setValue(min(head["Zpositions"][0, :]))
+        self.AreaX1.setValue(min(head["Xpositions"][0, :]))
+        self.AreaX2.setValue(max(head["Xpositions"][0, :]))
+        self.AreaZ1.setValue(min(head["Zpositions"][0, :]))
+        self.AreaZ2.setValue(max(head["Zpositions"][0, :]))
+
+        self.PointX.blockSignals(False)
+        self.PointZ.blockSignals(False)
+        self.AreaX1.blockSignals(False)
+        self.AreaX2.blockSignals(False)
+        self.AreaZ1.blockSignals(False)
+        self.AreaZ2.blockSignals(False)
+
+        if self.MarkPoint.isChecked(): 
+            self.MarkPoint.blockSignals(True)
+            self.MarkPoint.setChecked(False)
+            self.MarkPoint.blockSignals(False)
+        if self.SelectArea.isChecked(): 
+            self.SelectArea.blockSignals(True)
+            self.SelectArea.setChecked(False)
+            self.SelectArea.blockSignals(False)
+        self.PointChanged = False
+        self.AreaChanged = False
+
+        if self.AutoReload.isChecked(): self.Reload_clicked()
     
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
