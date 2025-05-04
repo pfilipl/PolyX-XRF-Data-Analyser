@@ -78,6 +78,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.TotalSignal        = self.tab_TotalSignal
         self.SumSpectrum        = self.tab_SumSpectrum
         self.MaxSpectrum        = self.tab_MaxSpectrum
+        self.ExtSumSpectrum     = self.tab_ExtSumSpectrum
+        self.ExtMaxSpectrum     = self.tab_ExtMaxSpectrum
         self.I0                 = self.tab_I0
         self.PIN                = self.tab_PIN
         self.DT                 = self.tab_DT
@@ -95,14 +97,23 @@ class SingleWindow(QtWidgets.QWidget):
         self.VLine              = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.SumLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.MaxLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.ExtSumLine         = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.ExtMaxLine         = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
         self.SumText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
         self.MaxText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.ExtSumText         = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtSumSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.ExtMaxText         = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtMaxSpectrum.Canvas.Axes.get_xaxis_transform())
     
         self.TotalSignal.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonPressed(event, canvas))
         self.TotalSignal.Canvas.mpl_connect("button_release_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonReleased(event, canvas))
         self.TotalSignal.Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibMouseMotion(event, canvas))
         self.SumSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.SumSpectrum.Canvas, mode = "sum": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
         self.MaxSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.MaxSpectrum.Canvas, mode = "max": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
+        self.ExtSumSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.ExtSumSpectrum.Canvas, mode = "extsum": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
+        self.ExtMaxSpectrum.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.ExtMaxSpectrum.Canvas, mode = "extmax": self.MatplotlibButtonPressedSpectrum(event, canvas, mode))
+
+        self.tabWidget.setTabEnabled(3, False)
+        self.tabWidget.setTabEnabled(4, False)
 
         # Spectrum from map region
         self.MarkPoint          = self.pushButton_MarkPoint
@@ -205,6 +216,12 @@ class SingleWindow(QtWidgets.QWidget):
         elif mode == "max":
             line = self.MaxLine
             text = self.MaxText
+        elif mode == "extsum":
+            line = self.ExtSumLine
+            text = self.ExtSumText
+        elif mode == "extmax":
+            line = self.ExtMaxLine
+            text = self.ExtMaxText
         if event.inaxes == canvas.Axes:
             line.set(xdata = [event.xdata, event.xdata], ydata = [canvas.Axes.get_ylim()[0], canvas.Axes.get_ylim()[1]])
             canvas.Axes.add_artist(line)
@@ -237,6 +254,10 @@ class SingleWindow(QtWidgets.QWidget):
                     self.VLine.set(xdata = [self.LastPressedX, self.LastPressedX], ydata = [self.LastPressedZ - v, self.LastPressedZ + v])
                     canvas.Axes.add_artist(self.HLine)
                     canvas.Axes.add_artist(self.VLine)
+                    self.AreaChanged = False
+                    self.PointChanged = True
+                    self.tabWidget.setTabEnabled(3, True)
+                    self.tabWidget.setTabEnabled(4, True)
                 canvas.draw()
                 self.MarkPoint.setChecked(False)
             if not self.SelectArea.isChecked():
@@ -253,6 +274,10 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastMotionX = None
                 self.LastMotionZ = None
             self.SelectArea.setChecked(False)
+            self.PointChanged = False
+            self.AreaChanged = True
+            self.tabWidget.setTabEnabled(3, True)
+            self.tabWidget.setTabEnabled(4, True)
             if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def MatplotlibMouseMotion(self, event, canvas):
@@ -294,8 +319,8 @@ class SingleWindow(QtWidgets.QWidget):
     def ROIsChanged(self):
         table = self.ROIs
         tabs = self.tabWidget
-        while tabs.count() > 7:
-            tabs.removeTab(7)
+        while tabs.count() > 9:
+            tabs.removeTab(9)
         for row in range(table.rowCount()):
             i = tabs.addTab(PreviewTab(self, int(table.item(row, 1).text()), int(table.item(row, 2).text()), float(table.item(row, 3).text())), table.item(row, 0).text())
             tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
@@ -376,10 +401,10 @@ class SingleWindow(QtWidgets.QWidget):
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
-            load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1 v PIN [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
+            load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1 or PIN [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.PlotStats1D(self, self.RC, "RC", "I [mA]", importLoad = importLoad)
-            for i in range(7, self.tabWidget.count()):
+            for i in range(9, self.tabWidget.count()):
                 load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
 
             if not self.Reload.isEnabled(): 
@@ -486,13 +511,15 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.CurrentDetector == "ML": det = 0
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
-        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
-        load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1/PIN [V]", Aspect = mapAspect, Cmap = cMap)
-        load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
+        # load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        # load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        # load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
+        # load_plots.MapStats2D(self, self.PIN, "PIN", det, "I1 or PIN [V]", Aspect = mapAspect, Cmap = cMap)
+        # load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
         # load_plots.PlotStats1D(self, self.RC, "RC")
-        for i in range(7, self.tabWidget.count()):
+        for i in range(9, self.tabWidget.count()):
             load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
@@ -516,8 +543,8 @@ class SingleWindow(QtWidgets.QWidget):
             if changeROIsDefault: self.ROIsDefault.setChecked(False)
             self.ROIs.blockSignals(True)
             self.ROIs.setCurrentCell(0, 0)
-            while self.tabWidget.count() > 7:
-                self.tabWidget.removeTab(7)
+            while self.tabWidget.count() > 9:
+                self.tabWidget.removeTab(9)
 
             read = False
             file = open(fileName, "r")
@@ -582,7 +609,7 @@ class SingleWindow(QtWidgets.QWidget):
         rows = list(set(rows))
         rows.sort(reverse = True)
         for row in rows:
-            self.tabWidget.removeTab(7 + row)
+            self.tabWidget.removeTab(9 + row)
             self.ROIs.removeRow(row)
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
@@ -590,8 +617,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.ROIs.setCurrentCell(0, 0)
         while self.ROIs.rowCount() > 0:
             self.ROIs.removeRow(self.ROIs.currentRow())
-        while self.tabWidget.count() > 7:
-                self.tabWidget.removeTab(7)
+        while self.tabWidget.count() > 9:
+                self.tabWidget.removeTab(9)
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def RegionChanged(self, value, mode):
@@ -646,7 +673,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.TotalSignal.Canvas.draw()
         self.SumSpectrum.Canvas.draw()
         self.MaxSpectrum.Canvas.draw()
-        for i in range(7, self.tabWidget.count()):
+        for i in range(9, self.tabWidget.count()):
             self.tabWidget.widget(i).Canvas.draw()
         
         self.PointX.blockSignals(True)
@@ -681,6 +708,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.PointChanged = False
         self.AreaChanged = False
 
+        self.tabWidget.setTabEnabled(3, False)
+        self.tabWidget.setTabEnabled(4, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
     
     def MapPathSearch_clicked(self):

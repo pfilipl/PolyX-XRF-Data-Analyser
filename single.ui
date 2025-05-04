@@ -855,6 +855,9 @@
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QTabWidget" name="tabWidget">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="mouseTracking">
            <bool>true</bool>
           </property>
@@ -866,17 +869,27 @@
           </property>
           <widget class="PreviewTab" name="tab_TotalSignal">
            <attribute name="title">
-            <string>Total signal</string>
+            <string>Total sig.</string>
            </attribute>
           </widget>
           <widget class="PreviewTab" name="tab_SumSpectrum">
            <attribute name="title">
-            <string>Sum spectrum</string>
+            <string>Sum sp.</string>
            </attribute>
           </widget>
           <widget class="PreviewTab" name="tab_MaxSpectrum">
            <attribute name="title">
-            <string>Max spectrum</string>
+            <string>Max sp.</string>
+           </attribute>
+          </widget>
+          <widget class="PreviewTab" name="tab_ExtSumSpectrum">
+           <attribute name="title">
+            <string>Ext. sum sp.</string>
+           </attribute>
+          </widget>
+          <widget class="PreviewTab" name="tab_ExtMaxSpectrum">
+           <attribute name="title">
+            <string>Ext. max sp.</string>
            </attribute>
           </widget>
           <widget class="PreviewTab" name="tab_I0">
@@ -886,7 +899,7 @@
           </widget>
           <widget class="PreviewTab" name="tab_PIN">
            <attribute name="title">
-            <string>I1 v PIN</string>
+            <string>I1 or PIN</string>
            </attribute>
           </widget>
           <widget class="PreviewTab" name="tab_DT">

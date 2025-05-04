@@ -259,8 +259,8 @@ class AddRoi(QtWidgets.QDialog):
                 table.removeRow(table.currentRow())
             try:
                 tabs = self.parent().findChild(QtWidgets.QTabWidget, "tabWidget")
-                while tabs.count() > 7:
-                    tabs.removeTab(7)
+                while tabs.count() > 9:
+                    tabs.removeTab(9)
                 singleParent = True
             except:
                 signleParent = False
