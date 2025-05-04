@@ -29,7 +29,11 @@ class Analyse(QtWidgets.QDialog):
                 "NormTypeI0LT"      : True,
                 "NormTypeI0"        : False,
                 "NormTypeLT"        : False,
-                "Show"              : True,
+                "DispSelected"      : True,
+                "DispSimpTitles"    : False,
+                "DispTitles"        : True,
+                "DispColorbars"     : True,
+                "DispAxes"          : True,
                 "DiagRC"            : True,
                 "DiagSum"           : True,
                 "DiagMax"           : True,
@@ -62,7 +66,12 @@ class Analyse(QtWidgets.QDialog):
             else:
                 exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
+        self.checkBox_DispTitles.toggled.connect(lambda checked, mode = "Simp": self.TitlesChanged(checked, mode))        
+        self.checkBox_DispSimpTitles.toggled.connect(lambda checked, mode = "": self.TitlesChanged(checked, mode))        
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
+
+    def TitlesChanged(self, checked, mode):
+        exec(f"if checked and self.checkBox_Disp{mode}Titles.isChecked(): self.checkBox_Disp{mode}Titles.setChecked(False)")
 
     def ButtonBox_clicked(self, button):
         if button.text() == "Cancel":
@@ -101,7 +110,7 @@ def generateOutputPath(path, resultPath, nestingType, outputType):
     elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep)
     return outputPath
 
-def DiagRC(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagRC(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     RC = Data["RC"]
     dataName = path.stem
@@ -111,7 +120,7 @@ def DiagRC(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     plt.close('all')
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RC")
 
-def DiagSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -122,7 +131,7 @@ def DiagSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck")
 
-def DiagMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -133,7 +142,7 @@ def DiagMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck")
 
-def DiagI0(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagI0(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     I0 = Data["I0"]
     dataName = path.stem
@@ -144,7 +153,7 @@ def DiagI0(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     PDA.print_Map(Map, outputPath + f"{dataName}_I0")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_I0")
 
-def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     PIN = Data["PIN"]
     dataName = path.stem
@@ -155,7 +164,7 @@ def DiagPIN(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN")
 
-def DiagLT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagLT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     LT = Data["LT"]
     dataName = path.stem
@@ -166,7 +175,7 @@ def DiagLT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     PDA.print_Map(Map, outputPath + f"{dataName}_LT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_LT", detector = detectors)
 
-def DiagDT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagDT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     DT = Data["DT"]
     dataName = path.stem
@@ -177,7 +186,7 @@ def DiagDT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     PDA.print_Map(Map, outputPath + f"{dataName}_DT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_DT", detector = detectors)
 
-def DiagRT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagRT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     RT = Data["RT"]
     dataName = path.stem
@@ -188,7 +197,7 @@ def DiagRT(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin 
     PDA.print_Map(Map, outputPath + f"{dataName}_RT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RT", detector = detectors)
 
-def DiagICR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagICR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     ICR = Data["ICR"]
     dataName = path.stem
@@ -199,7 +208,7 @@ def DiagICR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_ICR", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_ICR", detector = detectors)
 
-def DiagOCR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def DiagOCR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     OCR = Data["OCR"]
     dataName = path.stem
@@ -210,29 +219,29 @@ def DiagOCR(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin
     PDA.print_Map(Map, outputPath + f"{dataName}_OCR", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_OCR", detector = detectors)
 
-def UNormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def UNormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = maspect, pos = pos if show else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = maspect, pos = pos if dselected else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormTotal", detector = detectors)
 
-def UNormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def UNormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, pos = pos if show else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
+    Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, pos = pos if dselected else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
 
-def UNormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def UNormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -242,7 +251,7 @@ def UNormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", o
     plt.close('all')
     PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_UNormTabular", detectors)
 
-# def UNormRGB(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+# def UNormRGB(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
 #     head = Data["head"]
 #     data = Data["Data"]
 #     dataName = path.stem
@@ -263,7 +272,7 @@ def UNormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", o
 #             PDA.print_Fig(stackFig, outputPath + f"{dataName}_UNormRGB", Name = [f"{sL[0]}_{sL[1]}_{sL[2]}"], detector = [d])
 #         didx += 1
 
-def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -280,12 +289,12 @@ def NormTotal(Data, path, resultPath, detectors = [2], nestingType = "OtO", orig
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos if show else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos if dselected else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
         plt.close('all')
         PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
 
-def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -302,12 +311,12 @@ def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origi
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos if show else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos if dselected else None, Vmin = vmin, Vmax = vmax, Cmap = cmap)
         plt.close('all')
         PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}ROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
 
-def NormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def NormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -328,13 +337,13 @@ def NormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", or
         plt.close('all')
         PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Norm{nt}Tabular", detectors)
 
-def SpectraSumROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def SpectraSumROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if show:
+    if dselected:
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = roi, log = True, Aspect = saspect, Emin = emin)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSumROIs", detector = detectors)
@@ -344,13 +353,13 @@ def SpectraSumROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO",
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumROIs", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumROIs", detector = detectors)
 
-def SpectraMaxROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def SpectraMaxROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if show:
+    if dselected:
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = roi, log = False, POS = pos, Aspect = saspect, Emin = emin)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMaxROIs", detector = detectors)
@@ -360,13 +369,13 @@ def SpectraMaxROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO",
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxROIs", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxROIs", detector = detectors)
 
-def SpectraSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def SpectraSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if show:
+    if dselected:
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = None, log = True, Aspect = saspect, Emin = emin)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSum", detector = detectors)
@@ -376,13 +385,13 @@ def SpectraSum(Data, path, resultPath, detectors = [2], nestingType = "OtO", ori
     PDA.print_Hist(Hist, outputPath + f"{dataName}_Sum", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_Sum", detector = detectors)
 
-def SpectraMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], show = False):
+def SpectraMax(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], dselected = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if show:
+    if dselected:
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = None, log = False, POS = pos, Aspect = saspect, Emin = emin)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMax", detector = detectors)

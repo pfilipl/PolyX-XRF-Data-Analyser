@@ -373,18 +373,18 @@ class BatchWindow(QtWidgets.QWidget):
                     normType = []
                     
                     for name in self.OutputConfig.keys():
-                        if name[:2] in ["De", "Si", "Ba", "Sh"]:
+                        if name[:3] in ["Det", "Sim", "Bat", "Dis"]:
                             if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
                             elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
                             elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             elif name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
-                            elif name == "Show": showing = self.OutputConfig[name]
+                            elif name == "DispSelected": dispSelected = self.OutputConfig[name]
                             continue
                         if name[:8] == "NormType":
                             if self.OutputConfig[name]: normType.append(name[8:])
                             continue
                         if self.OutputConfig[name]:
-                            exec(f'analyse.{name}(tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, show = showing)')
+                            exec(f'analyse.{name}(tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, show = dispSelected)')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
