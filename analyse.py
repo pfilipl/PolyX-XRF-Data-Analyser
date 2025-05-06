@@ -67,9 +67,23 @@ class Analyse(QtWidgets.QDialog):
             else:
                 exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
+        self.checkBox_NormTotal.toggled.connect(self.NormTypeChanged)
+        self.checkBox_NormROIs.toggled.connect(self.NormTypeChanged)
+        self.checkBox_NormTabular.toggled.connect(self.NormTypeChanged)
+        self.checkBox_NormTypeI0LT.toggled.connect(self.NormTypeChanged)
+        self.checkBox_NormTypeI0.toggled.connect(self.NormTypeChanged)
+        self.checkBox_NormTypeLT.toggled.connect(self.NormTypeChanged)
         self.checkBox_DispTitles.toggled.connect(lambda checked, mode = "Simp": self.TitlesChanged(checked, mode))        
         self.checkBox_DispSimpTitles.toggled.connect(lambda checked, mode = "": self.TitlesChanged(checked, mode))        
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
+
+    def NormTypeChanged(self, checked):
+        output = self.checkBox_NormTotal.isChecked() or self.checkBox_NormROIs.isChecked() or self.checkBox_NormTabular.isChecked()
+        normalization = self.checkBox_NormTypeI0LT.isChecked() or self.checkBox_NormTypeI0.isChecked() or self.checkBox_NormTypeLT.isChecked()
+        if output and not normalization:
+            self.checkBox_NormTypeI0LT.blockSignals(True)
+            self.checkBox_NormTypeI0LT.setChecked(True)
+            self.checkBox_NormTypeI0LT.blockSignals(False)
 
     def TitlesChanged(self, checked, mode):
         exec(f"if checked and self.checkBox_Disp{mode}Titles.isChecked(): self.checkBox_Disp{mode}Titles.setChecked(False)")

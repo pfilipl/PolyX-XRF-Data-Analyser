@@ -178,7 +178,7 @@
      <item row="10" column="1" colspan="2">
       <widget class="QCheckBox" name="checkBox_GenWiatrowska">
        <property name="text">
-        <string>Generate output for Wiatrowska analysis</string>
+        <string>Generate output for Wiatrowska's app</string>
        </property>
       </widget>
      </item>
