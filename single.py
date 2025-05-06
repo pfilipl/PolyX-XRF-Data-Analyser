@@ -873,7 +873,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 13) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 5 display setting
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 14) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 5 display setting + Wiatrowska
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -900,14 +900,16 @@ class SingleWindow(QtWidgets.QWidget):
                 cMap = self.MapsConfigColormap.currentText()
                 detectors = []
                 nestingType = None
+                wiatrowska = False
                 display = {}
                 normType = []
                 for name in self.OutputConfig.keys():
-                    if name[:2] in ["De", "Si", "Ba"]:
+                    if name[:2] in ["De", "Si", "Ba", "Ge"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
                         if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
                         if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         if name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
+                        if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
                         continue
                     if name[:4] == "Disp":
                         display.update({ name[4:] : self.OutputConfig[name]})
@@ -917,6 +919,8 @@ class SingleWindow(QtWidgets.QWidget):
                         continue
                     if self.OutputConfig[name]:
                         exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display)')
+                        if name == "NormROIs" and wiatrowska:
+                            exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)

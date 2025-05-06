@@ -34,6 +34,7 @@ class Analyse(QtWidgets.QDialog):
                 "DispTitles"        : True,
                 "DispColorbars"     : True,
                 "DispAxes"          : True,
+                "GenWiatrowska"     : False,
                 "DiagRC"            : True,
                 "DiagSum"           : True,
                 "DiagMax"           : True,
@@ -108,6 +109,7 @@ def generateOutputPath(path, resultPath, nestingType, outputType):
     elif nestingType == "MO"    : outputPath = str(resultPath) + str(os.sep) + path.stem + str(os.sep)
     elif nestingType == "OtO"   : outputPath = str(resultPath) + str(os.sep) + outputType + str(os.sep)
     elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep)
+    elif nestingType == "W"     : outputPath = str(resultPath) + str(os.sep) + "Wiatrowska" + str(os.sep) + path.stem + str(os.sep)
     return outputPath
 
 def DiagRC(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None):
@@ -314,7 +316,8 @@ def NormROIs(Data, path, resultPath, detectors = [2], nestingType = "OtO", origi
         Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
         plt.close('all')
         PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
-        PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}ROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
+        if nestingType != "W":
+            PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}ROIs", Name = numpy.array(roi)[:, 0], detector = detectors)
 
 def NormTabular(Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None):
     head = Data["head"]
