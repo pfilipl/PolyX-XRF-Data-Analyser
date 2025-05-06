@@ -95,26 +95,8 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_8">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Normalized maps</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraSumROIs">
+     <item row="9" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagICR">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -122,12 +104,12 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Sum with ROIs</string>
+        <string>ICR map</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraSum">
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="checkBox_SpectraMax">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -135,19 +117,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Sum</string>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="0">
-      <widget class="QLabel" name="label_Nesting">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Results' nesting</string>
+        <string>Max</string>
        </property>
       </widget>
      </item>
@@ -160,123 +130,6 @@
        </property>
        <property name="text">
         <string>Normalization</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Display</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1" colspan="2">
-      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
-       <property name="text">
-        <string>Generate output for Wiatrowska's app</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraMaxROIs">
-       <property name="text">
-        <string>Max with ROIs</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0" colspan="2">
-      <widget class="QCheckBox" name="checkBox_DispSelected">
-       <property name="text">
-        <string>Selected point/area on output maps</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagMax">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Max spectrum</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QCheckBox" name="checkBox_UNormTabular">
-       <property name="text">
-        <string>ROIs tabular</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="label_4">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Spectra</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QCheckBox" name="checkBox_NormTypeI0">
-       <property name="text">
-        <string>I0</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagPIN">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>I1/PIN map</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagSum">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Sum spectrum</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagRC">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Ring current</string>
        </property>
       </widget>
      </item>
@@ -347,8 +200,15 @@
        </item>
       </layout>
      </item>
-     <item row="10" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagOCR">
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTabular">
+       <property name="text">
+        <string>ROIs tabular</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagDT">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -356,12 +216,51 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>OCR map</string>
+        <string>DT map</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QCheckBox" name="checkBox_UNormTotal">
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagMax">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Max spectrum</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagRC">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Ring current</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QCheckBox" name="checkBox_UNormROIs">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>ROIs signal</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTotal">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -370,6 +269,89 @@
        </property>
        <property name="text">
         <string>Total signal</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Display</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="checkBox_SpectraSumROIs">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Sum with ROIs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagLT">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>LT map</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagPIN">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>I1/PIN map</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Unnormalized maps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QCheckBox" name="checkBox_GenTiffs">
+       <property name="text">
+        <string>TIFFs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QCheckBox" name="checkBox_DispAxes">
+       <property name="text">
+        <string>Axes</string>
        </property>
       </widget>
      </item>
@@ -393,8 +375,15 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="checkBox_UNormROIs">
+     <item row="7" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTypeLT">
+       <property name="text">
+        <string>LT</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="checkBox_UNormTotal">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -402,7 +391,90 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>ROIs signal</string>
+        <string>Total signal</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QCheckBox" name="checkBox_NormTypeI0">
+       <property name="text">
+        <string>I0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagOCR">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>OCR map</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Normalized maps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="checkBox_UNormTabular">
+       <property name="text">
+        <string>ROIs tabular</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_Nesting">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Results' nesting</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QCheckBox" name="checkBox_SpectraSum">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Sum</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="checkBox_DiagSum">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Sum spectrum</string>
        </property>
       </widget>
      </item>
@@ -419,65 +491,6 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagLT">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>LT map</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagICR">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>ICR map</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QCheckBox" name="checkBox_NormTotal">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Total signal</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QCheckBox" name="checkBox_DiagDT">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>DT map</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QCheckBox" name="checkBox_NormTypeLT">
-       <property name="text">
-        <string>LT</string>
-       </property>
-      </widget>
-     </item>
      <item row="8" column="0">
       <widget class="QCheckBox" name="checkBox_DiagRT">
        <property name="sizePolicy">
@@ -491,8 +504,29 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_3">
+     <item row="12" column="2">
+      <widget class="QCheckBox" name="checkBox_DispSimpTitles">
+       <property name="text">
+        <string>Simplified titles</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="checkBox_SpectraMaxROIs">
+       <property name="text">
+        <string>Max with ROIs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QCheckBox" name="checkBox_DispColorbars">
+       <property name="text">
+        <string>Colorbars</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_4">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -505,39 +539,21 @@
         </font>
        </property>
        <property name="text">
-        <string>Unnormalized maps</string>
+        <string>Spectra</string>
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
-      <widget class="QLabel" name="label_6">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
+     <item row="13" column="2">
+      <widget class="QCheckBox" name="checkBox_DispTitles">
        <property name="text">
-        <string>Other</string>
+        <string>Titles</string>
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
-      <widget class="QCheckBox" name="checkBox_SpectraMax">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+     <item row="12" column="0" colspan="2">
+      <widget class="QCheckBox" name="checkBox_DispSelected">
        <property name="text">
-        <string>Max</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QCheckBox" name="checkBox_NormTabular">
-       <property name="text">
-        <string>ROIs tabular</string>
+        <string>Selected point/area on output maps</string>
        </property>
       </widget>
      </item>
@@ -562,31 +578,22 @@
        </property>
       </widget>
      </item>
-     <item row="13" column="0">
-      <widget class="QCheckBox" name="checkBox_DispColorbars">
+     <item row="9" column="1">
+      <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Colorbars</string>
+        <string>Generate files</string>
        </property>
       </widget>
      </item>
-     <item row="13" column="1">
-      <widget class="QCheckBox" name="checkBox_DispAxes">
+     <item row="10" column="1">
+      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
        <property name="text">
-        <string>Axes</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="2">
-      <widget class="QCheckBox" name="checkBox_DispSimpTitles">
-       <property name="text">
-        <string>Simplified titles</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="2">
-      <widget class="QCheckBox" name="checkBox_DispTitles">
-       <property name="text">
-        <string>Titles</string>
+        <string>Wiatrowska's app</string>
        </property>
       </widget>
      </item>

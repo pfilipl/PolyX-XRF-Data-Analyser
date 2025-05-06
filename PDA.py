@@ -13,6 +13,7 @@ from matplotlib.patches import Rectangle
 import matplotlib.lines as lines
 import matplotlib.scale as scale
 import xraylib as xrl
+from PIL import Image
 
 import main
 
@@ -1056,6 +1057,27 @@ def print_Map(Map, filename, Name = None, detector = None):
             for i in range(Map[m].shape[0]):
                 file.write(f"{Map[m][i, j]}" if i == 0 else f",{Map[m][i, j]}")
         file.close()
+
+def print_Tiff(Map, filename, Name = None, detector = None):
+    for m in range(len(Map)):
+        if Name is not None:
+            if len(Map) > len(Name):
+                if detector is not None:
+                    name = filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.tiff"
+                else:
+                    name = filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.tiff"
+            else:
+                if detector is not None:
+                    name = filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m]}.tiff"
+                else:
+                    name = filename + f"_{Name[m]}.tiff"
+        else:
+            if detector is not None:
+                name = filename + f"_SDD-{detectors[detector[m]]}.tiff"
+            else:
+                name = filename + f"_{m}.csv" if len(Map) > 1 else filename + ".tiff"
+        img = Image.fromarray(Map[m].transpose())
+        img.save(name)
 
 def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper", Aspect = 'auto'):
     if len(Map) > 3:
