@@ -873,7 +873,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 9) # 3 detectors buttons + 2 nesting combos + 3 normalization types + show
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 13) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 5 display setting
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -900,20 +900,23 @@ class SingleWindow(QtWidgets.QWidget):
                 cMap = self.MapsConfigColormap.currentText()
                 detectors = []
                 nestingType = None
+                display = {}
                 normType = []
                 for name in self.OutputConfig.keys():
-                    if name[:3] in ["Det", "Sim", "Bat", "Dis"]:
+                    if name[:2] in ["De", "Si", "Ba"]:
                         if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
-                        elif name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
-                        elif name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
-                        elif name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
-                        elif name == "DispSelected": dispSelected = self.OutputConfig[name]
+                        if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
+                        if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
+                        if name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
+                        continue
+                    if name[:4] == "Disp":
+                        display.update({ name[4:] : self.OutputConfig[name]})
                         continue
                     if name[:8] == "NormType":
                         if self.OutputConfig[name]: normType.append(name[8:])
                         continue
                     if self.OutputConfig[name]:
-                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, dselected = dispSelected)')
+                        exec(f'analyse.{name}(self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)

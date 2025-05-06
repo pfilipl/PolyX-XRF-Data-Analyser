@@ -282,9 +282,10 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
             width = sigma_width
         ROI.append([name, idx - width, idx + width])
 
-def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = None, normalize = None, Origin = 'upper', Aspect = 'auto'):
+def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = None, normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
     Map = []
     Fig = []
+    if not Disp["Selected"]: pos = None
     if normalize is not None:
         I0 = normalize[0]
         LT = normalize[1]
@@ -323,10 +324,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 # else:
                 img = ax1.imshow(sum_signal.transpose(), origin = Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
                 # img = ax1.imshow(sum_signal.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
-                cb = fig.colorbar(img)
-                cb.set_ticks(np.linspace(max(np.min(sum_signal), Vmin) if Vmin is not None else np.min(sum_signal), min(np.max(sum_signal), Vmax) if Vmax is not None else np.max(sum_signal), len(cb.get_ticks()) - 2))
-                if clabel:
-                    cb.set_label(clabel)
+                if Disp["Colorbars"]:
+                    cb = fig.colorbar(img)
+                    cb.set_ticks(np.linspace(max(np.min(sum_signal), Vmin) if Vmin is not None else np.min(sum_signal), min(np.max(sum_signal), Vmax) if Vmax is not None else np.max(sum_signal), len(cb.get_ticks()) - 2))
+                    if clabel:
+                        cb.set_label(clabel)
                 ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
                 ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
                 ax1.set_xlabel("X [mm]")
@@ -337,7 +339,10 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}, normalized")
                 # else:
                 #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
-                ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                if Disp["Titles"]:
+                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                elif Disp["SimpTitles"]:
+                    ax1.set_title(f"{ROI[i][0]}")
                 if pos is not None:
                     if pos.shape[0] == 1:
                         # ax1.add_patch(Rectangle((x0 - 1, z0 - 1), 2, 2, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
@@ -362,10 +367,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 # max_signal = max_signal / I0 / (LT[d] / 1e3)
             img = ax1.imshow(max_signal.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(max_signal.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
-            cb = fig.colorbar(img)
-            cb.set_ticks(np.linspace(max(np.min(max_signal), Vmin) if Vmin is not None else np.min(max_signal), min(np.max(max_signal), Vmax) if Vmax is not None else np.max(max_signal), len(cb.get_ticks()) - 2))
-            if clabel:
-                cb.set_label(clabel)
+            if Disp["Colorbars"]:
+                cb = fig.colorbar(img)
+                cb.set_ticks(np.linspace(max(np.min(max_signal), Vmin) if Vmin is not None else np.min(max_signal), min(np.max(max_signal), Vmax) if Vmax is not None else np.max(max_signal), len(cb.get_ticks()) - 2))
+                if clabel:
+                    cb.set_label(clabel)
             ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
             ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
             ax1.set_xlabel("X [mm]")
@@ -376,15 +382,21 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             #     ax1.set_title(f"{title}\n SDD {detectors[d]}, normalized")
             # else:
             #     ax1.set_title(f"{title}\n SDD {detectors[d]}")
-            ax1.set_title(f"{title}\n SDD {detectors[d]}")
+            if Disp["Titles"]:
+                ax1.set_title(f"{title}\n SDD {detectors[d]}")
+            elif Disp["SimpTitles"]:
+                ax1.set_title(f"ROI max")
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
             Map.append(max_signal)
             Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Map, Fig
 
-def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto'):
+def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto', Disp = None):
     Fig = []
     fig = plt.figure(layout = 'compressed')
     ax1 = fig.add_subplot()
@@ -393,16 +405,22 @@ def Stats1D_plot(data, head, title, ylabel = None, Aspect = 'auto'):
     img = ax1.plot(data, ".-")
     if ylabel:
         ax1.set_ylabel(ylabel)
-    ax1.set_title(f"{title}")
+    if Disp["Titles"]:
+        ax1.set_title(f"{title}")
+    elif Disp["SimpTitles"]:
+        ax1.set_title(f'{title.split(": ")[-1]}')
     ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
     ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_xticks())))
     ax1.set_xlabel("Z [mm]")
     # ax1.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
     ax1.set_aspect(Aspect)
     Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Fig
 
-def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = None, Vmax = None, clabel = None, Origin = "upper", Aspect = 'auto'):
+def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = None, Vmax = None, clabel = None, Origin = "upper", Aspect = 'auto', Disp = None):
     Map = []
     Fig = []
     if isinstance(Data, list):
@@ -412,17 +430,21 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             ax1 = fig.add_subplot()
             img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
-            cb = fig.colorbar(img)
-            cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
-            if clabel:
-                cb.set_label(clabel)
+            if Disp["Colorbars"]:
+                cb = fig.colorbar(img)
+                cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
+                if clabel:
+                    cb.set_label(clabel)
             ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
             ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
             ax1.set_xlabel("X [mm]")
             ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
             ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
-            ax1.set_title(f"{title}, SDD {detectors[d]}")
+            if Disp["Titles"]:
+                ax1.set_title(f"{title}, SDD {detectors[d]}")
+            elif Disp["SimpTitles"]:
+                ax1.set_title(f'{title.split(": ")[-1]}')
             ax1.set_aspect(Aspect)
             Map.append(data)
             Fig.append(fig)
@@ -432,23 +454,30 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         ax1 = fig.add_subplot()
         img = ax1.imshow(data.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
         # img = ax1.imshow(data.transpose(), cmap = Cmap, vmin = Vmin vmax = Vmax)
-        cb = fig.colorbar(img)
-        cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
-        if clabel:
-            cb.set_label(clabel)
+        if Disp["Colorbars"]:
+            cb = fig.colorbar(img)
+            cb.set_ticks(np.linspace(max(np.min(data), Vmin) if Vmin is not None else np.min(data), min(np.max(data), Vmax) if Vmax is not None else np.max(data), len(cb.get_ticks()) - 2))
+            if clabel:
+                cb.set_label(clabel)
         ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
         ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
         ax1.set_xlabel("X [mm]")
         ax1.set_yticks(np.linspace(0, data.shape[1] - 1, len(ax1.get_yticks()) - 2))
         ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
         ax1.set_ylabel("Z [mm]")
-        ax1.set_title(f"{title}")
+        if Disp["Titles"]:
+            ax1.set_title(f"{title}")
+        elif Disp["SimpTitles"]:
+            ax1.set_title(f'{title.split(": ")[-1]}')
         ax1.set_aspect(Aspect)
         Map.append(data)
         Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Map, Fig
 
-def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, normalize = None, Aspect = 'auto'):
+def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, normalize = None, Aspect = 'auto', Disp = None):
     if normalize is not None:
         I0 = normalize[0]
         LT = normalize[1]
@@ -492,14 +521,26 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             z0r = np.round(head["Zpositions"][0, z0], 2)
             if POS is not None:
                 if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"pos = [{x0r}, {z0r}]")
                 else:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"pos = [{x0r}, {z0r}]")
             else:
                 if normalize is not None:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"{title}")
                 else:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"{title}")
             hist = data[x0, z0, :]
             if ROI is not None:
                 for i in range(len(ROI)):
@@ -619,14 +660,26 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             z1r = np.round(head["Zpositions"][0, z1], 2)
             if POS is not None:
                 if normalize is not None:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
                 else:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
             else:
                 if normalize is not None:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"{title}")
                 else:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    if Disp["Titles"]:
+                        ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    elif Disp["SimpTitles"]:
+                        ax1.set_title(f"{title}")
             hist = sum_data
             if ROI is not None:
                 for i in range(len(ROI)):
@@ -714,9 +767,12 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Hist, Fig
     
-def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, Aspect = 'auto', POS = None):
+def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False, ROI = None, Emin = 0.0, Emax = None, peaks = None, Aspect = 'auto', POS = None, Disp = None):
     Hist = []
     Fig = []
     if POS is None:
@@ -753,9 +809,15 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             x0r = np.round(head["Xpositions"][0, x0], 2)
             z0r = np.round(head["Zpositions"][0, z0], 2)
             if POS is not None:
-                ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                if Disp["Titles"]:
+                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                elif Disp["SimpTitles"]:
+                    ax1.set_title(f"pos = [{x0r}, {z0r}]")
             else:
-                ax1.set_title(f"{title}, SDD {detectors[d]}")
+                if Disp["Titles"]:
+                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                elif Disp["SimpTitles"]:
+                    ax1.set_title(f"{title}")
             hist = max_data
             if ROI is not None:
                 for i in range(len(ROI)):
@@ -822,9 +884,15 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             x1r = np.round(head["Xpositions"][0, x1], 2)
             z1r = np.round(head["Zpositions"][0, z1], 2)
             if POS is not None:
-                ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                if Disp["Titles"]:
+                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                elif Disp["SimpTitles"]:
+                    ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
             else:
-                ax1.set_title(f"{title}, SDD {detectors[d]}")
+                if Disp["Titles"]:
+                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                elif Disp["SimpTitles"]:
+                    ax1.set_title(f"{title}")
             hist = max_data
             if ROI is not None:
                 for i in range(len(ROI)):
@@ -889,9 +957,12 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Hist, Fig
     
-def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto'):
+def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto', Disp = None):
     Hist = []
     Fig = []
     fig = plt.figure(layout = 'compressed')
@@ -902,7 +973,10 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
         ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
         Hist.append(data)
     ax1.legend()
-    ax1.set_title(f"{title}")
+    if Disp["Titles"]:
+        ax1.set_title(f"{title}")
+    elif Disp["SimpTitles"]:
+        ax1.set_title(f'{title.split(": ")[-1]}')
     if log:
         ax1.set_yscale('log')
     ax1.set_xlim([0, head["bins"][0, 0]])
@@ -910,6 +984,9 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
     ax1.set_xlabel("channel")
     ax1.set_aspect(Aspect)
     Fig.append(fig)
+    if not Disp["Axes"]:
+        for fig in Fig:
+            fig.axes[0].set_axis_off()
     return Hist, Fig
 
 def print_Hist(Hist, filename, Name = None, detector = None):
