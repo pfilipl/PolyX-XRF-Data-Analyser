@@ -68,8 +68,6 @@ class Analyse(QtWidgets.QDialog):
             else:
                 exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
-        # self.label_Nesting.setPixmap(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_MessageBoxInformation).pixmap(16))
-
         self.checkBox_NormTotal.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormROIs.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTabular.toggled.connect(self.NormTypeChanged)
