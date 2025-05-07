@@ -225,7 +225,7 @@ def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: Input Count Rate", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: Input Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_ICR", detector = detectors)
     if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_ICR", detector = detectors)
@@ -237,7 +237,7 @@ def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: Output Count Rate", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: Output Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
     PDA.print_Map(Map, outputPath + f"{dataName}_OCR", detector = detectors)
     if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_OCR", detector = detectors)
