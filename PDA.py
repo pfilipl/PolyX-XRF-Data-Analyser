@@ -128,7 +128,6 @@ def gen_calib(N, a, b, n, f):
 
 # załadowanie zestawu danych eksperymentalnych
 # <- path       - string,           ścieżka do zestawu danych
-# (<-) variant  - string,           wariant załadunku dancyh ("fast" - podstawowy, "all" - zawierający ilorazy spektrów)
 # -> head       - dataframe,        
 # -> Data       - list(ndarray),     
 # -> ICR        - list(ndarray),    
@@ -140,7 +139,7 @@ def gen_calib(N, a, b, n, f):
 # -> I0         - list(ndarray),    
 # -> RC         - list,             
 # -> ROI        - list(list),       
-def data_load(path, variant = "fast"):
+def data_load(path):
     if isinstance(path, pathlib.Path):
         dataname = path.stem
     else:
@@ -232,20 +231,12 @@ def data_load(path, variant = "fast"):
     # I0 = mat["I0_map"].transpose()      # [x, z]
 
     if number_of_files > 0:
-        if variant == "all":
-            Data = [Data1, Data2, Data1 + Data2, div_spectrum(Data1, Data2), div_spectrum(Data2, Data1)]
-            ICR = [ICR1, ICR2, ICR1 + ICR2, ICR1 + ICR2, ICR1 + ICR2]    
-            OCR = [OCR1, OCR2, OCR1 + OCR2, OCR1 + OCR2, OCR1 + OCR2]    
-            RT = [RT1, RT2, RT1 + RT2, RT1 + RT2, RT1 + RT2]
-            LT = [LT1, LT2, LT1 + LT2, LT1 + LT2, LT1 + LT2]
-            DT = [DT1, DT2, np.mean([DT1, DT2], axis = 0), np.mean([DT1, DT2], axis = 0), np.mean([DT1, DT2], axis = 0)]
-        else:
-            Data = [Data1, Data2, Data1 + Data2]
-            ICR = [ICR1, ICR2, ICR1 + ICR2]    
-            OCR = [OCR1, OCR2, OCR1 + OCR2]    
-            RT = [RT1, RT2, RT1 + RT2]
-            LT = [LT1, LT2, LT1 + LT2]
-            DT = [DT1, DT2, np.mean([DT1, DT2], axis = 0)]
+        Data = [Data1, Data2, Data1 + Data2]
+        ICR = [ICR1, ICR2, ICR1 + ICR2]    
+        OCR = [OCR1, OCR2, OCR1 + OCR2]    
+        RT = [RT1, RT2, RT1 + RT2]
+        LT = [LT1, LT2, LT1 + LT2]
+        DT = [DT1, DT2, np.max([DT1, DT2], axis = 0)]
         return [head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI]
     
     return [[], [], [], [], [], [], [], [], [], [], []]
