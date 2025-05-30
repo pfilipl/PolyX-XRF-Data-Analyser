@@ -25,13 +25,16 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
     imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
+    map.Axes.invert_xaxis()
 
-    map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+    # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+    map.Axes2x = map.Axes.secondary_xaxis('bottom')
     map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
     map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
     map.Axes2x.set_xlabel("X [mm]")
 
-    map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+    # map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+    map.Axes2y = map.Axes.secondary_yaxis('left')
     map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
     map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
     map.Axes2y.set_ylabel("Z [mm]")
@@ -76,7 +79,8 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
     plot.Axes.set_xlim([0, len(data)])
     if ylabel: plot.Axes.set_ylabel(ylabel)
 
-    plot.Axes2x = plot.Axes.secondary_xaxis('bottom', transform = plot.Axes.transData)
+    # plot.Axes2x = plot.Axes.secondary_xaxis('bottom', transform = plot.Axes.transData)
+    plot.Axes2x = plot.Axes.secondary_xaxis('bottom')
     plot.Axes2x.set_xticks(numpy.linspace(0, len(data) - 1, len(plot.Axes.get_xticks()) - 2))
     plot.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(plot.Axes2x.get_xticks())))
     plot.Axes2x.set_xlabel("Z [mm]")
@@ -100,13 +104,16 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
     imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
+    map.Axes.invert_xaxis()
 
-    map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+    # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+    map.Axes2x = map.Axes.secondary_xaxis('bottom')
     map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
     map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
     map.Axes2x.set_xlabel("X [mm]")
 
-    map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+    # map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+    map.Axes2y = map.Axes.secondary_yaxis('left')
     map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
     map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
     map.Axes2y.set_ylabel("Z [mm]")
@@ -161,7 +168,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         sumData = data[x0, z0, :]
     imgSpectrum = spectrum.Axes.plot(sumData)
 
-    if func == numpy.sum: spectrum.Axes.set_yscale('log')
+    if func == numpy.sum and not widget.PointChanged: spectrum.Axes.set_yscale('log')
     spectrum.Axes.get_xaxis().set_visible(True)
     spectrum.Axes.get_yaxis().set_visible(True)
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):
@@ -198,7 +205,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
                 for xp in xP[0]:
                     if widget.Calib is not None:
                         if  xp > (numpy.abs(widget.Calib - 0)).argmin() + 50:
-                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C1'))
+                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C1'))
                             if xp > cEmin and xp < cEmax:
                                 ka = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Ka'] - widget.Calib[xp] / 1000)).argmin()]
                                 kb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)).argmin()]
@@ -209,7 +216,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
                                 spectrum.Axes.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform())
                                 spectrum.Axes.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform())
                     else:
-                        spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], 1.0, '-', 'C2'))
+                        spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C2'))
                 if widget.Calib is not None:
                     spectrum.Axes.text(0.05, 0.75, "Ka", ha = 'left', color = 'C4', transform = spectrum.Axes.transAxes)
                     spectrum.Axes.text(0.05, 0.80, "Kb", ha = 'left', color = 'C6', transform = spectrum.Axes.transAxes)
@@ -247,7 +254,8 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         spectrum.Axes.format_coord = lambda x, y: f'x = {x:d} ch, y = {y:.3e}'
     else:
         spectrum.Axes.get_xaxis().set_visible(False)
-        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom', transform = spectrum.Axes.transData)
+        # spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom', transform = spectrum.Axes.transData)
+        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
         spectrum.Axes.set_xlim([cEmin, cEmax])
         Eval = numpy.linspace(Emin * 1000, Emax * 1000, len(spectrum.Axes.get_xticks()) - 2)
         E = []

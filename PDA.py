@@ -348,6 +348,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                         print("Invalid pos!")
                         break
                 ax1.set_aspect(Aspect)
+                ax1.invert_xaxis()
                 Map.append(sum_signal)
                 Fig.append(fig)
         else:
@@ -381,6 +382,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
+            ax1.invert_xaxis()
             Map.append(max_signal)
             Fig.append(fig)
     if not Disp["Axes"]:
@@ -438,6 +440,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             elif Disp["SimpTitles"]:
                 ax1.set_title(f'{title.split(": ")[-1]}')
             ax1.set_aspect(Aspect)
+            ax1.invert_xaxis()
             Map.append(data)
             Fig.append(fig)
     else:
@@ -462,6 +465,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         elif Disp["SimpTitles"]:
             ax1.set_title(f'{title.split(": ")[-1]}')
         ax1.set_aspect(Aspect)
+        ax1.invert_xaxis()
         Map.append(data)
         Fig.append(fig)
     if not Disp["Axes"]:
@@ -550,7 +554,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         for xp in xP[0]:
                             if calib is not None:
                                 if  xp > (np.abs(calib - 0)).argmin() + 50:
-                                    ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], 1.0, '-', 'C1'))
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
                                     if xp > cEmin and xp < cEmax:
                                         # ka_diff = Energies['Ka'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
                                         # kb_diff = Energies['Kb'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
@@ -569,7 +573,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                         ax1.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
                                         ax1.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
                             else:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
                             ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes)
                             ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes)
@@ -596,7 +600,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
                                 ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
         elif pos.shape[0] == 2:
@@ -689,7 +693,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         for xp in xP[0]:
                             if calib is not None:
                                 if  xp > (np.abs(calib - 0)).argmin() + 50:
-                                    ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], 1.0, '-', 'C1'))
+                                    ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
                                     if xp > cEmin and xp < cEmax:
                                         # ka_diff = Energies['Ka'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
                                         # kb_diff = Energies['Kb'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
@@ -708,7 +712,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                         ax1.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
                                         ax1.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
                             else:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
                             ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes)
                             ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes)
@@ -735,7 +739,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
                                 ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
         else:
@@ -826,9 +830,9 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         xP = sig.find_peaks(max_data, height = 0.01 * np.max(max_data), width = 10)
                         for xp in xP[0]:
                             if calib is not None and xp > (np.abs(calib - Emin * 1000)).argmin() + 10:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], linewidth=1.0, linestyle='-', color='C2'))
                             else:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], linewidth=1.0, linestyle='-', color='C2'))
                 elif calib is not None:
                     for name in peaks:
                         if name != 'Total signal':
@@ -850,7 +854,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
                                 ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
         elif pos.shape[0] == 2:
@@ -901,9 +905,9 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         xP = sig.find_peaks(max_data, height = 0.01 * np.max(max_data), width = 10)
                         for xp in xP[0]:
                             if calib is not None and xp > (np.abs(calib - Emin * 1000)).argmin() + 10:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], linewidth=1.0, linestyle='-', color='C2'))
                             else:
-                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], 1.0, '-', 'C2'))
+                                ax1.add_artist(lines.Line2D([xp, xp], [0, max_data[xp] / np.max(max_data)], linewidth=1.0, linestyle='-', color='C2'))
                 elif calib is not None:
                     for name in peaks:
                         if name != 'Total signal':
@@ -925,7 +929,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
-                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = ax1.get_xaxis_transform()))
+                            ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
                                 ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
         else:

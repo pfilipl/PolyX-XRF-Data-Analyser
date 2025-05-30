@@ -519,8 +519,8 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.CurrentDetector == "ML": det = 0
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
-        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = True, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
