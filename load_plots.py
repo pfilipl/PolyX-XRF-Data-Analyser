@@ -173,7 +173,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
     spectrum.Axes.get_yaxis().set_visible(True)
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):
         if pos.shape[0] == 1: spectrum.Axes.set_title(f"pos = [{widget.PointX.value()} mm, {widget.PointZ.value()} mm]")
-        elif pos.shape[0] == 2: spectrum.Axes.set_title(f"pos = [[{widget.AreaX1.value()} mm, {widget.AreaZ1.value()} mm], [{widget.AreaX2.value()} mm, {widget.AreaZ2.value()} mm]]")
+        elif pos.shape[0] == 2: spectrum.Axes.set_title(f"pos = [[{widget.AreaX1.value()} mm, {widget.AreaZ1.value()} mm], [{widget.AreaX2.value()} mm, {widget.AreaZ2.value()} mm]]" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0))
 
     if widget.Calib is not None:
         if func == numpy.sum: spectrum.Axes.set_ylim([1, numpy.max(sumData[cEmin:cEmax]) * 1.5])

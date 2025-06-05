@@ -518,14 +518,14 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             if POS is not None:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], SDD {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
-                        ax1.set_title(f"pos = [{x0r}, {z0r}]")
+                        ax1.set_title(f"pos = [{x0r} mm, {z0r} mm]")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], SDD {detectors[d]}")
                     elif Disp["SimpTitles"]:
-                        ax1.set_title(f"pos = [{x0r}, {z0r}]")
+                        ax1.set_title(f"pos = [{x0r} mm, {z0r} mm]")
             else:
                 if normalize is not None:
                     if Disp["Titles"]:
@@ -657,14 +657,14 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             if POS is not None:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]\n SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
-                        ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
+                        ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}")
                     elif Disp["SimpTitles"]:
-                        ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
+                        ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
             else:
                 if normalize is not None:
                     if Disp["Titles"]:
@@ -881,9 +881,9 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             z1r = np.round(head["Zpositions"][0, z1], 2)
             if POS is not None:
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}\npos = [[{x0r}, {z0r}], [{x1r}, {z1r}]], SDD {detectors[d]}")
+                    ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}")
                 elif Disp["SimpTitles"]:
-                    ax1.set_title(f"pos = [[{x0r}, {z0r}], [{x1r}, {z1r}]]")
+                    ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
             else:
                 if Disp["Titles"]:
                     ax1.set_title(f"{title}, SDD {detectors[d]}")
