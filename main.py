@@ -5,7 +5,7 @@ import PDA
 
 try:
     from ctypes import windll
-    myappid = 'SOLARIS.PolyX.PDA.20250605c'
+    myappid = 'SOLARIS.PolyX.PXDA'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError:
     pass
@@ -16,7 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         uic.loadUi(basedir / "main.ui", self)
-        self.setWindowTitle('PolyX Data Analyser')
+        self.setWindowTitle('PolyX XRF Data Analyser')
 
         self.Calib  = None
         self.Sigma  = None
