@@ -25,7 +25,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
     imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
-    map.Axes.invert_xaxis()
+    # map.Axes.invert_xaxis()
 
     # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
     map.Axes2x = map.Axes.secondary_xaxis('bottom')
@@ -104,7 +104,7 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
     imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
     map.Axes.get_xaxis().set_visible(False)
     map.Axes.get_yaxis().set_visible(False)
-    map.Axes.invert_xaxis()
+    # map.Axes.invert_xaxis()
 
     # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
     map.Axes2x = map.Axes.secondary_xaxis('bottom')

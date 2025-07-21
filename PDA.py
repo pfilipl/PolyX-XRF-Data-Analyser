@@ -348,7 +348,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                         print("Invalid pos!")
                         break
                 ax1.set_aspect(Aspect)
-                ax1.invert_xaxis()
+                # ax1.invert_xaxis()
                 Map.append(sum_signal)
                 Fig.append(fig)
         else:
@@ -382,7 +382,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             if pos is not None:
                 ax1.add_patch(Rectangle((x0, z0), x1 - x0, z1 - z0, linewidth = 1, linestyle = '--', edgecolor = 'r', facecolor = 'none'))
             ax1.set_aspect(Aspect)
-            ax1.invert_xaxis()
+            # ax1.invert_xaxis()
             Map.append(max_signal)
             Fig.append(fig)
     if not Disp["Axes"]:
@@ -440,7 +440,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             elif Disp["SimpTitles"]:
                 ax1.set_title(f'{title.split(": ")[-1]}')
             ax1.set_aspect(Aspect)
-            ax1.invert_xaxis()
+            # ax1.invert_xaxis()
             Map.append(data)
             Fig.append(fig)
     else:
@@ -465,7 +465,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
         elif Disp["SimpTitles"]:
             ax1.set_title(f'{title.split(": ")[-1]}')
         ax1.set_aspect(Aspect)
-        ax1.invert_xaxis()
+        # ax1.invert_xaxis()
         Map.append(data)
         Fig.append(fig)
     if not Disp["Axes"]:
