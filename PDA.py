@@ -41,8 +41,12 @@ for i in range(1, 107):
         lb = xrl.LineEnergy(i, xrl.LB_LINE)
     except: 
         lb = 0
-    Energies.append((xrl.AtomicNumberToSymbol(i), ka, kb, la, lb))
-Energies = np.array(Energies, dtype = [('symbol', 'U2'), ('Ka', 'f8'), ('Kb', 'f8'), ('La', 'f8'), ('Lb', 'f8')])
+    try: 
+        m = xrl.LineEnergy(i, xrl.MA1_LINE)
+    except: 
+        m = 0
+    Energies.append((xrl.AtomicNumberToSymbol(i), ka, kb, la, lb, m))
+Energies = np.array(Energies, dtype = [('symbol', 'U2'), ('Ka', 'f8'), ('Kb', 'f8'), ('La', 'f8'), ('Lb', 'f8'), ('M', 'f8')])
 
 # ZAŁADOWANIE FUNKCJI
 

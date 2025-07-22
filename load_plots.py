@@ -211,17 +211,20 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
                                 kb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)).argmin()]
                                 la = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['La'] - widget.Calib[xp] / 1000)).argmin()]
                                 lb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Lb'] - widget.Calib[xp] / 1000)).argmin()]
+                                m = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['M'] - widget.Calib[xp] / 1000)).argmin()]
                                 spectrum.Axes.text(xp, 0.05, ka, ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform())
                                 spectrum.Axes.text(xp, 0.12, kb, ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform())
                                 spectrum.Axes.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform())
                                 spectrum.Axes.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform())
+                                spectrum.Axes.text(xp, 0.35, m, ha = 'right', rotation = 'vertical', color = 'C8', transform = spectrum.Axes.get_xaxis_transform())
                     else:
                         spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C2'))
                 if widget.Calib is not None:
-                    spectrum.Axes.text(0.05, 0.75, "Ka", ha = 'left', color = 'C4', transform = spectrum.Axes.transAxes)
-                    spectrum.Axes.text(0.05, 0.80, "Kb", ha = 'left', color = 'C6', transform = spectrum.Axes.transAxes)
-                    spectrum.Axes.text(0.05, 0.85, "La", ha = 'left', color = 'C5', transform = spectrum.Axes.transAxes)
-                    spectrum.Axes.text(0.05, 0.90, "Lb", ha = 'left', color = 'C7', transform = spectrum.Axes.transAxes)
+                    spectrum.Axes.text(0.05, 0.70, "Ka", ha = 'left', color = 'C4', transform = spectrum.Axes.transAxes)
+                    spectrum.Axes.text(0.05, 0.75, "Kb", ha = 'left', color = 'C6', transform = spectrum.Axes.transAxes)
+                    spectrum.Axes.text(0.05, 0.80, "La", ha = 'left', color = 'C5', transform = spectrum.Axes.transAxes)
+                    spectrum.Axes.text(0.05, 0.85, "Lb", ha = 'left', color = 'C7', transform = spectrum.Axes.transAxes)
+                    spectrum.Axes.text(0.05, 0.90, "M", ha = 'left', color = 'C8', transform = spectrum.Axes.transAxes)
         elif widget.Calib is not None:
             for name in peaks:
                 if name != 'Total signal':
