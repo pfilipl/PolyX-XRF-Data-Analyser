@@ -207,16 +207,23 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
                         if  xp > (numpy.abs(widget.Calib - 0)).argmin() + 50:
                             spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C1'))
                             if xp > cEmin and xp < cEmax:
-                                ka = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Ka'] - widget.Calib[xp] / 1000)).argmin()]
-                                kb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)).argmin()]
-                                la = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['La'] - widget.Calib[xp] / 1000)).argmin()]
-                                lb = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['Lb'] - widget.Calib[xp] / 1000)).argmin()]
-                                m = PDA.Energies['symbol'][(numpy.abs(PDA.Energies['M'] - widget.Calib[xp] / 1000)).argmin()]
-                                spectrum.Axes.text(xp, 0.05, ka, ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform())
-                                spectrum.Axes.text(xp, 0.12, kb, ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform())
-                                spectrum.Axes.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform())
-                                spectrum.Axes.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform())
-                                spectrum.Axes.text(xp, 0.35, m, ha = 'right', rotation = 'vertical', color = 'C8', transform = spectrum.Axes.get_xaxis_transform())
+                                ts = False * numpy.ones((5, 1))
+                                kadifft = numpy.abs(PDA.Energies['Ka'] - widget.Calib[xp] / 1000)
+                                kbdifft = numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)
+                                ladifft = numpy.abs(PDA.Energies['La'] - widget.Calib[xp] / 1000)
+                                lbdifft = numpy.abs(PDA.Energies['Lb'] - widget.Calib[xp] / 1000)
+                                mdifft  = numpy.abs(PDA.Energies['M']  - widget.Calib[xp] / 1000)
+                                ka = PDA.Energies['symbol'][kadifft.argmin()]
+                                kb = PDA.Energies['symbol'][kbdifft.argmin()]
+                                la = PDA.Energies['symbol'][ladifft.argmin()]
+                                lb = PDA.Energies['symbol'][lbdifft.argmin()]
+                                m  = PDA.Energies['symbol'][mdifft.argmin()]
+                                ts[numpy.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
+                                spectrum.Axes.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform())
+                                spectrum.Axes.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform())
+                                spectrum.Axes.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform())
+                                spectrum.Axes.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform())
+                                spectrum.Axes.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = spectrum.Axes.get_xaxis_transform())
                     else:
                         spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C2'))
                 if widget.Calib is not None:
