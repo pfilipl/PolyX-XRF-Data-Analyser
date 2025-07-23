@@ -18,9 +18,9 @@ from PIL import Image
 import main
 
 detectors = {
-    0 : "ML3",
-    1 : "Be",
-    2 : "Be+ML3"
+    0 : "SDD1",
+    1 : "SDD2",
+    2 : "SDDSum"
 }
 
 Energies = []
@@ -332,11 +332,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
                 ax1.set_ylabel("Z [mm]")
                 # if normalize is not None:
-                #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}, normalized")
+                #     ax1.set_title(f"{title}\n {detectors[d]}, ROI = {ROI[i][0]}, normalized")
                 # else:
-                #     ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                #     ax1.set_title(f"{title}\n {detectors[d]}, ROI = {ROI[i][0]}")
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}\n SDD {detectors[d]}, ROI = {ROI[i][0]}")
+                    ax1.set_title(f"{title}\n {detectors[d]}, ROI = {ROI[i][0]}")
                 elif Disp["SimpTitles"]:
                     ax1.set_title(f"{ROI[i][0]}")
                 if pos is not None:
@@ -376,11 +376,11 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
             # if normalize is not None:
-            #     ax1.set_title(f"{title}\n SDD {detectors[d]}, normalized")
+            #     ax1.set_title(f"{title}\n {detectors[d]}, normalized")
             # else:
-            #     ax1.set_title(f"{title}\n SDD {detectors[d]}")
+            #     ax1.set_title(f"{title}\n {detectors[d]}")
             if Disp["Titles"]:
-                ax1.set_title(f"{title}\n SDD {detectors[d]}")
+                ax1.set_title(f"{title}\n {detectors[d]}")
             elif Disp["SimpTitles"]:
                 ax1.set_title(f"ROI max")
             if pos is not None:
@@ -440,7 +440,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
             ax1.set_yticklabels(f"{x:.3f}" for x in np.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(ax1.get_yticks())))
             ax1.set_ylabel("Z [mm]")
             if Disp["Titles"]:
-                ax1.set_title(f"{title}, SDD {detectors[d]}")
+                ax1.set_title(f"{title}, {detectors[d]}")
             elif Disp["SimpTitles"]:
                 ax1.set_title(f'{title.split(": ")[-1]}')
             ax1.set_aspect(Aspect)
@@ -522,23 +522,23 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             if POS is not None:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"pos = [{x0r} mm, {z0r} mm]")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], SDD {detectors[d]}")
+                        ax1.set_title(f"{title}\npos = [{x0r} mm, {z0r} mm], {detectors[d]}")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"pos = [{x0r} mm, {z0r} mm]")
             else:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}, {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"{title}")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}, SDD {detectors[d]}")
+                        ax1.set_title(f"{title}, {detectors[d]}")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"{title}")
             hist = data[x0, z0, :]
@@ -661,23 +661,23 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             if POS is not None:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}")
+                        ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], {detectors[d]}")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
             else:
                 if normalize is not None:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}, SDD {detectors[d]}, normalized")
+                        ax1.set_title(f"{title}, {detectors[d]}, normalized")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"{title}")
                 else:
                     if Disp["Titles"]:
-                        ax1.set_title(f"{title}, SDD {detectors[d]}")
+                        ax1.set_title(f"{title}, {detectors[d]}")
                     elif Disp["SimpTitles"]:
                         ax1.set_title(f"{title}")
             hist = sum_data
@@ -810,12 +810,12 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             z0r = np.round(head["Zpositions"][0, z0], 2)
             if POS is not None:
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], SDD {detectors[d]}")
+                    ax1.set_title(f"{title}\npos = [{x0r}, {z0r}], {detectors[d]}")
                 elif Disp["SimpTitles"]:
                     ax1.set_title(f"pos = [{x0r}, {z0r}]")
             else:
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    ax1.set_title(f"{title}, {detectors[d]}")
                 elif Disp["SimpTitles"]:
                     ax1.set_title(f"{title}")
             hist = max_data
@@ -885,12 +885,12 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             z1r = np.round(head["Zpositions"][0, z1], 2)
             if POS is not None:
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], SDD {detectors[d]}")
+                    ax1.set_title(f"{title}" + r", area = {0} $\times$ {1} px$^2$".format(x1 - x0, z1 - z0) + f"\npos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]], {detectors[d]}")
                 elif Disp["SimpTitles"]:
                     ax1.set_title(f"pos = [[{x0r} mm, {z0r} mm], [{x1r} mm, {z1r} mm]]")
             else:
                 if Disp["Titles"]:
-                    ax1.set_title(f"{title}, SDD {detectors[d]}")
+                    ax1.set_title(f"{title}, {detectors[d]}")
                 elif Disp["SimpTitles"]:
                     ax1.set_title(f"{title}")
             hist = max_data
@@ -969,7 +969,7 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
     ax1 = fig.add_subplot()
     for d in (range(len(Data)) if detector is None else detector):
         data = func(func(Data[d], axis = 0), axis = 0)
-        ax1.plot(data, label = f"SDD {detectors[d]}")
+        ax1.plot(data, label = f"{detectors[d]}")
         ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
         Hist.append(data)
     ax1.legend()
@@ -994,18 +994,18 @@ def print_Hist(Hist, filename, Name = None, detector = None):
         if Name is not None:
             if len(Hist) > len(Name):
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[h // len(Name)]]}_{Name[h % len(Name)]}.csv", "w")
+                    file = open(filename + f"_{detectors[detector[h // len(Name)]]}_{Name[h % len(Name)]}.csv", "w")
                 else:
                     file = open(filename + f"_{Name[h % len(Name)]}_{h // len(Name)}.csv", "w")
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[h // len(Name)]]}_{Name[h]}.csv", "w")
+                    file = open(filename + f"_{detectors[detector[h // len(Name)]]}_{Name[h]}.csv", "w")
                 else:
                     file = open(filename + f"_{Name[h]}.csv", "w")
         else:
             if detector is not None:
-                file = open(filename + f"_SDD-{detectors[h]}.csv", "w")
-                # file = open(filename + f"_SDD-{detectors[detector[h]]}.csv", "w")
+                file = open(filename + f"_{detectors[h]}.csv", "w")
+                # file = open(filename + f"_{detectors[detector[h]]}.csv", "w")
             else:
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         for i in Hist[h]:
@@ -1017,17 +1017,17 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
         if Name is not None:
             if len(Fig) > len(Name):
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f // len(Name)]]}_{Name[f % len(Name)]}" + ext, dpi = dpi)
+                    Fig[f].savefig(filename + f"_{detectors[detector[f // len(Name)]]}_{Name[f % len(Name)]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_SDD-{detectors[detector[f // len(Name)]]}_{Name[f]}" + ext, dpi = dpi)
+                    Fig[f].savefig(filename + f"_{detectors[detector[f // len(Name)]]}_{Name[f]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f]}" + ext, dpi = dpi)
         else:
             if detector is not None:
-                Fig[f].savefig(filename + f"_SDD-{detectors[detector[f]]}" + ext, dpi = dpi)
+                Fig[f].savefig(filename + f"_{detectors[detector[f]]}" + ext, dpi = dpi)
             else:
                 Fig[f].savefig(filename + f"_{f}" + ext if len(Fig) > 1 else filename + ext, dpi = dpi)
 
@@ -1036,17 +1036,17 @@ def print_Map(Map, filename, Name = None, detector = None):
         if Name is not None:
             if len(Map) > len(Name):
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.csv", 'w')
+                    file = open(filename + f"_{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.csv", 'w')
                 else:
                     file = open(filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.csv", 'w')
             else:
                 if detector is not None:
-                    file = open(filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m]}.csv", 'w')
+                    file = open(filename + f"_{detectors[detector[m // len(Name)]]}_{Name[m]}.csv", 'w')
                 else:
                     file = open(filename + f"_{Name[m]}.csv", 'w')
         else:
             if detector is not None:
-                file = open(filename + f"_SDD-{detectors[detector[m]]}.csv", 'w')
+                file = open(filename + f"_{detectors[detector[m]]}.csv", 'w')
             else:
                 file = open(filename + f"_{m}.csv" if len(Map) > 1 else filename + ".csv", 'w')
 
@@ -1062,17 +1062,17 @@ def print_Tiff(Map, filename, Name = None, detector = None):
         if Name is not None:
             if len(Map) > len(Name):
                 if detector is not None:
-                    name = filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.tiff"
+                    name = filename + f"_{detectors[detector[m // len(Name)]]}_{Name[m % len(Name)]}.tiff"
                 else:
                     name = filename + f"_{Name[m % len(Name)]}_{m // len(Name)}.tiff"
             else:
                 if detector is not None:
-                    name = filename + f"_SDD-{detectors[detector[m // len(Name)]]}_{Name[m]}.tiff"
+                    name = filename + f"_{detectors[detector[m // len(Name)]]}_{Name[m]}.tiff"
                 else:
                     name = filename + f"_{Name[m]}.tiff"
         else:
             if detector is not None:
-                name = filename + f"_SDD-{detectors[detector[m]]}.tiff"
+                name = filename + f"_{detectors[detector[m]]}.tiff"
             else:
                 name = filename + f"_{m}.csv" if len(Map) > 1 else filename + ".tiff"
         img = Image.fromarray(np.array(Map[m].transpose(), dtype = "float32"), mode = 'F')
@@ -1138,7 +1138,7 @@ def print_stack_Map(Map, head, ROI, filename, detector = None):
     else:
         didx = 0
         for d in detector:
-            file = open(filename + f"_SDD-{detectors[d]}.csv", 'w')
+            file = open(filename + f"_{detectors[d]}.csv", 'w')
             file.write("X,Z,real_X,real_Z")
             for k in range(len(ROI)):
                 file.write(f",{ROI[k][0]}")

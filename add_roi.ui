@@ -31,6 +31,163 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
+     <widget class="QWidget" name="tab_XRFLines">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="tabletTracking">
+       <bool>false</bool>
+      </property>
+      <attribute name="title">
+       <string>XRF lines</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_XRFWarning">
+           <property name="text">
+            <string>Energy calibration needed!</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Renge around line energy:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="doubleSpinBox_XRFSigmaWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
+           <property name="suffix">
+            <string> σ</string>
+           </property>
+           <property name="maximum">
+            <double>2.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.010000000000000</double>
+           </property>
+           <property name="stepType">
+            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           </property>
+           <property name="value">
+            <double>0.500000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_XRFSigmaWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="spinBox_XRFWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="suffix">
+            <string> ch</string>
+           </property>
+           <property name="prefix">
+            <string>± </string>
+           </property>
+           <property name="maximum">
+            <number>2000</number>
+           </property>
+           <property name="singleStep">
+            <number>2</number>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_XRFWidth">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="autoExclusive">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <property name="documentMode">
+          <bool>false</bool>
+         </property>
+         <widget class="PeriodicTable" name="tab_Kalpha">
+          <attribute name="title">
+           <string>Kα</string>
+          </attribute>
+         </widget>
+         <widget class="PeriodicTable" name="tab_Kbeta">
+          <attribute name="title">
+           <string>Kβ</string>
+          </attribute>
+         </widget>
+         <widget class="PeriodicTable" name="tab_Lalpha">
+          <attribute name="title">
+           <string>Lα</string>
+          </attribute>
+         </widget>
+         <widget class="PeriodicTable" name="tab_Lbeta">
+          <attribute name="title">
+           <string>Lβ</string>
+          </attribute>
+         </widget>
+         <widget class="PeriodicTable" name="tab_M">
+          <attribute name="title">
+           <string>M</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="tab_Custom">
       <attribute name="title">
        <string>Custom</string>
@@ -591,163 +748,6 @@
            <string>Sum factor [Be/ML3.3]</string>
           </property>
          </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab_XRFLines">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="tabletTracking">
-       <bool>false</bool>
-      </property>
-      <attribute name="title">
-       <string>XRF lines</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label_XRFWarning">
-           <property name="text">
-            <string>Energy calibration needed!</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>Renge around line energy:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_XRFSigmaWidth">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="prefix">
-            <string>± </string>
-           </property>
-           <property name="suffix">
-            <string> σ</string>
-           </property>
-           <property name="maximum">
-            <double>2.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.010000000000000</double>
-           </property>
-           <property name="stepType">
-            <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-           </property>
-           <property name="value">
-            <double>0.500000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="radioButton_XRFSigmaWidth">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_XRFWidth">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="suffix">
-            <string> ch</string>
-           </property>
-           <property name="prefix">
-            <string>± </string>
-           </property>
-           <property name="maximum">
-            <number>2000</number>
-           </property>
-           <property name="singleStep">
-            <number>2</number>
-           </property>
-           <property name="value">
-            <number>0</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="radioButton_XRFWidth">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="autoExclusive">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <property name="documentMode">
-          <bool>false</bool>
-         </property>
-         <widget class="PeriodicTable" name="tab_Kalpha">
-          <attribute name="title">
-           <string>Kα</string>
-          </attribute>
-         </widget>
-         <widget class="PeriodicTable" name="tab_Kbeta">
-          <attribute name="title">
-           <string>Kβ</string>
-          </attribute>
-         </widget>
-         <widget class="PeriodicTable" name="tab_Lalpha">
-          <attribute name="title">
-           <string>Lα</string>
-          </attribute>
-         </widget>
-         <widget class="PeriodicTable" name="tab_Lbeta">
-          <attribute name="title">
-           <string>Lβ</string>
-          </attribute>
-         </widget>
-         <widget class="PeriodicTable" name="tab_M">
-          <attribute name="title">
-           <string>M</string>
-          </attribute>
-         </widget>
         </widget>
        </item>
       </layout>

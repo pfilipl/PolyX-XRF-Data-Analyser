@@ -11,7 +11,7 @@ def OpenDirectory(path):
     except: subprocess.Popen(['xdg-open', path])
 
 class Analyse(QtWidgets.QDialog):
-    def __init__(self, parent = None, outputConfig = None, detectorsBe = True, detectorsML = True, detectorsSum = False, batch = False):
+    def __init__(self, parent = None, outputConfig = None, detectorsSDD1 = True, detectorsSDD2 = True, detectorsSum = False, batch = False):
         super(Analyse, self).__init__(parent)
         uic.loadUi(basedir / "analyse.ui", self)
         self.setWindowTitle('Choose output data')
@@ -21,8 +21,8 @@ class Analyse(QtWidgets.QDialog):
 
         if outputConfig is None:
             self.Output = {
-                "DetectorsBe"       : detectorsBe,
-                "DetectorsML"       : detectorsML,
+                "DetectorsSDD1"     : detectorsSDD1,
+                "DetectorsSDD2"     : detectorsSDD2,
                 "DetectorsSum"      : detectorsSum,
                 "Single"            : "Output type > Output",
                 "Batch"             : "Experiment/Load > Map > Output type > Output",

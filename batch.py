@@ -11,8 +11,8 @@ class BatchWindow(QtWidgets.QWidget):
         uic.loadUi(basedir / "batch.ui", self)
 
         # Detectors
-        self.DetectorsBe                = self.pushButton_DetectorsBe
-        self.DetectorsML                = self.pushButton_DetectorsML
+        self.DetectorsSDD1              = self.pushButton_DetectorsSDD1
+        self.DetectorsSDD2              = self.pushButton_DetectorsSDD2
         self.DetectorsSum               = self.pushButton_DetectorsSum
 
         # Energy calibration
@@ -282,8 +282,8 @@ class BatchWindow(QtWidgets.QWidget):
             file = open(fileName, 'w')
             fileContent = "## General configuration\n# Element name\tProperty\tValue"
 
-            fileContent += f"\n\nDetectorsBe\tChecked\t{self.DetectorsBe.isChecked()}"
-            fileContent += f"\nDetectorsML\tChecked\t{self.DetectorsML.isChecked()}"
+            fileContent += f"\n\nDetectorsSDD1\tChecked\t{self.DetectorsSDD1.isChecked()}"
+            fileContent += f"\nDetectorsSDD2\tChecked\t{self.DetectorsSDD2.isChecked()}"
             fileContent += f"\nDetectorsSum\tChecked\t{self.DetectorsSum.isChecked()}"
 
             fileContent += f"\n\nCalibrationGain\tValue\t{self.CalibrationGain.value()}"
@@ -334,7 +334,7 @@ class BatchWindow(QtWidgets.QWidget):
             else:
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
         else:
-            outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), True)
+            outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsSDD1.isChecked(), self.DetectorsSDD2.isChecked(), self.DetectorsSum.isChecked(), True)
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
@@ -374,8 +374,8 @@ class BatchWindow(QtWidgets.QWidget):
                     normType = []
                     for name in self.OutputConfig.keys():
                         if name[:2] in ["De", "Si", "Ba", "Ge"]:
-                            if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
-                            if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
+                            if name == "DetectorsSDD1" and self.OutputConfig[name]: detectors.append(0)
+                            if name == "DetectorsSDD2" and self.OutputConfig[name]: detectors.append(1)
                             if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             if name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                             if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]

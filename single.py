@@ -161,14 +161,14 @@ class SingleWindow(QtWidgets.QWidget):
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
         # Detectors
-        self.DetectorsBe        = self.pushButton_DetectorsBe
-        self.DetectorsML        = self.pushButton_DetectorsML
+        self.DetectorsSDD1      = self.pushButton_DetectorsSDD1
+        self.DetectorsSDD2      = self.pushButton_DetectorsSDD2
         self.DetectorsSum       = self.pushButton_DetectorsSum
         self.LastDetector       = None
         self.CurrentDetector    = None
 
-        self.DetectorsBe.clicked.connect(lambda checked, mode = "Be": self.DetectorChanged(checked, mode))
-        self.DetectorsML.clicked.connect(lambda checked, mode = "ML": self.DetectorChanged(checked, mode))
+        self.DetectorsSDD1.clicked.connect(lambda checked, mode = "SDD1": self.DetectorChanged(checked, mode))
+        self.DetectorsSDD2.clicked.connect(lambda checked, mode = "SDD2": self.DetectorChanged(checked, mode))
         self.DetectorsSum.clicked.connect(lambda checked, mode = "Sum": self.DetectorChanged(checked, mode))
 
         # Energy calibration
@@ -300,7 +300,7 @@ class SingleWindow(QtWidgets.QWidget):
             self.CurrentDetector = mode
             if self.LastDetector is None:
                 self.LastDetector = mode
-            for detector in ["Be", "ML", "Sum"]:
+            for detector in ["SDD1", "SDD2", "Sum"]:
                 if detector != mode:
                     exec(f'if self.Detectors{detector}.isChecked(): self.LastDetector = "{detector}"')
                     exec(f"self.Detectors{detector}.blockSignals(True)")
@@ -388,8 +388,8 @@ class SingleWindow(QtWidgets.QWidget):
             cMap = self.MapsConfigColormap.currentText()
 
             if startLoad:
-                if self.CurrentDetector == "Be": self.DetectorsBe.setChecked(True)
-                elif self.CurrentDetector == "ML": self.DetectorsML.setChecked(True)
+                if self.CurrentDetector == "SDD1": self.DetectorsSDD1.setChecked(True)
+                elif self.CurrentDetector == "SDD2": self.DetectorsSDD2.setChecked(True)
                 else: self.DetectorsSum.setChecked(True)
 
             if self.NormType is None: norm = None
@@ -402,8 +402,8 @@ class SingleWindow(QtWidgets.QWidget):
                 norm = [i0, self.Data["LT"]]
             else: norm = [self.Data["I0"], self.Data["LT"]]
 
-            if self.CurrentDetector == "Be": det = 1
-            elif self.CurrentDetector == "ML": det = 0
+            if self.CurrentDetector == "SDD1": det = 0
+            elif self.CurrentDetector == "SDD2": det = 1
             else: det = 2
             load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
@@ -515,8 +515,8 @@ class SingleWindow(QtWidgets.QWidget):
             norm = [i0, self.Data["LT"]]
         else: norm = [self.Data["I0"], self.Data["LT"]]
 
-        if self.CurrentDetector == "Be": det = 1
-        elif self.CurrentDetector == "ML": det = 0
+        if self.CurrentDetector == "SDD1": det = 0
+        elif self.CurrentDetector == "SDD2": det = 1
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
         load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
@@ -788,8 +788,8 @@ class SingleWindow(QtWidgets.QWidget):
                         value = " ".join(data[2:])
 
                     if variableName[:9] == "Detectors":
-                        if variableName[9:] == "Be": self.CurrentDetector = "Be"
-                        elif variableName[9:] == "ML": self.CurrentDetector = "ML"
+                        if variableName[9:] == "SDD1": self.CurrentDetector = "SDD1"
+                        elif variableName[9:] == "SDD2": self.CurrentDetector = "SDD2"
                         else: self.CurrentDetector = "Sum"
 
                     if variableName in ["MapPath"]:
@@ -869,7 +869,7 @@ class SingleWindow(QtWidgets.QWidget):
             else:
                 QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
         else:
-            outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsBe.isChecked(), self.DetectorsML.isChecked(), self.DetectorsSum.isChecked(), False)
+            outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsSDD1.isChecked(), self.DetectorsSDD2.isChecked(), self.DetectorsSum.isChecked(), False)
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
@@ -904,8 +904,8 @@ class SingleWindow(QtWidgets.QWidget):
                 normType = []
                 for name in self.OutputConfig.keys():
                     if name[:2] in ["De", "Si", "Ba", "Ge"]:
-                        if name == "DetectorsBe" and self.OutputConfig[name]: detectors.append(1)
-                        if name == "DetectorsML" and self.OutputConfig[name]: detectors.append(0)
+                        if name == "DetectorsSDD1" and self.OutputConfig[name]: detectors.append(0)
+                        if name == "DetectorsSDD2" and self.OutputConfig[name]: detectors.append(1)
                         if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         if name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]

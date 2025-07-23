@@ -262,7 +262,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_DetectorsML">
+           <widget class="QPushButton" name="pushButton_DetectorsSDD1">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -273,7 +273,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>ML3.3</string>
+             <string>SDD1</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -284,7 +284,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_DetectorsBe">
+           <widget class="QPushButton" name="pushButton_DetectorsSDD2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -295,7 +295,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Be</string>
+             <string>SDD2</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
