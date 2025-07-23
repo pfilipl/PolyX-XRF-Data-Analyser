@@ -34,8 +34,8 @@ class Analyse(QtWidgets.QDialog):
                 "DispTitles"        : True,
                 "DispColorbars"     : True,
                 "DispAxes"          : True,
+                "GenCsvs"           : False,
                 "GenWiatrowska"     : False,
-                "GenTiffs"          : False,
                 "DiagRC"            : True,
                 "DiagSum"           : True,
                 "DiagMax"           : True,
@@ -127,7 +127,7 @@ def generateOutputPath(path, resultPath, nestingType, outputType):
     elif nestingType == "W"     : outputPath = str(resultPath) + str(os.sep) + "Wiatrowska" + str(os.sep) + path.stem + str(os.sep)
     return outputPath
 
-def DiagRC(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagRC(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     RC = Data["RC"]
     dataName = path.stem
@@ -137,7 +137,7 @@ def DiagRC(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     plt.close('all')
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RC")
 
-def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -148,7 +148,7 @@ def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck")
 
-def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -159,7 +159,7 @@ def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck")
 
-def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     I0 = Data["I0"]
     dataName = path.stem
@@ -167,11 +167,11 @@ def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: I0 [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_I0")
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_I0")
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_I0")
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_I0")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_I0")
 
-def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     PIN = Data["PIN"]
     dataName = path.stem
@@ -179,11 +179,11 @@ def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: I1 or PIN [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_PIN")
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_PIN")
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_PIN")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_PIN")
 
-def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     LT = Data["LT"]
     dataName = path.stem
@@ -191,11 +191,11 @@ def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, LT)), head, f"{dataName}: Live Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_LT", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_LT", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_LT", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_LT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_LT", detector = detectors)
 
-def DiagDT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagDT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     DT = Data["DT"]
     dataName = path.stem
@@ -203,11 +203,11 @@ def DiagDT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(DT, head, f"{dataName}: Dead Time [%]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_DT", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_DT", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_DT", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_DT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_DT", detector = detectors)
 
-def DiagRT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagRT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     RT = Data["RT"]
     dataName = path.stem
@@ -215,11 +215,11 @@ def DiagRT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, RT)), head, f"{dataName}: Real Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_RT", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_RT", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_RT", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_RT", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_RT", detector = detectors)
 
-def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     ICR = Data["ICR"]
     dataName = path.stem
@@ -227,11 +227,11 @@ def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: Input Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_ICR", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_ICR", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_ICR", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_ICR", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_ICR", detector = detectors)
 
-def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     OCR = Data["OCR"]
     dataName = path.stem
@@ -239,11 +239,11 @@ def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: Output Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_OCR", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_OCR", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_OCR", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_OCR", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_OCR", detector = detectors)
 
-def UNormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def UNormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -251,11 +251,11 @@ def UNormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_Map(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_UNormTotal", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormTotal", detector = detectors)
 
-def UNormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def UNormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -267,11 +267,11 @@ def UNormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
     except: 
         QtWidgets.QMessageBox.warning(Parent, "Analyse", f"ROIs are incorrectly defined. It is impossible to make unnormalized ROIs maps.")
         name = None
-    PDA.print_Map(Map, outputPath + f"{dataName}_UNormROIs", Name = name, detector = detectors)
-    if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_UNormROIs", Name = name, detector = detectors)
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_UNormROIs", Name = name, detector = detectors)
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_UNormROIs", Name = name, detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_UNormROIs", Name = name, detector = detectors)
 
-def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -281,7 +281,7 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
     plt.close('all')
     PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_UNormTabular", detectors)
 
-# def UNormRGB(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+# def UNormRGB(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
 #     head = Data["head"]
 #     data = Data["Data"]
 #     dataName = path.stem
@@ -302,7 +302,7 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
 #             PDA.print_Fig(stackFig, outputPath + f"{dataName}_UNormRGB", Name = [f"{sL[0]}_{sL[1]}_{sL[2]}"], detector = [d])
 #         didx += 1
 
-def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -321,11 +321,11 @@ def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
         os.makedirs(outputPath, exist_ok = True)
         Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
         plt.close('all')
-        PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
-        if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
+        PDA.print_Tiff(Map, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
+        if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}Total", detector = detectors)
 
-def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -348,12 +348,12 @@ def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO
         except: 
             QtWidgets.QMessageBox.warning(Parent, "Analyse", f"ROIs are incorrectly defined. It is impossible to make normalized ROIs maps.")
             name = None
-        PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = name, detector = detectors)
+        PDA.print_Tiff(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = name, detector = detectors)
         if nestingType != "W": 
-            if tiffs: PDA.print_Tiff(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = name, detector = detectors)
+            if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_Norm{nt}ROIs", Name = name, detector = detectors)
             PDA.print_Fig(Fig, outputPath + f"{dataName}_Norm{nt}ROIs", Name = name, detector = detectors)
 
-def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     I0 = Data["I0"]
@@ -374,7 +374,7 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
         plt.close('all')
         PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Norm{nt}Tabular", detectors)
 
-def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -390,7 +390,7 @@ def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumROIs", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumROIs", detector = detectors)
 
-def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -406,7 +406,7 @@ def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxROIs", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxROIs", detector = detectors)
 
-def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
@@ -422,7 +422,7 @@ def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     PDA.print_Hist(Hist, outputPath + f"{dataName}_Sum", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_Sum", detector = detectors)
 
-def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, tiffs = False):
+def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem

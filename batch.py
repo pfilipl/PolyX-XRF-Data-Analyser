@@ -379,7 +379,7 @@ class BatchWindow(QtWidgets.QWidget):
                             if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             if name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                             if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
-                            if name == "GenTiffs": tiffs = self.OutputConfig[name]
+                            if name == "GenCsvs": csvs = self.OutputConfig[name]
                             continue
                         if name[:4] == "Disp":
                             display.update({ name[4:] : self.OutputConfig[name]})
@@ -388,9 +388,9 @@ class BatchWindow(QtWidgets.QWidget):
                             if self.OutputConfig[name]: normType.append(name[8:])
                             continue
                         if self.OutputConfig[name]:
-                            exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, tiffs = tiffs)')
+                            exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, csvs = csvs)')
                             if name == "NormROIs" and wiatrowska:
-                                exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, tiffs = tiffs)')
+                                exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)

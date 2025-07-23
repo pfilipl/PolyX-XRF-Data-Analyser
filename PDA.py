@@ -1075,7 +1075,7 @@ def print_Tiff(Map, filename, Name = None, detector = None):
                 name = filename + f"_SDD-{detectors[detector[m]]}.tiff"
             else:
                 name = filename + f"_{m}.csv" if len(Map) > 1 else filename + ".tiff"
-        img = Image.fromarray(Map[m].transpose())
+        img = Image.fromarray(np.array(Map[m].transpose(), dtype = "float32"), mode = 'F')
         img.save(name)
 
 def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper", Aspect = 'auto'):

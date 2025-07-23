@@ -341,13 +341,6 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="2">
-      <widget class="QCheckBox" name="checkBox_GenTiffs">
-       <property name="text">
-        <string>TIFFs</string>
-       </property>
-      </widget>
-     </item>
      <item row="13" column="1">
       <widget class="QCheckBox" name="checkBox_DispAxes">
        <property name="text">
@@ -594,9 +587,19 @@
       </widget>
      </item>
      <item row="10" column="1">
-      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
+      <widget class="QCheckBox" name="checkBox_GenCsvs">
        <property name="text">
-        <string>Wiatrowska's app</string>
+        <string>CSVs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>SliceQuant</string>
        </property>
       </widget>
      </item>
