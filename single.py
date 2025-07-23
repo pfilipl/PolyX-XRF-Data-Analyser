@@ -175,6 +175,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.Calib              = None
         self.Sigma              = None
         self.monoE              = None
+        self.monoType           = None
 
         self.CalibrationGain    = self.doubleSpinBox_CalibrationGain
         self.CalibrationZero    = self.doubleSpinBox_CalibrationZero
@@ -352,6 +353,11 @@ class SingleWindow(QtWidgets.QWidget):
                 self.monoE = head["monoE"][0][0]
             except:
                 self.monoE = None
+
+            try:
+                self.monoType = head["monotype"][0]
+            except:
+                self.monoType = None
 
             if self.ROIsDefault.isChecked():
                 self.ROIs.blockSignals(True)
@@ -581,7 +587,7 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsAdd_clicked(self):
         self.ROIsDefault.setChecked(False)
-        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount, self.monoE)
+        addroi = add_roi.AddRoi(self, self.Calib, self.Sigma, self.RoiCount, self.monoE, self.monoType)
         table = addroi.tableWidget_CustomROIs
         for row in range(self.ROIs.rowCount()):
             table.insertRow(table.currentRow() + 1)

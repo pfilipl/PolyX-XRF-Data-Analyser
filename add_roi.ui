@@ -54,7 +54,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Renge around line energy:</string>
+            <string>Range around line energy:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>

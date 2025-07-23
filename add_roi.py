@@ -6,7 +6,7 @@ import main, single
 basedir = pathlib.Path(os.path.dirname(__file__))
 
 class AddRoi(QtWidgets.QDialog):
-    def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0, monoE = None):
+    def __init__(self, parent = None, calib = None, sigma = None, roiCount = 0, monoE = None, monoType = None):
         super(AddRoi, self).__init__(parent)
         uic.loadUi(basedir / "add_roi.ui", self)
         self.setWindowTitle('Add Regions of Interest (ROIs)')
@@ -14,6 +14,7 @@ class AddRoi(QtWidgets.QDialog):
         self.Calib                      = calib
         self.Sigma                      = sigma
         self.monoE                      = monoE
+        self.monoType                   = monoType
 
         # Custom
         self.CustomName                 = self.lineEdit_CustomName
@@ -111,7 +112,11 @@ class AddRoi(QtWidgets.QDialog):
             self.radioButton_CustomEnergySigmaWidth.setEnabled(True)
             
             self.XRFLines.setEnabled(True)
-            self.XRFWarning.hide()
+            if self.monoE is not None:
+                self.XRFWarning.show()
+                self.XRFWarning.setText(f"Monochromator: {self.monoType}, E = {self.monoE:.0f} eV")
+            else:
+                self.XRFWarning.hide()
 
             self.Kalpha.setLine("Ka")
             self.Kbeta.setLine("Kb")
