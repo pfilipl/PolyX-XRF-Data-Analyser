@@ -929,8 +929,20 @@ class SingleWindow(QtWidgets.QWidget):
                             exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
-                dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
-                if dialog == QtWidgets.QMessageBox.StandardButton.Open:
+                
+                dialog = QtWidgets.QMessageBox(self)
+                dialog.setIcon(QtWidgets.QMessageBox.Icon.Information)
+                dialog.setWindowTitle("Analyse")
+                dialog.setText(f"Analysis completed!")
+                dialog.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok)
+                button = dialog.button(QtWidgets.QMessageBox.StandardButton.Open)
+                button.setText("Open folder")
+                button.setMinimumWidth(100)
+                dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Ok)
+                dialog.exec()
+                if dialog.clickedButton() == button:
+                # dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
+                # if dialog == QtWidgets.QMessageBox.StandardButton.Open:
                     analyse.OpenDirectory(resultsPath)
 
     def ResetAll_clicked(self):

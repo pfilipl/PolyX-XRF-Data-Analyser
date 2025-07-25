@@ -276,8 +276,20 @@ class StitchWindow(QtWidgets.QWidget):
                     data["I0_map"] = numpy.concatenate((self.TopMap.Data[-1]["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["I0_map"][self.BottomMapOffset.value():, :]))
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+self.TopMap.NumberOfFiles-self.TopMapOffset.value():04}.mat", data)
             QtGui.QGuiApplication.restoreOverrideCursor()
-            dialog = QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
-            if dialog == QtWidgets.QMessageBox.StandardButton.Open:
+
+            dialog = QtWidgets.QMessageBox(self)
+            dialog.setIcon(QtWidgets.QMessageBox.Icon.Information)
+            dialog.setWindowTitle("Stitch")
+            dialog.setText(f"Stitching completed!")
+            dialog.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok)
+            button = dialog.button(QtWidgets.QMessageBox.StandardButton.Open)
+            button.setText("Open folder")
+            button.setMinimumWidth(100)
+            dialog.setDefaultButton(QtWidgets.QMessageBox.StandardButton.Ok)
+            dialog.exec()
+            if dialog.clickedButton() == button:
+            # dialog = QtWidgets.QMessageBox.information(self, "Stitch", f"Stitching completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
+            # if dialog == QtWidgets.QMessageBox.StandardButton.Open:
                 analyse.OpenDirectory(resultPath)
 
     def ResetAll_clicked(self):
