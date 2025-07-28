@@ -118,7 +118,7 @@ def real_pos(rpos, head):
 def gen_calib(N, a, b, n, f):
     calib = []
     sigma = []
-    for i in range(1, N):
+    for i in range(N):
         # kalibracja energetyczna
         E = (i * a + b) * 1000  # [ch * keV/ch + keV] -> [eV]
         # kalibracja dyspersji pików
@@ -989,9 +989,9 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
             fig.axes[0].set_axis_off()
     return Hist, Fig
 
-def print_Hist(Hist, filename, Name = None, detector = None):
+def print_Hist(Hist, filename, Name = None, detector = None, Calib = None):
     for h in range(len(Hist)):
-        if Name is not None:
+        if Name is not None: 
             if len(Hist) > len(Name):
                 if detector is not None:
                     file = open(filename + f"_{detectors[detector[h // len(Name)]]}_{Name[h % len(Name)]}.csv", "w")
@@ -1008,8 +1008,15 @@ def print_Hist(Hist, filename, Name = None, detector = None):
                 # file = open(filename + f"_{detectors[detector[h]]}.csv", "w")
             else:
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
-        for i in Hist[h]:
-            file.write(f"{i}\n")
+        file.write(f"# Channel")
+        file.write(f"\t" if Calib is None else f"\tEnergy [eV]\t")
+        file.write(f"Counts [cps]\n")
+        ch = 1
+        for c in Hist[h]:
+            file.write(f"{ch:4d}")
+            file.write(f"\t" if Calib is None else f"\t{Calib[ch - 1]: 10.3f}\t")
+            file.write(f"{c}\n")
+            ch += 1
         file.close()
 
 def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = None):
@@ -1022,7 +1029,7 @@ def print_Fig(Fig, filename, Name = None, dpi = 300, ext = ".png", detector = No
                     Fig[f].savefig(filename + f"_{Name[f % len(Name)]}_{f // len(Name)}" + ext, dpi = dpi)
             else:
                 if detector is not None:
-                    Fig[f].savefig(filename + f"_{detectors[detector[f // len(Name)]]}_{Name[f]}" + ext, dpi = dpi)
+                  Fig[f].savefig(filename + f"_{detectors[detector[f // len(Name)]]}_{Name[f]}" + ext, dpi = dpi)
                 else:
                     Fig[f].savefig(filename + f"_{Name[f]}" + ext, dpi = dpi)
         else:
@@ -1122,32 +1129,32 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper
     Fig.append(fig)
     return Fig
 
-def print_stack_Map(Map, head, ROI, filename, detector = None):
+def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False):
     if detector is None:
         file = open(filename + ".csv", 'w')
-        file.write("X,Z,real_X,real_Z")
+        file.write("# X position [px]\tZ position [px]\tX position [mm]\tZ position [mm]")
         for k in range(len(ROI)):
-            file.write(f",{ROI[k][0]}")
+            file.write(f"\t{ROI[k][0]} [cps]")
         for i in range(Map[0].shape[0]):
             for j in range(Map[0].shape[1]):
                 file.write("\n")
-                file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+                file.write(f'{i:4d}\t{j:4d}\t{head["Xpositions"][0, i]:6.2f}\t{head["Zpositions"][0, j]:6.2f}')
                 for k in range(len(ROI)):
-                    file.write(f",{Map[k][i, j]}")
+                    file.write(f"\t{Map[k][i, j]:d}" if not Norm else f"\t{Map[k][i, j]:11.3f}")
         file.close()
     else:
         didx = 0
         for d in detector:
             file = open(filename + f"_{detectors[d]}.csv", 'w')
-            file.write("X,Z,real_X,real_Z")
+            file.write("# X position [px]\tZ position [px]\tX position [mm]\tZ position [mm]")
             for k in range(len(ROI)):
-                file.write(f",{ROI[k][0]}")
+                file.write(f"\t{ROI[k][0]} [cps]")
             for i in range(Map[0].shape[0]):
                 for j in range(Map[0].shape[1]):
                     file.write("\n")
-                    file.write(f'{i},{j},{head["Xpositions"][0, i]},{head["Zpositions"][0, j]}')
+                    file.write(f'{i:4d}\t{j:4d}\t{head["Xpositions"][0, i]:6.2f}\t{head["Zpositions"][0, j]:6.2f}')
                     for k in range(len(ROI)):
-                        file.write(f",{Map[didx * len(ROI) + k][i, j]}")
+                        file.write(f"\t{Map[didx * len(ROI) + k][i, j]:d}" if not Norm else f"\t{Map[didx * len(ROI) + k][i, j]:11.3f}")
             file.close()
             didx += 1
 

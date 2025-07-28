@@ -145,7 +145,7 @@ def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     os.makedirs(outputPath, exist_ok = True)
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Sum Signal Check", log = True, func = numpy.sum, Aspect = saspect, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_SumCheck", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumCheck")
 
 def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
@@ -156,7 +156,7 @@ def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     os.makedirs(outputPath, exist_ok = True)
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Max Signal Check", log = False, func = numpy.max, Aspect = saspect, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxCheck", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxCheck")
 
 def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
@@ -279,7 +279,7 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
     plt.close('all')
-    PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_UNormTabular", detectors)
+    PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_UNormTabular", detectors, Norm = False)
 
 # def UNormRGB(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
 #     head = Data["head"]
@@ -372,7 +372,7 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
         os.makedirs(outputPath, exist_ok = True)
         Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
         plt.close('all')
-        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Norm{nt}Tabular", detectors)
+        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Norm{nt}Tabular", detectors, Norm = True)
 
 def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
@@ -383,11 +383,11 @@ def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     if disp["Selected"]:
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = roi, log = True, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
-        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSumROIs", detector = detectors)
+        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSumROIs", detector = detectors, Calib = calib)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_ExtSumROIs", detector = detectors)
     Hist, Fig = PDA.Hist_plot(data, head, f"{dataName}", None, calib, detectors, Emax = emax, ROI = roi, log = True, Aspect = saspect, Emin = emin, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_SumROIs", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_SumROIs", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumROIs", detector = detectors)
 
 def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
@@ -399,11 +399,11 @@ def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     if disp["Selected"]:
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = roi, log = False, POS = pos, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
-        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMaxROIs", detector = detectors)
+        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMaxROIs", detector = detectors, Calib = calib)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_ExtMaxROIs", detector = detectors)
     Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = emax, ROI = roi, log = False, POS = None, Aspect = saspect, Emin = emin, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxROIs", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxROIs", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxROIs", detector = detectors)
 
 def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
@@ -415,11 +415,11 @@ def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     if disp["Selected"]:
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = None, log = True, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
-        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSum", detector = detectors)
+        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtSum", detector = detectors, Calib = calib)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_ExtSum", detector = detectors)
     Hist, Fig = PDA.Hist_plot(data, head, f"{dataName}", None, calib, detectors, Emax = emax, ROI = None, log = True, Aspect = saspect, Emin = emin, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_Sum", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_Sum", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_Sum", detector = detectors)
 
 def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
@@ -431,11 +431,11 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     if disp["Selected"]:
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = None, log = False, POS = pos, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
-        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMax", detector = detectors)
+        PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtMax", detector = detectors, Calib = calib)
         PDA.print_Fig(Fig, outputPath + f"{dataName}_ExtMax", detector = detectors)
     Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName}", calib, detectors, Emax = emax, ROI = None, log = False, POS = None, Aspect = saspect, Emin = emin, Disp = disp)
     plt.close('all')
-    PDA.print_Hist(Hist, outputPath + f"{dataName}_Max", detector = detectors)
+    PDA.print_Hist(Hist, outputPath + f"{dataName}_Max", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_Max", detector = detectors)
 
 if __name__ == "__main__":
