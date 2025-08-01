@@ -247,7 +247,7 @@ def UNormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "RawData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -259,7 +259,7 @@ def UNormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "RawData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -275,7 +275,7 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "RawData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -285,7 +285,7 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
 #     head = Data["head"]
 #     data = Data["Data"]
 #     dataName = path.stem
-#     outputPath = generateOutputPath(path, resultPath, nestingType, "Unnormalized")
+#     outputPath = generateOutputPath(path, resultPath, nestingType, "RawData")
 #     os.makedirs(outputPath, exist_ok = True)
 #     Map, Fig = PDA.Data_plot(data, head, f"{dataName}", detectors, ROI = roi, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
 #     plt.close('all')
