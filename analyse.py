@@ -131,7 +131,7 @@ def DiagRC(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     head = Data["head"]
     RC = Data["RC"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Fig = PDA.Stats1D_plot(RC, head, f"{dataName}: Ring Currert", "I [mA]", Disp = disp)
     plt.close('all')
@@ -141,7 +141,7 @@ def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Sum Signal Check", log = True, func = numpy.sum, Aspect = saspect, Disp = disp)
     plt.close('all')
@@ -152,7 +152,7 @@ def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     head = Data["head"]
     data = Data["Data"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Max Signal Check", log = False, func = numpy.max, Aspect = saspect, Disp = disp)
     plt.close('all')
@@ -163,7 +163,7 @@ def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     head = Data["head"]
     I0 = Data["I0"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: I0 [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -175,7 +175,7 @@ def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     head = Data["head"]
     PIN = Data["PIN"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: I1 or PIN [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -187,7 +187,7 @@ def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     head = Data["head"]
     LT = Data["LT"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, LT)), head, f"{dataName}: Live Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -199,7 +199,7 @@ def DiagDT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     head = Data["head"]
     DT = Data["DT"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(DT, head, f"{dataName}: Dead Time [%]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -211,7 +211,7 @@ def DiagRT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     head = Data["head"]
     RT = Data["RT"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, RT)), head, f"{dataName}: Real Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -223,7 +223,7 @@ def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     head = Data["head"]
     ICR = Data["ICR"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: Input Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
@@ -235,7 +235,7 @@ def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     head = Data["head"]
     OCR = Data["OCR"]
     dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "DiagnosticData")
+    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
     Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: Output Count Rate [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
     plt.close('all')
