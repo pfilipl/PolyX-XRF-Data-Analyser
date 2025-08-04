@@ -126,6 +126,49 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
 
     map.draw()
 
+def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = False, Aspect = 'auto'):
+    spectrum = tab.Canvas
+    head = widget.Data["head"]
+    spectrum.Axes.cla()
+    if widget.Calib is not None:
+        cEmin = (numpy.abs(widget.Calib - Emin * 1000)).argmin() - 1
+        if Emax is None:
+            Emax = widget.Calib[-1] / 1000
+            cEmax = head["bins"][0, 0] - 1
+        else:
+            cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
+
+    for d in [0, 1]:
+        data = widget.Data["Data"][d]
+        spectrum.Axes.plot(func(func(data, axis = 0), axis = 0), label = f"{PDA.detectors[d]}")
+        spectrum.Axes.set_ylim([1 if log else 0, numpy.max([numpy.max(data) * 1.5 if log else numpy.max(data) * 1.05, spectrum.Axes.get_ylim()[1]], axis = 0)])
+    spectrum.Axes.legend()
+    if log:
+        spectrum.Axes.set_yscale('log')
+
+    if widget.Calib is None:
+        spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
+        spectrum.Axes.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
+        spectrum.Axes.set_xlabel("channel")
+        spectrum.Axes.format_coord = lambda x, y: f'x = {x:d} ch, y = {y:.3e}'
+    else:
+        spectrum.Axes.get_xaxis().set_visible(False)
+        spectrum.Axes.get_yaxis().set_visible(True)
+        # spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom', transform = spectrum.Axes.transData)
+        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
+        spectrum.Axes.set_xlim([cEmin, cEmax])
+        Eval = numpy.linspace(Emin * 1000, Emax * 1000, len(spectrum.Axes.get_xticks()) - 2)
+        E = []
+        for eval in Eval:
+            E.append((numpy.abs(widget.Calib - eval)).argmin())
+        spectrum.Axes2x.set_xticks(E)
+        spectrum.Axes2x.set_xticklabels(numpy.abs(numpy.round(widget.Calib[E] / 1000, 2)))
+        spectrum.Axes2x.set_xlabel("E [keV]")
+        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)] / 1000:.3f} keV, y = {y:.3e}'
+
+    spectrum.Axes.set_aspect(Aspect)
+    spectrum.draw()
+
 def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False, Aspect = 'auto'):
     spectrum = tab.Canvas
     head = widget.Data["head"]

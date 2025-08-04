@@ -429,6 +429,8 @@ class SingleWindow(QtWidgets.QWidget):
             elif self.CurrentDetector == "SDD2": det = 1
             else: det = 2
             load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+            load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
+            load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
@@ -545,6 +547,8 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.CurrentDetector == "SDD2": det = 1
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+        load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
+        load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = True, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
