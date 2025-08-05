@@ -69,8 +69,7 @@ class BatchWindow(QtWidgets.QWidget):
         self.toolButton_ExperimentPathSearch.clicked.connect(self.ExperimentPathSearch_clicked)
         self.MapsNesting2.clicked.connect(self.LoadExperiment)
         self.MapsNesting3.clicked.connect(self.LoadExperiment)
-        self.pushButton_PathsListExcept.clicked.connect(self.PathsListExcept_clicked)
-        self.pushButton_PathsListReload.clicked.connect(self.LoadExperiment)
+        self.PathsList.itemChanged.connect(self.PathsList_itemChanged)
 
         # Results
         self.ResultsPath                = self.lineEdit_ResultsPath
@@ -177,12 +176,12 @@ class BatchWindow(QtWidgets.QWidget):
     def SpectraConfigAspect_changed(self):
         if self.SpectraConfigAspectAuto.isChecked(): self.SpectraConfigAspectAuto.setChecked(False)
 
-    def PathsListExcept_clicked(self):
-        for item in self.PathsList.selectedItems():
-            self.PathsList.takeItem(self.PathsList.row(item))
+    def PathsList_itemChanged(self):
         self.Paths = []
         experimentPath = pathlib.Path(self.ExperimentPath.text())
         for row in range(self.PathsList.count()):
+            if self.PathsList.item(row).checkState() == QtCore.Qt.CheckState.Unchecked:
+                continue
             self.Paths.append(experimentPath / self.PathsList.item(row).text())
 
     def LoadExperiment(self):
@@ -196,12 +195,14 @@ class BatchWindow(QtWidgets.QWidget):
                     if self.MapsNesting2.isChecked():
                         self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}"))
                         self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                        self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
                         self.Paths.append(experimentPath / mainPath)
                     elif self.MapsNesting3.isChecked():
                         for path in mainPath.iterdir():
                             if path != resultsPath and path.is_dir():
                                 self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
                                 self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                                self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
                                 self.Paths.append(experimentPath / mainPath / path)
         if len(self.Paths): self.Analyse.setEnabled(True)
         else: self.Analyse.setEnabled(False)
@@ -346,8 +347,12 @@ class BatchWindow(QtWidgets.QWidget):
                     except:
                         if path == "":
                             QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from empty path.")
+                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 15))
+                            continue
                         else:
                             QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
+                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 15))
+                            continue
                     else:
                         tempData = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
                     
