@@ -40,15 +40,16 @@ class Analyse(QtWidgets.QDialog):
                 "DiagSum"           : True,
                 "DiagMax"           : True,
                 "DiagI0"            : True,
-                "DiagPIN"           : True,
                 "DiagLT"            : True,
                 "DiagDT"            : True,
                 "DiagRT"            : False,
                 "DiagICR"           : False,
                 "DiagOCR"           : False,
+                "UNormPIN"          : True,
                 "UNormTotal"        : True,
                 "UNormROIs"         : True,
                 "UNormTabular"      : False,
+                "NormPIN"           : False,
                 "NormTotal"         : True,
                 "NormROIs"          : True,
                 "NormTabular"       : False,
@@ -60,14 +61,40 @@ class Analyse(QtWidgets.QDialog):
         else:
             self.Output = outputConfig
 
+        self.checkBox_DiagRC.checkStateChanged.connect(lambda state, mode = "DiagRC": self.CheckOutputs(state, mode))
+        self.checkBox_DiagSum.checkStateChanged.connect(lambda state, mode = "DiagSum": self.CheckOutputs(state, mode))
+        self.checkBox_DiagMax.checkStateChanged.connect(lambda state, mode = "DiagMax": self.CheckOutputs(state, mode))
+        self.checkBox_DiagI0.checkStateChanged.connect(lambda state, mode = "DiagI0": self.CheckOutputs(state, mode))
+        self.checkBox_DiagLT.checkStateChanged.connect(lambda state, mode = "DiagLT": self.CheckOutputs(state, mode))
+        self.checkBox_DiagDT.checkStateChanged.connect(lambda state, mode = "DiagDT": self.CheckOutputs(state, mode))
+        self.checkBox_DiagRT.checkStateChanged.connect(lambda state, mode = "DiagRT": self.CheckOutputs(state, mode))
+        self.checkBox_DiagICR.checkStateChanged.connect(lambda state, mode = "DiagICR": self.CheckOutputs(state, mode))
+        self.checkBox_DiagOCR.checkStateChanged.connect(lambda state, mode = "DiagOCR": self.CheckOutputs(state, mode))
+        self.checkBox_UNormPIN.checkStateChanged.connect(lambda state, mode = "UNormPIN": self.CheckOutputs(state, mode))
+        self.checkBox_UNormTotal.checkStateChanged.connect(lambda state, mode = "UNormTotal": self.CheckOutputs(state, mode))
+        self.checkBox_UNormROIs.checkStateChanged.connect(lambda state, mode = "UNormROIs": self.CheckOutputs(state, mode))
+        self.checkBox_UNormTabular.checkStateChanged.connect(lambda state, mode = "UNormTabular": self.CheckOutputs(state, mode))
+        self.checkBox_NormPIN.checkStateChanged.connect(lambda state, mode = "NormPIN": self.CheckOutputs(state, mode))
+        self.checkBox_NormTotal.checkStateChanged.connect(lambda state, mode = "NormTotal": self.CheckOutputs(state, mode))
+        self.checkBox_NormROIs.checkStateChanged.connect(lambda state, mode = "NormROIs": self.CheckOutputs(state, mode))
+        self.checkBox_NormTabular.checkStateChanged.connect(lambda state, mode = "NormTabular": self.CheckOutputs(state, mode))
+        self.checkBox_SpectraSumROIs.checkStateChanged.connect(lambda state, mode = "SpectraSumROIs": self.CheckOutputs(state, mode))
+        self.checkBox_SpectraMaxROIs.checkStateChanged.connect(lambda state, mode = "SpectraMaxROIs": self.CheckOutputs(state, mode))
+        self.checkBox_SpectraSum.checkStateChanged.connect(lambda state, mode = "SpectraSum": self.CheckOutputs(state, mode))
+        self.checkBox_SpectraMax.checkStateChanged.connect(lambda state, mode = "SpectraMax": self.CheckOutputs(state, mode))
+
         for name in self.Output.keys():
-            if name[:9] == "Detectors":
+            if name.startswith("Detectors"):
                 exec(f'self.pushButton_{name}.setChecked(self.Output["{name}"])')
             elif name in ["Single", "Batch"]:
                 exec(f'self.comboBox_{name}.setCurrentIndex(self.comboBox_{name}.findText("{self.Output[name]}", QtCore.Qt.MatchFlag.MatchExactly))')
             else:
                 exec(f'self.checkBox_{name}.setChecked(self.Output["{name}"])')
 
+        self.checkBox_Diag.checkStateChanged.connect(lambda state, mode = "Diag": self.CheckOutputs(state, mode))
+        self.checkBox_UNorm.checkStateChanged.connect(lambda state, mode = "UNorm": self.CheckOutputs(state, mode))
+        self.checkBox_Norm.checkStateChanged.connect(lambda state, mode = "Norm": self.CheckOutputs(state, mode))
+        self.checkBox_Spectra.checkStateChanged.connect(lambda state, mode = "Spectra": self.CheckOutputs(state, mode))
         self.checkBox_NormTotal.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormROIs.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTabular.toggled.connect(self.NormTypeChanged)
@@ -77,6 +104,41 @@ class Analyse(QtWidgets.QDialog):
         self.checkBox_DispTitles.toggled.connect(lambda checked, mode = "Simp": self.TitlesChanged(checked, mode))        
         self.checkBox_DispSimpTitles.toggled.connect(lambda checked, mode = "": self.TitlesChanged(checked, mode))        
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
+
+    def CheckOutputs(self, state, mode):
+        if mode in ["Diag", "UNorm", "Norm", "Spectra"]:
+            if state != QtCore.Qt.CheckState.PartiallyChecked:
+                for name in self.Output.keys():
+                    if name.startswith(mode) and not name.startswith("NormType"):
+                        exec(f'self.checkBox_{name}.blockSignals(True)')
+                        exec(f'self.checkBox_{name}.setCheckState(QtCore.Qt.{state})')
+                        exec(f'self.checkBox_{name}.blockSignals(False)')
+            else:
+                exec(f'self.checkBox_{mode}.setCheckState(QtCore.Qt.CheckState.Checked)')
+        else:
+            if mode.startswith(("Diag", "Norm")):
+                tMode = mode[:4]
+            elif mode.startswith("UNorm"):
+                tMode = mode[:5]
+            elif mode.startswith("Spectra"):
+                tMode = mode[:7]
+            flag = False
+            exec(f'self.checkBox_{tMode}.blockSignals(True)')
+            for name in self.Output.keys():
+                if name.startswith(tMode) and name != mode and (not name.startswith("NormType")):
+                    exec_code = f'''
+if self.checkBox_{name}.checkState() != QtCore.Qt.{state}:
+    if self.checkBox_{tMode}.checkState() != QtCore.Qt.CheckState.PartiallyChecked: 
+        self.checkBox_{tMode}.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
+    flag = True
+                    '''
+                    localdict = locals()
+                    exec(exec_code, locals = localdict)
+                    flag = localdict['flag']
+                    if flag:
+                        break
+            exec(f'if not flag: self.checkBox_{tMode}.setCheckState(QtCore.Qt.{state})')
+            exec(f'self.checkBox_{tMode}.blockSignals(False)')
 
     def NormTypeChanged(self, checked):
         output = self.checkBox_NormTotal.isChecked() or self.checkBox_NormROIs.isChecked() or self.checkBox_NormTabular.isChecked()
