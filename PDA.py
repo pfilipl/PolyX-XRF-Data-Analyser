@@ -423,6 +423,7 @@ def Stats2D_plot(Data, head, title, detector = None, Cmap = 'viridis', Vmin = No
     Fig = []
     if isinstance(Data, list):
         for d in (range(len(Data)) if detector is None else detector):
+            if d == 2: continue # do not make statistic data for SDDSum
             data = Data[d].copy()
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
