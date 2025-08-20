@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, uic
-import sys, os, pathlib
+import sys, os, pathlib, scipy, numpy
 
 import PDA
 
@@ -24,6 +24,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # Single
         self.Single = self.tab_Single
 
+        danteCalib = scipy.io.loadmat(basedir / "_dante_Ecallibration.mat") # path to _dante_Ecallibration file
+        danteCalibOpt, danteCalibCov = scipy.optimize.curve_fit(lambda x, a, b: a * x + b, danteCalib['callibration_table'][:, 0], danteCalib['callibration_table'][:, 1])
+        self.Single.doubleSpinBox_CalibrationGain.setValue(danteCalibOpt[0])
+        self.Single.doubleSpinBox_CalibrationZero.setValue(danteCalibOpt[1])
+        self.Single.doubleSpinBox_CalibrationNoise.setValue(140)
+        self.Single.doubleSpinBox_CalibrationFano.setValue(0.006)
+
         self.Single.doubleSpinBox_CalibrationGain.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
         self.Single.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
         self.Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Single": self.setCalibration(value, mode))
@@ -40,6 +47,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Stitch
         self.Stitch = self.tab_Stitch
 
+        self.setCalibration(None, "Single")
+
     def setCalibration(self, value, mode):
         if mode == "Single": 
             child = self.Single
@@ -47,6 +56,10 @@ class MainWindow(QtWidgets.QMainWindow):
         elif mode == "Batch": 
             child = self.Batch
             child2 = self.Single
+
+        if value is not None:
+            child.label_CalibrationCheck.hide()
+            child2.label_CalibrationCheck.hide()
 
         gain  = child.doubleSpinBox_CalibrationGain.value() / 1000
         zero  = child.doubleSpinBox_CalibrationZero.value() / 1000
