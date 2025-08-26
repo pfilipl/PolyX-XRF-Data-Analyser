@@ -4,7 +4,7 @@ import sys, xraylib, matplotlib, numpy, scipy, math
 
 import main, PDA
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, clabel = "Counts [cps]"):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -43,6 +43,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
 
     map.ColorBar = map.figure.colorbar(imgMap)
     map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(sumSignal), Vmin) if Vmin is not None else numpy.min(sumSignal), min(numpy.max(sumSignal), Vmax) if Vmax is not None else numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
+    if clabel: map.ColorBar.set_label(clabel)
 
     if (widget.AreaChanged or widget.PointChanged) and not importLoad:
         if isinstance(pos, list):
@@ -90,41 +91,42 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
     plot.draw()
 
 def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis'):
-    map = tab.Canvas
-    head = widget.Data["head"]
-    Data = widget.Data[dataName]
+    if detector != 2: # do not draw statistic data for SDDSum
+        map = tab.Canvas
+        head = widget.Data["head"]
+        Data = widget.Data[dataName]
 
-    if isinstance(Data, list):
-        data = Data[detector]
-    else:
-        data = Data
+        if isinstance(Data, list):
+            data = Data[detector]
+        else:
+            data = Data
 
-    if map.ColorBar: map.ColorBar.remove()
-    map.Axes.cla()
-    imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
-    map.Axes.get_xaxis().set_visible(False)
-    map.Axes.get_yaxis().set_visible(False)
-    # map.Axes.invert_xaxis()
+        if map.ColorBar: map.ColorBar.remove()
+        map.Axes.cla()
+        imgMap = map.Axes.imshow(data.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)
+        map.Axes.get_xaxis().set_visible(False)
+        map.Axes.get_yaxis().set_visible(False)
+        # map.Axes.invert_xaxis()
 
-    # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
-    map.Axes2x = map.Axes.secondary_xaxis('bottom')
-    map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
-    map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
-    map.Axes2x.set_xlabel("X [mm]")
+        # map.Axes2x = map.Axes.secondary_xaxis('bottom', transform = map.Axes.transData)
+        map.Axes2x = map.Axes.secondary_xaxis('bottom')
+        map.Axes2x.set_xticks(numpy.linspace(0, data.shape[0] - 1, len(map.Axes.get_xticks()) - 2))
+        map.Axes2x.set_xticklabels(f"{x:.3f}" for x in numpy.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(map.Axes2x.get_xticks())))
+        map.Axes2x.set_xlabel("X [mm]")
 
-    # map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
-    map.Axes2y = map.Axes.secondary_yaxis('left')
-    map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
-    map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
-    map.Axes2y.set_ylabel("Z [mm]")
+        # map.Axes2y = map.Axes.secondary_yaxis('left', transform = map.Axes.transData)
+        map.Axes2y = map.Axes.secondary_yaxis('left')
+        map.Axes2y.set_yticks(numpy.linspace(0, data.shape[1] - 1, len(map.Axes.get_yticks()) - 2))
+        map.Axes2y.set_yticklabels(f"{x:.3f}" for x in numpy.linspace(head["Zpositions"][0, 0], head["Zpositions"][0, -1], len(map.Axes2y.get_yticks())))
+        map.Axes2y.set_ylabel("Z [mm]")
 
-    map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
+        map.Axes.format_coord = lambda x, y: f'x = {head["Xpositions"][0, round(x)]:.3f} mm, z = {head["Zpositions"][0, round(y)]:.3f} mm'
 
-    map.ColorBar = map.figure.colorbar(imgMap)
-    map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(data), Vmin) if Vmin is not None else numpy.min(data), min(numpy.max(data), Vmax) if Vmax is not None else numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
-    if clabel: map.ColorBar.set_label(clabel)
+        map.ColorBar = map.figure.colorbar(imgMap)
+        map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(data), Vmin) if Vmin is not None else numpy.min(data), min(numpy.max(data), Vmax) if Vmax is not None else numpy.max(data), len(map.ColorBar.get_ticks()) - 2))
+        if clabel: map.ColorBar.set_label(clabel)
 
-    map.draw()
+        map.draw()
 
 def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = False, Aspect = 'auto'):
     spectrum = tab.Canvas
@@ -145,6 +147,7 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
     spectrum.Axes.legend()
     if log:
         spectrum.Axes.set_yscale('log')
+    spectrum.Axes.set_ylabel("Counts [cps]")
 
     if widget.Calib is None:
         spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
@@ -212,6 +215,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
     imgSpectrum = spectrum.Axes.plot(sumData)
 
     if func == numpy.sum and not widget.PointChanged: spectrum.Axes.set_yscale('log')
+    spectrum.Axes.set_ylabel("Counts [cps]")
     spectrum.Axes.get_xaxis().set_visible(True)
     spectrum.Axes.get_yaxis().set_visible(True)
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):

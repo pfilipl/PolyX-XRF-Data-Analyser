@@ -130,6 +130,11 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
+        self.tabWidget.setTabEnabled(8, False)
+        self.tabWidget.setTabEnabled(9, False)
+        self.tabWidget.setTabEnabled(10, False)
+        self.tabWidget.setTabEnabled(11, False)
+        self.tabWidget.setTabEnabled(12, False)
 
         # Spectrum from map region
         self.MarkPoint          = self.pushButton_MarkPoint
@@ -333,6 +338,18 @@ class SingleWindow(QtWidgets.QWidget):
             else:
                 self.LastDetector = None
                 self.CurrentDetector = None
+        if self.CurrentDetector in ["SDD1", "SDD2"]:
+            self.tabWidget.setTabEnabled(8, True)
+            self.tabWidget.setTabEnabled(9, True)
+            self.tabWidget.setTabEnabled(10, True)
+            self.tabWidget.setTabEnabled(11, True)
+            self.tabWidget.setTabEnabled(12, True)
+        else:
+            self.tabWidget.setTabEnabled(8, False)
+            self.tabWidget.setTabEnabled(9, False)
+            self.tabWidget.setTabEnabled(10, False)
+            self.tabWidget.setTabEnabled(11, False)
+            self.tabWidget.setTabEnabled(12, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def NormTypeChanged(self, mode = None):
@@ -582,7 +599,7 @@ class SingleWindow(QtWidgets.QWidget):
 
     def ROIsImport_clicked(self, checked, fileName, changeROIsDefault = True):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIsDeleteAll_clicked()
             if changeROIsDefault: self.ROIsDefault.setChecked(False)
@@ -638,7 +655,7 @@ class SingleWindow(QtWidgets.QWidget):
         
     def ROIsSave_clicked(self, checked, fileName, mode):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
             fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [ML3.3/Be]\n"
@@ -755,6 +772,11 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
+        self.tabWidget.setTabEnabled(8, False)
+        self.tabWidget.setTabEnabled(9, False)
+        self.tabWidget.setTabEnabled(10, False)
+        self.tabWidget.setTabEnabled(11, False)
+        self.tabWidget.setTabEnabled(12, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
     
     def MapPathSearch_clicked(self):
@@ -777,7 +799,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.PointChanged = False
         self.AreaChanged = False
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Single config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.PointX.blockSignals(True)
             self.PointZ.blockSignals(True)
@@ -843,7 +865,7 @@ class SingleWindow(QtWidgets.QWidget):
     
     def SaveConfig_clicked(self, clicked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "## General configuration\n# Element name\tProperty\tValue"

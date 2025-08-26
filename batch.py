@@ -103,7 +103,7 @@ class BatchWindow(QtWidgets.QWidget):
     
     def ROIsImport_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             self.ROIsDeleteAll_clicked()
             self.ROIsDefault.setChecked(False)
@@ -139,7 +139,7 @@ class BatchWindow(QtWidgets.QWidget):
         
     def ROIsSave_clicked(self, checked, fileName, mode):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
             fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [ML3.3/Be]\n"
@@ -251,7 +251,7 @@ class BatchWindow(QtWidgets.QWidget):
 
     def ImportConfig_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Batch config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Import Batch config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             read = False
             file = open(fileName, "r")
@@ -278,7 +278,7 @@ class BatchWindow(QtWidgets.QWidget):
     
     def SaveConfig_clicked(self, checked, fileName):
         if fileName is None:
-            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Batch config", self.ResultsPath.text(), "PDA Files(*.PDAconfig);; Text files(*.dat *.txt);; All files(*)")
+            fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Batch config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, 'w')
             fileContent = "## General configuration\n# Element name\tProperty\tValue"

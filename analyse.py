@@ -227,7 +227,7 @@ def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: I0 [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: Incident radiation", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "I0 [V]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
@@ -239,7 +239,7 @@ def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: Transmission [V]", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: Transmission", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [V]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_TransmissionMap")
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_TransmissionMap")
@@ -251,7 +251,7 @@ def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, LT)), head, f"{dataName}: Live Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, LT)), head, f"{dataName}: Live Time", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "LT [ms]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_LiveTimeMap", detector = detectors)
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_LiveTimeMap", detector = detectors)
@@ -263,7 +263,7 @@ def DiagDT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(DT, head, f"{dataName}: Dead Time [%]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(DT, head, f"{dataName}: Dead Time", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "DT [%]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_DeadTimeMap", detector = detectors)
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_DeadTimeMap", detector = detectors)
@@ -275,7 +275,7 @@ def DiagRT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, RT)), head, f"{dataName}: Real Time [ms]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(list(map(lambda x: x / 1e3, RT)), head, f"{dataName}: Real Time", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "RT [ms]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_RealTimeMap", detector = detectors)
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_RealTimeMap", detector = detectors)
@@ -287,7 +287,7 @@ def DiagICR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: ICR [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(ICR, head, f"{dataName}: Input Count Rate", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "ICR [kcps]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_ICRMap", detector = detectors)
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_ICRMap", detector = detectors)
@@ -299,7 +299,7 @@ def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: OCR [kcps]", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp)
+    Map, Fig = PDA.Stats2D_plot(OCR, head, f"{dataName}: Output Count Rate", detectors, Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "OCR [kcps]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_OCRMap", detector = detectors)
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_OCRMap", detector = detectors)

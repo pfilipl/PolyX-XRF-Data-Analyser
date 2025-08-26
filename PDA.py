@@ -278,7 +278,7 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
             width = sigma_width
         ROI.append([name, idx - width, idx + width])
 
-def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = None, normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
+def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = "Counts [cps]", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
     Map = []
     Fig = []
     if not Disp["Selected"]: pos = None
@@ -754,6 +754,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             break
         if log:
             ax1.set_yscale('log')
+        ax1.set_ylabel("Counts [cps]")
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
             ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -944,6 +945,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             break
         if log:
             ax1.set_yscale('log')
+        ax1.set_ylabel("Counts [cps]")
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
             ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -989,6 +991,7 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
         ax1.set_title(f'{title.split(": ")[-1]}')
     if log:
         ax1.set_yscale('log')
+    ax1.set_ylabel("Counts [cps]")
     if Calib is None:
         ax1.set_xlim([0, head["bins"][0, 0]])
         ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -1160,7 +1163,7 @@ def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False):
                 file.write("\n")
                 file.write(f'{i:4d}\t{j:4d}\t{head["Xpositions"][0, i]:6.2f}\t{head["Zpositions"][0, j]:6.2f}')
                 for k in range(len(ROI)):
-                    file.write(f"\t{Map[k][i, j]:d}" if not Norm else f"\t{Map[k][i, j]:11.3f}")
+                    file.write(f"\t{int(Map[k][i, j]):d}" if not Norm else f"\t{Map[k][i, j]:11.3f}")
         file.close()
     else:
         didx = 0
@@ -1174,7 +1177,7 @@ def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False):
                     file.write("\n")
                     file.write(f'{i:4d}\t{j:4d}\t{head["Xpositions"][0, i]:6.2f}\t{head["Zpositions"][0, j]:6.2f}')
                     for k in range(len(ROI)):
-                        file.write(f"\t{Map[didx * len(ROI) + k][i, j]:d}" if not Norm else f"\t{Map[didx * len(ROI) + k][i, j]:11.3f}")
+                        file.write(f"\t{int(Map[didx * len(ROI) + k][i, j]):d}" if not Norm else f"\t{Map[didx * len(ROI) + k][i, j]:11.3f}")
             file.close()
             didx += 1
 
