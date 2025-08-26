@@ -420,7 +420,7 @@ class SingleWindow(QtWidgets.QWidget):
             mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
             if self.Calib is not None:
                 eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-                eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+                eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
             else:
                 eMin = 0.0
                 eMax = None
@@ -543,7 +543,7 @@ class SingleWindow(QtWidgets.QWidget):
         mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
         if self.Calib is not None:
             eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-            eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+            eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
         else:
             eMin = 0.0
             eMax = None
@@ -772,11 +772,6 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
-        self.tabWidget.setTabEnabled(8, False)
-        self.tabWidget.setTabEnabled(9, False)
-        self.tabWidget.setTabEnabled(10, False)
-        self.tabWidget.setTabEnabled(11, False)
-        self.tabWidget.setTabEnabled(12, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
     
     def MapPathSearch_clicked(self):
@@ -949,7 +944,7 @@ class SingleWindow(QtWidgets.QWidget):
                 mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
                 if self.Calib is not None:
                     eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-                    eMax = None if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value()
+                    eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
                 else:
                     eMin = 0.0
                     eMax = None

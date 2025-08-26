@@ -447,7 +447,7 @@ def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if disp["Selected"]:
+    if disp["Selected"] and (Parent.PointChanged or Parent.AreaChanged):
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = roi, log = True, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtractedSumROIsSpectrum", detector = detectors, Calib = calib)
@@ -463,7 +463,7 @@ def SpectraMaxROIs(Parent, Data, path, resultPath, detectors = [2], nestingType 
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if disp["Selected"]:
+    if disp["Selected"] and (Parent.PointChanged or Parent.AreaChanged):
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = roi, log = False, POS = pos, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtractedMaxROIsSpectrum", detector = detectors, Calib = calib)
@@ -479,7 +479,7 @@ def SpectraSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if disp["Selected"]:
+    if disp["Selected"] and (Parent.PointChanged or Parent.AreaChanged):
         Hist, Fig = PDA.Hist_plot(data, head, f"{dataName} (extracted)", pos, calib, detectors, Emax = emax, ROI = None, log = True, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtractedSumSpectrum", detector = detectors, Calib = calib)
@@ -495,7 +495,7 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "Spectra")
     os.makedirs(outputPath, exist_ok = True)
-    if disp["Selected"]:
+    if disp["Selected"] and (Parent.PointChanged or Parent.AreaChanged):
         Hist, Fig = PDA.Hist_max_plot(data, head, f"{dataName} (extracted)", calib, detectors, Emax = emax, ROI = None, log = False, POS = pos, Aspect = saspect, Emin = emin, Disp = disp)
         plt.close('all')
         PDA.print_Hist(Hist, outputPath + f"{dataName}_ExtractedMaxSpectrum", detector = detectors, Calib = calib)
