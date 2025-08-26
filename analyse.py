@@ -105,6 +105,11 @@ class Analyse(QtWidgets.QDialog):
         self.checkBox_DispSimpTitles.toggled.connect(lambda checked, mode = "": self.TitlesChanged(checked, mode))        
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
 
+        self.label_Nesting.hide()
+        self.comboBox_Single.hide()
+        self.comboBox_Batch.hide()
+        self.setFixedHeight(490)
+
     def CheckOutputs(self, state, mode):
         if mode in ["Diag", "UNorm", "Norm", "Spectra"]:
             if state != QtCore.Qt.CheckState.PartiallyChecked:

@@ -74,6 +74,7 @@ class BatchWindow(QtWidgets.QWidget):
         # Results
         self.ResultsPath                = self.lineEdit_ResultsPath
 
+        self.ResultsPath.editingFinished.connect(self.LoadExperiment)
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
         # Process
@@ -189,7 +190,12 @@ class BatchWindow(QtWidgets.QWidget):
         self.PathsList.clear()
         experimentPath = pathlib.Path(self.ExperimentPath.text())
         resultsPath = pathlib.Path(self.ResultsPath.text())
-        if experimentPath != resultsPath:
+        if experimentPath == resultsPath:
+            QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
+            self.ResultsPath.blockSignals(True)
+            self.ResultsPath.setText(str(pathlib.Path(self.ExperimentPath.text()).parent))
+            self.ResultsPath.blockSignals(False)
+        else:
             for mainPath in experimentPath.iterdir():
                 if mainPath != resultsPath and mainPath.is_dir():
                     if self.MapsNesting2.isChecked():
@@ -210,7 +216,12 @@ class BatchWindow(QtWidgets.QWidget):
     def ExperimentPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ExperimentPath.text())
         if path:
+            self.ExperimentPath.blockSignals(True)
+            self.ResultsPath.blockSignals(True)
             self.ExperimentPath.setText(path)
+            self.ResultsPath.setText(str(pathlib.Path(path).parent))
+            self.ExperimentPath.blockSignals(False)
+            self.ResultsPath.blockSignals(False)
             self.LoadExperiment()
     
     def PathsSave(self, fileName, mode):
@@ -245,8 +256,12 @@ class BatchWindow(QtWidgets.QWidget):
 
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
-        if path:
+        if path == self.ExperimentPath.text():
+            QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
+        else:
+            self.ResultsPath.blockSignals(True)
             self.ResultsPath.setText(path)
+            self.ResultsPath.blockSignals(False)
             # self.LoadExperiment()
 
     def ImportConfig_clicked(self, checked, fileName):
@@ -330,10 +345,9 @@ class BatchWindow(QtWidgets.QWidget):
     def Analyse_clicked(self):
         resultsPath = self.ResultsPath.text()
         if not os.path.isdir(resultsPath):
-            if resultsPath == "":
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
-            else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
+            QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
+        elif resultsPath == pathlib.Path():
+            QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsSDD1.isChecked(), self.DetectorsSDD2.isChecked(), self.DetectorsSum.isChecked(), True)
             if outputConfig.exec():

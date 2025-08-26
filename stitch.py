@@ -198,10 +198,9 @@ class StitchWindow(QtWidgets.QWidget):
     def StitchMaps_clicked(self):
         resultPath = pathlib.Path(self.ResultPath.text())
         if not resultPath.is_dir():
-            if resultPath == pathlib.Path():
+            QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on the path:\n{resultPath}")
+        elif resultPath == pathlib.Path():
                 QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on an empty path.")
-            else:
-                QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on the path:\n{resultPath}")
         else:
             QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
             if self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:

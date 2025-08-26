@@ -783,8 +783,11 @@ class SingleWindow(QtWidgets.QWidget):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
         if path:
             self.MapPath.blockSignals(True)
+            self.ResultsPath.blockSignals(True)
             self.MapPath.setText(path)
+            self.ResultsPath.setText(path)
             self.MapPath.blockSignals(False)
+            self.ResultsPath.blockSignals(False)
             self.LoadData()
     
     def ResultsPathSearch_clicked(self):
@@ -919,10 +922,9 @@ class SingleWindow(QtWidgets.QWidget):
     def Analyse_clicked(self):
         resultsPath = pathlib.Path(self.ResultsPath.text())
         if not resultsPath.is_dir():
-            if resultsPath == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
-            else:
-                QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
+            QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on the path:\n{resultsPath}")
+        elif resultsPath == pathlib.Path():
+            QtWidgets.QMessageBox.warning(self, "Analyse", f"It is impossible to save output files on an empty path.")
         else:
             outputConfig = analyse.Analyse(self, self.OutputConfig, self.DetectorsSDD1.isChecked(), self.DetectorsSDD2.isChecked(), self.DetectorsSum.isChecked(), False)
             if outputConfig.exec():
