@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets, uic
-import sys, os, pathlib, scipy, numpy
+import sys, os, pathlib
+from scipy import io as sio, optimize as so
 
 import PDA
 
@@ -24,8 +25,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Single
         self.Single = self.tab_Single
 
-        danteCalib = scipy.io.loadmat(basedir / "_dante_Ecallibration.mat") # path to _dante_Ecallibration file
-        danteCalibOpt, danteCalibCov = scipy.optimize.curve_fit(lambda x, a, b: a * x + b, danteCalib['callibration_table'][:, 0], danteCalib['callibration_table'][:, 1])
+        danteCalib = sio.loadmat(basedir / "_dante_Ecallibration.mat") # path to _dante_Ecallibration file
+        danteCalibOpt, danteCalibCov = so.curve_fit(lambda x, a, b: a * x + b, danteCalib['callibration_table'][:, 0], danteCalib['callibration_table'][:, 1])
         self.Single.doubleSpinBox_CalibrationGain.setValue(danteCalibOpt[0])
         self.Single.doubleSpinBox_CalibrationZero.setValue(danteCalibOpt[1])
         self.Single.doubleSpinBox_CalibrationNoise.setValue(140)
@@ -47,6 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Stitch
         self.Stitch = self.tab_Stitch
 
+        # Set default energy calibration
         self.setCalibration(None, "Single")
 
     def setCalibration(self, value, mode):

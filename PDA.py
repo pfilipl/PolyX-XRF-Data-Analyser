@@ -561,22 +561,23 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 if  xp > (np.abs(calib - 0)).argmin() + 50:
                                     ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
                                     if xp > cEmin and xp < cEmax:
-                                        # ka_diff = Energies['Ka'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # kb_diff = Energies['Kb'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # la_diff = Energies['La'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # lb_diff = Energies['Lb'][(np.abs(Energies['Lb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # k = Energies['symbol'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] + "-Ka" if ka_diff < kb_diff else Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] + "-Kb"
-                                        # l = Energies['symbol'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()] + "-La" if la_diff < lb_diff else Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] + "-Lb"
-                                        # ax1.text(xp, 0.05, k, ha = 'right', rotation = 'vertical', color = 'C1', transform = ax1.get_xaxis_transform())
-                                        # ax1.text(xp, 0.20, l, ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ka = Energies['symbol'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()]
-                                        kb = Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()]
-                                        la = Energies['symbol'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()]
-                                        lb = Energies['symbol'][(np.abs(Energies['Lb'] - calib[xp] / 1000)).argmin()]
-                                        ax1.text(xp, 0.05, ka, ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.12, kb, ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
+                                        ts = False * np.ones((5, 1))
+                                        kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
+                                        kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
+                                        ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
+                                        lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
+                                        mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
+                                        ka = Energies['symbol'][kadifft.argmin()]
+                                        kb = Energies['symbol'][kbdifft.argmin()]
+                                        la = Energies['symbol'][ladifft.argmin()]
+                                        lb = Energies['symbol'][lbdifft.argmin()]
+                                        m  = Energies['symbol'][mdifft.argmin()]
+                                        ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
+                                        ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform())
                             else:
                                 ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
@@ -700,22 +701,23 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 if  xp > (np.abs(calib - 0)).argmin() + 50:
                                     ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
                                     if xp > cEmin and xp < cEmax:
-                                        # ka_diff = Energies['Ka'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # kb_diff = Energies['Kb'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # la_diff = Energies['La'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # lb_diff = Energies['Lb'][(np.abs(Energies['Lb'] - calib[xp] / 1000)).argmin()] - calib[xp] / 1000
-                                        # k = Energies['symbol'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()] + "-Ka" if ka_diff < kb_diff else Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] + "-Kb"
-                                        # l = Energies['symbol'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()] + "-La" if la_diff < lb_diff else Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()] + "-Lb"
-                                        # ax1.text(xp, 0.05, k, ha = 'right', rotation = 'vertical', color = 'C1', transform = ax1.get_xaxis_transform())
-                                        # ax1.text(xp, 0.20, l, ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ka = Energies['symbol'][(np.abs(Energies['Ka'] - calib[xp] / 1000)).argmin()]
-                                        kb = Energies['symbol'][(np.abs(Energies['Kb'] - calib[xp] / 1000)).argmin()]
-                                        la = Energies['symbol'][(np.abs(Energies['La'] - calib[xp] / 1000)).argmin()]
-                                        lb = Energies['symbol'][(np.abs(Energies['Lb'] - calib[xp] / 1000)).argmin()]
-                                        ax1.text(xp, 0.05, ka, ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.12, kb, ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.20, la, ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.27, lb, ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
+                                        ts = False * np.ones((5, 1))
+                                        kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
+                                        kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
+                                        ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
+                                        lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
+                                        mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
+                                        ka = Energies['symbol'][kadifft.argmin()]
+                                        kb = Energies['symbol'][kbdifft.argmin()]
+                                        la = Energies['symbol'][ladifft.argmin()]
+                                        lb = Energies['symbol'][lbdifft.argmin()]
+                                        m  = Energies['symbol'][mdifft.argmin()]
+                                        ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
+                                        ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
+                                        ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform())
                             else:
                                 ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
@@ -763,8 +765,8 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             for eval in Eval:
                 E.append((np.abs(calib - eval)).argmin())
             ax1.set_xticks(E)
-            ax1.set_xticklabels(np.abs(np.round(calib[E] / 1000, 2)))
-            ax1.set_xlabel("E [keV]")
+            ax1.set_xticklabels(np.round(calib[E], 2))
+            ax1.set_xlabel("E [eV]")
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
@@ -953,8 +955,8 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             for eval in Eval:
                 E.append((np.abs(calib - eval)).argmin())
             ax1.set_xticks(E)
-            ax1.set_xticklabels(np.abs(np.round(calib[E] / 1000, 2)))
-            ax1.set_xlabel("E [keV]")
+            ax1.set_xticklabels(np.round(calib[E], 2))
+            ax1.set_xlabel("E [eV]")
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
@@ -963,9 +965,16 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             fig.axes[0].set_axis_off()
     return Hist, Fig
     
-def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto', Disp = None):
+def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto', Disp = None, Calib = None, Emin = 0.0, Emax = None):
     Hist = []
     Fig = []
+    if Calib is not None:
+        cEmin = (np.abs(Calib - Emin * 1000)).argmin() - 1
+        if Emax is None:
+            Emax = Calib[-1] / 1000
+            cEmax = head["bins"][0, 0] - 1
+        else:
+            cEmax = (np.abs(Calib - Emax * 1000)).argmin() + 1
     fig = plt.figure(layout = 'compressed')
     ax1 = fig.add_subplot()
     for d in (range(len(Data)) if detector is None else detector):
@@ -980,9 +989,19 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
         ax1.set_title(f'{title.split(": ")[-1]}')
     if log:
         ax1.set_yscale('log')
-    ax1.set_xlim([0, head["bins"][0, 0]])
-    ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-    ax1.set_xlabel("channel")
+    if Calib is None:
+        ax1.set_xlim([0, head["bins"][0, 0]])
+        ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
+        ax1.set_xlabel("channel")
+    else:
+        ax1.set_xlim([cEmin, cEmax])
+        Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
+        E = []
+        for eval in Eval:
+            E.append((np.abs(Calib - eval)).argmin())
+        ax1.set_xticks(E)
+        ax1.set_xticklabels(np.round(Calib[E], 2))
+        ax1.set_xlabel("E [eV]")
     ax1.set_aspect(Aspect)
     Fig.append(fig)
     if not Disp["Axes"]:

@@ -162,9 +162,9 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
         for eval in Eval:
             E.append((numpy.abs(widget.Calib - eval)).argmin())
         spectrum.Axes2x.set_xticks(E)
-        spectrum.Axes2x.set_xticklabels(numpy.abs(numpy.round(widget.Calib[E] / 1000, 2)))
-        spectrum.Axes2x.set_xlabel("E [keV]")
-        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)] / 1000:.3f} keV, y = {y:.3e}'
+        spectrum.Axes2x.set_xticklabels(numpy.round(widget.Calib[E], 2))
+        spectrum.Axes2x.set_xlabel("E [eV]")
+        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)]:.3f} eV, y = {y:.3e}'
 
     spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()
@@ -315,9 +315,9 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         for eval in Eval:
             E.append((numpy.abs(widget.Calib - eval)).argmin())
         spectrum.Axes2x.set_xticks(E)
-        spectrum.Axes2x.set_xticklabels(numpy.abs(numpy.round(widget.Calib[E] / 1000, 2)))
-        spectrum.Axes2x.set_xlabel("E [keV]")
-        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)] / 1000:.3f} keV, y = {y:.3e}'
+        spectrum.Axes2x.set_xticklabels(numpy.round(widget.Calib[E], 2))
+        spectrum.Axes2x.set_xlabel("E [eV]")
+        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)]:.3f} eV, y = {y:.3e}'
 
     spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()

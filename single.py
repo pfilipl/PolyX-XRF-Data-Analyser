@@ -249,7 +249,7 @@ class SingleWindow(QtWidgets.QWidget):
             line.set(xdata = [event.xdata, event.xdata], ydata = [canvas.Axes.get_ylim()[0], canvas.Axes.get_ylim()[1]])
             canvas.Axes.add_artist(line)
             if self.Calib is not None:
-                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)] / 1000:.3f} keV ", horizontalalignment = 'right' if event.xdata > 4096 * 0.8 else 'left')
+                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV ", horizontalalignment = 'right' if event.xdata > 4096 * 0.8 else 'left')
                 canvas.Axes.add_artist(text)
             canvas.draw()
 

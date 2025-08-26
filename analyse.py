@@ -205,7 +205,7 @@ def DiagSum(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Sum Spectra", log = True, func = numpy.sum, Aspect = saspect, Disp = disp)
+    Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Sum Spectra", log = True, func = numpy.sum, Aspect = saspect, Disp = disp, Calib = calib, Emin = emin, Emax = emax)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_SumSpectra", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_SumSpectra")
@@ -216,7 +216,7 @@ def DiagMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Max Spectra", log = False, func = numpy.max, Aspect = saspect, Disp = disp)
+    Hist, Fig = PDA.Hist_check_plot(data, head, f"{dataName}: Max Spectra", log = False, func = numpy.max, Aspect = saspect, Disp = disp, Calib = calib, Emin = emin, Emax = emax)
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxSpectra", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxSpectra")
