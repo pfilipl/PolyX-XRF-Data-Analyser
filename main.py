@@ -75,7 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         child.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
         child.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        child.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        child.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Single.monoE / 1000 if self.Single.monoE is not None else self.Calib[-1] / 1000) # widma do energii mono
         child.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
 
         child2.pushButton_SpectraConfigEnergyAuto.setEnabled(True)
@@ -84,7 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         child2.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(True)
         child2.doubleSpinBox_SpectraConfigEnergyStop.setMaximum(self.Calib[-1] / 1000)
-        child2.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Calib[-1] / 1000)
+        child2.doubleSpinBox_SpectraConfigEnergyStop.setValue(self.Single.monoE / 1000 if self.Single.monoE is not None else self.Calib[-1] / 1000) # widma do energii mono
         child2.doubleSpinBox_SpectraConfigEnergyStop.blockSignals(False)
         
         child.setCalibration(self.Calib, self.Sigma)

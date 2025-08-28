@@ -549,42 +549,45 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
-                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
-                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
                     if peaks:
                         xP = sig.find_peaks(sum_data, height = 1e-5 * np.max(sum_data), width = 5)
                         for xp in xP[0]:
                             if calib is not None:
-                                if  xp > (np.abs(calib - 0)).argmin() + 50:
+                                try:
+                                    monoE = head["monoE"][0][0]
+                                except:
+                                    monoE = None
+                                if ((monoE is not None) and xp > (np.abs(calib - 0)).argmin() + 50 and xp < (np.abs(calib - monoE)).argmin()) or monoE is None and xp > (np.abs(calib - 0)).argmin() + 50:
                                     ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
-                                    if xp > cEmin and xp < cEmax:
-                                        ts = False * np.ones((5, 1))
-                                        kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
-                                        kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
-                                        ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
-                                        lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
-                                        mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
-                                        ka = Energies['symbol'][kadifft.argmin()]
-                                        kb = Energies['symbol'][kbdifft.argmin()]
-                                        la = Energies['symbol'][ladifft.argmin()]
-                                        lb = Energies['symbol'][lbdifft.argmin()]
-                                        m  = Energies['symbol'][mdifft.argmin()]
-                                        ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
-                                        ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform())
+                                    ts = False * np.ones((5, 1))
+                                    kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
+                                    kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
+                                    ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
+                                    lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
+                                    mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
+                                    ka = Energies['symbol'][kadifft.argmin()]
+                                    kb = Energies['symbol'][kbdifft.argmin()]
+                                    la = Energies['symbol'][ladifft.argmin()]
+                                    lb = Energies['symbol'][lbdifft.argmin()]
+                                    m  = Energies['symbol'][mdifft.argmin()]
+                                    ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
+                                    ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform(), clip_on = True)
                             else:
                                 ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
-                            ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.90, "La", ha = 'left', color = 'C5', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.95, "Lb", ha = 'left', color = 'C7', transform = ax1.transAxes)
+                            ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.90, "La", ha = 'left', color = 'C5', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.95, "Lb", ha = 'left', color = 'C7', transform = ax1.transAxes, clip_on = True)
                 elif calib is not None:
                     for name in peaks:
                         if name != 'Total signal':
@@ -602,13 +605,15 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 line = xrl.LA_LINE
                             elif line == "Lb":
                                 line = xrl.LB_LINE
+                            elif line == "M":
+                                line = xrl.MA1_LINE
                             else:
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
                             ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
-                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
+                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform(), clip_on = True)
         elif pos.shape[0] == 2:
             check_pos(pos, [data.shape[0], data.shape[1]])
             x0 = min(pos[0, 0], pos[1, 0])
@@ -689,42 +694,45 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
-                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
-                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
                     if peaks:
                         xP = sig.find_peaks(sum_data, height = 1e-5 * np.max(sum_data), width = 10)
                         for xp in xP[0]:
                             if calib is not None:
-                                if  xp > (np.abs(calib - 0)).argmin() + 50:
+                                try:
+                                    monoE = head["monoE"][0][0]
+                                except:
+                                    monoE = None
+                                if ((monoE is not None) and xp > (np.abs(calib - 0)).argmin() + 50 and xp < (np.abs(calib - monoE)).argmin()) or monoE is None and xp > (np.abs(calib - 0)).argmin() + 50:
                                     ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C1'))
-                                    if xp > cEmin and xp < cEmax:
-                                        ts = False * np.ones((5, 1))
-                                        kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
-                                        kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
-                                        ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
-                                        lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
-                                        mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
-                                        ka = Energies['symbol'][kadifft.argmin()]
-                                        kb = Energies['symbol'][kbdifft.argmin()]
-                                        la = Energies['symbol'][ladifft.argmin()]
-                                        lb = Energies['symbol'][lbdifft.argmin()]
-                                        m  = Energies['symbol'][mdifft.argmin()]
-                                        ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
-                                        ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform())
-                                        ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform())
+                                    ts = False * np.ones((5, 1))
+                                    kadifft = np.abs(Energies['Ka'] - calib[xp] / 1000)
+                                    kbdifft = np.abs(Energies['Kb'] - calib[xp] / 1000)
+                                    ladifft = np.abs(Energies['La'] - calib[xp] / 1000)
+                                    lbdifft = np.abs(Energies['Lb'] - calib[xp] / 1000)
+                                    mdifft  = np.abs(Energies['M']  - calib[xp] / 1000)
+                                    ka = Energies['symbol'][kadifft.argmin()]
+                                    kb = Energies['symbol'][kbdifft.argmin()]
+                                    la = Energies['symbol'][ladifft.argmin()]
+                                    lb = Energies['symbol'][lbdifft.argmin()]
+                                    m  = Energies['symbol'][mdifft.argmin()]
+                                    ts[np.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
+                                    ax1.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = ax1.get_xaxis_transform(), clip_on = True)
+                                    ax1.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = ax1.get_xaxis_transform(), clip_on = True)
                             else:
                                 ax1.add_artist(lines.Line2D([xp, xp], [0, sum_data[xp]], linewidth=1.0, linestyle='-', color='C2'))
                         if calib is not None:
-                            ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.90, "La", ha = 'left', color = 'C5', transform = ax1.transAxes)
-                            ax1.text(0.95, 0.95, "Lb", ha = 'left', color = 'C7', transform = ax1.transAxes)
+                            ax1.text(0.95, 0.80, "Ka", ha = 'left', color = 'C4', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.85, "Kb", ha = 'left', color = 'C6', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.90, "La", ha = 'left', color = 'C5', transform = ax1.transAxes, clip_on = True)
+                            ax1.text(0.95, 0.95, "Lb", ha = 'left', color = 'C7', transform = ax1.transAxes, clip_on = True)
                 elif calib is not None:
                     for name in peaks:
                         if name != 'Total signal':
@@ -742,13 +750,15 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                                 line = xrl.LA_LINE
                             elif line == "Lb":
                                 line = xrl.LB_LINE
+                            elif line == "M":
+                                line = xrl.MA1_LINE
                             else:
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
                             ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
-                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
+                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform(), clip_on = True)
         else:
             print("Invalid position!")
             break
@@ -829,9 +839,9 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
-                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
-                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
                     if peaks:
@@ -858,13 +868,15 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                                 line = xrl.LA_LINE
                             elif line == "Lb":
                                 line = xrl.LB_LINE
+                            elif line == "M":
+                                line = xrl.MA1_LINE
                             else:
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
                             ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
-                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
+                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform(), clip_on = True)
         elif pos.shape[0] == 2:
             fig = plt.figure(layout = 'compressed')
             ax1 = fig.add_subplot()
@@ -904,9 +916,9 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
-                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                                ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
-                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform())
+                            ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
                     if peaks:
@@ -933,13 +945,15 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                                 line = xrl.LA_LINE
                             elif line == "Lb":
                                 line = xrl.LB_LINE
+                            elif line == "M":
+                                line = xrl.MA1_LINE
                             else:
                                 print("Unknown line symbol!")
                                 continue
                             xp = (np.abs(calib - xrl.LineEnergy(element, line) * 1000)).argmin()
                             ax1.add_artist(lines.Line2D([xp, xp], [0, 0.5], linewidth=1.0, linestyle='-', color='red', transform = ax1.get_xaxis_transform()))
                             if xp > cEmin and xp < cEmax:
-                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform())
+                                ax1.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = ax1.get_xaxis_transform(), clip_on = True)
         else:
             print("Invalid position!")
             break

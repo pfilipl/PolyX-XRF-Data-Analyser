@@ -251,10 +251,10 @@ class SingleWindow(QtWidgets.QWidget):
             line = self.ExtMaxLine
             text = self.ExtMaxText
         if event.inaxes == canvas.Axes:
-            line.set(xdata = [event.xdata, event.xdata], ydata = [canvas.Axes.get_ylim()[0], canvas.Axes.get_ylim()[1]])
+            line.set(xdata = [event.xdata, event.xdata], ydata = [1e-10, 1e20])
             canvas.Axes.add_artist(line)
             if self.Calib is not None:
-                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV ", horizontalalignment = 'right' if event.xdata > 4096 * 0.8 else 'left')
+                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV ", horizontalalignment = 'right' if event.xdata > canvas.Axes.get_xlim()[1] * 0.8 else 'left')
                 canvas.Axes.add_artist(text)
             canvas.draw()
 
@@ -362,8 +362,8 @@ class SingleWindow(QtWidgets.QWidget):
     def ROIsChanged(self):
         table = self.ROIs
         tabs = self.tabWidget
-        while tabs.count() > 13:
-            tabs.removeTab(13)
+        while tabs.count() > 14:
+            tabs.removeTab(14)
         for row in range(table.rowCount()):
             i = tabs.addTab(PreviewTab(self, int(table.item(row, 1).text()), int(table.item(row, 2).text()), float(table.item(row, 3).text())), table.item(row, 0).text())
             tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
@@ -385,6 +385,9 @@ class SingleWindow(QtWidgets.QWidget):
 
             try:
                 self.monoE = head["monoE"][0][0]
+                self.SpectraConfigEnergyStop.blockSignals(True)
+                self.SpectraConfigEnergyStop.setValue(self.monoE / 1000) # widma do energii mono
+                self.SpectraConfigEnergyStop.blockSignals(False)
             except:
                 self.monoE = None
 
@@ -457,7 +460,7 @@ class SingleWindow(QtWidgets.QWidget):
             load_plots.MapStats2D(self, self.ICR, "ICR", det, "ICR [kcps]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.OCR, "OCR", det, "OCR [kcps]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.PlotStats1D(self, self.RC, "RC", "I [mA]", importLoad = importLoad)
-            for i in range(13, self.tabWidget.count()):
+            for i in range(14, self.tabWidget.count()):
                 load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
 
             if not self.Reload.isEnabled(): 
@@ -577,7 +580,7 @@ class SingleWindow(QtWidgets.QWidget):
         load_plots.MapStats2D(self, self.ICR, "ICR", det, "ICR [kcps]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.OCR, "OCR", det, "OCR [kcps]", Aspect = mapAspect, Cmap = cMap)
         # load_plots.PlotStats1D(self, self.RC, "RC")
-        for i in range(13, self.tabWidget.count()):
+        for i in range(14, self.tabWidget.count()):
             load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
@@ -605,8 +608,8 @@ class SingleWindow(QtWidgets.QWidget):
             if changeROIsDefault: self.ROIsDefault.setChecked(False)
             self.ROIs.blockSignals(True)
             self.ROIs.setCurrentCell(0, 0)
-            while self.tabWidget.count() > 13:
-                self.tabWidget.removeTab(13)
+            while self.tabWidget.count() > 14:
+                self.tabWidget.removeTab(14)
 
             read = False
             file = open(fileName, "r")
@@ -671,7 +674,7 @@ class SingleWindow(QtWidgets.QWidget):
         rows = list(set(rows))
         rows.sort(reverse = True)
         for row in rows:
-            self.tabWidget.removeTab(13 + row)
+            self.tabWidget.removeTab(14 + row)
             self.ROIs.removeRow(row)
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
@@ -679,8 +682,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.ROIs.setCurrentCell(0, 0)
         while self.ROIs.rowCount() > 0:
             self.ROIs.removeRow(self.ROIs.currentRow())
-        while self.tabWidget.count() > 13:
-                self.tabWidget.removeTab(13)
+        while self.tabWidget.count() > 14:
+                self.tabWidget.removeTab(14)
         if self.ROIsDefault.isChecked(): self.ROIsDefault.setChecked(False)
     
     def RegionChanged(self, value, mode):
@@ -735,7 +738,7 @@ class SingleWindow(QtWidgets.QWidget):
         self.TotalSignal.Canvas.draw()
         self.SumSpectrum.Canvas.draw()
         self.MaxSpectrum.Canvas.draw()
-        for i in range(13, self.tabWidget.count()):
+        for i in range(14, self.tabWidget.count()):
             self.tabWidget.widget(i).Canvas.draw()
         
         self.PointX.blockSignals(True)
