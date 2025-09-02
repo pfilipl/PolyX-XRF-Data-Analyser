@@ -238,18 +238,6 @@ def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
     PDA.print_Fig(Fig, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
 
-def DiagPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
-    head = Data["head"]
-    PIN = Data["PIN"]
-    dataName = path.stem
-    outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
-    os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: Transmission", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [V]")
-    plt.close('all')
-    PDA.print_Tiff(Map, outputPath + f"{dataName}_TransmissionMap")
-    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_TransmissionMap")
-    PDA.print_Fig(Fig, outputPath + f"{dataName}_TransmissionMap")
-
 def DiagLT(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     LT = Data["LT"]
@@ -310,6 +298,18 @@ def DiagOCR(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_OCRMap", detector = detectors)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_OCRMap", detector = detectors)
 
+def UNormPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
+    head = Data["head"]
+    PIN = Data["PIN"]
+    dataName = path.stem
+    outputPath = generateOutputPath(path, resultPath, nestingType, "RawData")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Stats2D_plot(PIN, head, f"{dataName}: Transmission", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [V]")
+    plt.close('all')
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_TransmissionMap")
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_TransmissionMap")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_TransmissionMap")
+
 def UNormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
     data = Data["Data"]
@@ -368,6 +368,19 @@ def UNormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = 
 #             stackFig = PDA.stack_Map(sD, head, f"{dataName}", sL, lightmode = False, Origin = origin)
 #             PDA.print_Fig(stackFig, outputPath + f"{dataName}_RawRGBMap", Name = [f"{sL[0]}_{sL[1]}_{sL[2]}"], detector = [d])
 #         didx += 1
+
+def NormPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
+    head = Data["head"]
+    PIN = Data["PIN"]
+    I0 = Data["I0"]
+    dataName = path.stem
+    outputPath = generateOutputPath(path, resultPath, nestingType, "NormalizedI0")
+    os.makedirs(outputPath, exist_ok = True)
+    Map, Fig = PDA.Stats2D_plot(PIN / I0, head, f"{dataName}: Transmission (normalized to I0)", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [-]")
+    plt.close('all')
+    PDA.print_Tiff(Map, outputPath + f"{dataName}_NormalizedI0TransmissionMap")
+    if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_NormalizedI0TransmissionMap")
+    PDA.print_Fig(Fig, outputPath + f"{dataName}_NormalizedI0TransmissionMap")
 
 def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "equal", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
