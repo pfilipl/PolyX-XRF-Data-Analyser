@@ -278,7 +278,7 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
             width = sigma_width
         ROI.append([name, idx - width, idx + width])
 
-def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, clabel = "Counts [cps]", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
+def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, Clabel = "Counts [c]", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
     Map = []
     Fig = []
     if not Disp["Selected"]: pos = None
@@ -323,8 +323,8 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 if Disp["Colorbars"]:
                     cb = fig.colorbar(img)
                     cb.set_ticks(np.linspace(max(np.min(sum_signal), Vmin) if Vmin is not None else np.min(sum_signal), min(np.max(sum_signal), Vmax) if Vmax is not None else np.max(sum_signal), len(cb.get_ticks()) - 2))
-                    if clabel:
-                        cb.set_label(clabel)
+                    if Clabel:
+                        cb.set_label(Clabel)
                 ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
                 ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
                 ax1.set_xlabel("X [mm]")
@@ -367,8 +367,8 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             if Disp["Colorbars"]:
                 cb = fig.colorbar(img)
                 cb.set_ticks(np.linspace(max(np.min(max_signal), Vmin) if Vmin is not None else np.min(max_signal), min(np.max(max_signal), Vmax) if Vmax is not None else np.max(max_signal), len(cb.get_ticks()) - 2))
-                if clabel:
-                    cb.set_label(clabel)
+                if Clabel:
+                    cb.set_label(Clabel)
             ax1.set_xticks(np.linspace(0, data.shape[0] - 1, len(ax1.get_xticks()) - 2))
             ax1.set_xticklabels(f"{x:.3f}" for x in np.linspace(head["Xpositions"][0, 0], head["Xpositions"][0, -1], len(ax1.get_xticks())))
             ax1.set_xlabel("X [mm]")
@@ -764,7 +764,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             break
         if log:
             ax1.set_yscale('log')
-        ax1.set_ylabel("Counts [cps]")
+        ax1.set_ylabel("Counts [c]")
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
             ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -959,7 +959,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             break
         if log:
             ax1.set_yscale('log')
-        ax1.set_ylabel("Counts [cps]")
+        ax1.set_ylabel("Counts [c]")
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
             ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -1005,7 +1005,7 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
         ax1.set_title(f'{title.split(": ")[-1]}')
     if log:
         ax1.set_yscale('log')
-    ax1.set_ylabel("Counts [cps]")
+    ax1.set_ylabel("Counts [c]")
     if Calib is None:
         ax1.set_xlim([0, head["bins"][0, 0]])
         ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
@@ -1047,7 +1047,7 @@ def print_Hist(Hist, filename, Name = None, detector = None, Calib = None):
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         file.write(f"# Channel")
         file.write(f"\t" if Calib is None else f"\tEnergy [eV]\t")
-        file.write(f"Counts [cps]\n")
+        file.write(f"Counts [c]\n")
         ch = 1
         for c in Hist[h]:
             file.write(f"{ch:4d}")
@@ -1166,12 +1166,12 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper
     Fig.append(fig)
     return Fig
 
-def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False):
+def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False, Label = "c"):
     if detector is None:
         file = open(filename + ".csv", 'w')
         file.write("# X position [px]\tZ position [px]\tX position [mm]\tZ position [mm]")
         for k in range(len(ROI)):
-            file.write(f"\t{ROI[k][0]} [cps]")
+            file.write(f"\t{ROI[k][0]} [{Label}]")
         for i in range(Map[0].shape[0]):
             for j in range(Map[0].shape[1]):
                 file.write("\n")
@@ -1185,7 +1185,7 @@ def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False):
             file = open(filename + f"_{detectors[d]}.csv", 'w')
             file.write("# X position [px]\tZ position [px]\tX position [mm]\tZ position [mm]")
             for k in range(len(ROI)):
-                file.write(f"\t{ROI[k][0]} [cps]")
+                file.write(f"\t{ROI[k][0]} [{Label}]")
             for i in range(Map[0].shape[0]):
                 for j in range(Map[0].shape[1]):
                     file.write("\n")

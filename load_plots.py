@@ -20,7 +20,7 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         secAxes.set_yticks(Y)
         secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, clabel = "Counts [cps]"):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "Counts [c]"):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -55,7 +55,7 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad 
 
     map.ColorBar = map.figure.colorbar(imgMap)
     map.ColorBar.set_ticks(numpy.linspace(max(numpy.min(sumSignal), Vmin) if Vmin is not None else numpy.min(sumSignal), min(numpy.max(sumSignal), Vmax) if Vmax is not None else numpy.max(sumSignal), len(map.ColorBar.get_ticks()) - 2))
-    if clabel: map.ColorBar.set_label(clabel)
+    if Clabel: map.ColorBar.set_label(Clabel)
 
     if (widget.AreaChanged or widget.PointChanged) and not importLoad:
         if isinstance(pos, list):
@@ -100,16 +100,16 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
 
     plot.draw()
 
-def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis'):
+def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', coefficient = 1):
     if detector != 2 or dataName == "I0": # do not draw statistic data for SDDSum
         map = tab.Canvas
         head = widget.Data["head"]
         Data = widget.Data[dataName]
 
         if isinstance(Data, list):
-            data = Data[detector]
+            data = Data[detector] * coefficient
         else:
-            data = Data
+            data = Data * coefficient
 
         if map.ColorBar: map.ColorBar.remove()
         map.Axes.cla()
@@ -153,7 +153,7 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
     spectrum.Axes.legend()
     if log:
         spectrum.Axes.set_yscale('log')
-    spectrum.Axes.set_ylabel("Counts [cps]")
+    spectrum.Axes.set_ylabel("Counts [c]")
 
     if widget.Calib is None:
         spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
@@ -215,7 +215,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
     imgSpectrum = spectrum.Axes.plot(sumData)
 
     if func == numpy.sum and not widget.PointChanged: spectrum.Axes.set_yscale('log')
-    spectrum.Axes.set_ylabel("Counts [cps]")
+    spectrum.Axes.set_ylabel("Counts [c]")
     spectrum.Axes.get_xaxis().set_visible(True)
     spectrum.Axes.get_yaxis().set_visible(True)
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):

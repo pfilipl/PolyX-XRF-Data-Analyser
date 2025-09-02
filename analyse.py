@@ -379,14 +379,19 @@ def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
+            label = "c/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-        else: norm = [I0, LT]
+            label = "cps"
+        else: 
+            norm = [I0, LT]
+            label = "cps/V"
+        clabel = f"Counts [{label}]"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
         PDA.print_Tiff(Map, outputPath + f"{dataName}_Normalized{nt}TotalSignalMap", detector = detectors)
         if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_Normalized{nt}TotalSignalMap", detector = detectors)
@@ -402,14 +407,19 @@ def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
+            label = "c/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-        else: norm = [I0, LT]
+            label = "cps"
+        else: 
+            norm = [I0, LT]
+            label = "cps/V"
+        clabel = f"Counts [{label}]"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
         try: name = numpy.array(roi)[:, 0]
         except: 
@@ -430,16 +440,21 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
+            label = "c/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-        else: norm = [I0, LT]
+            label = "cps"
+        else: 
+            norm = [I0, LT]
+            label = "cps/V"
+        clabel = f"Counts [{label}]"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
-        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors, Norm = True)
+        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, Norm = True, Label = label)
 
 def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]

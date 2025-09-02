@@ -193,7 +193,7 @@
      <item row="7" column="2">
       <widget class="QCheckBox" name="checkBox_NormTypeI0">
        <property name="text">
-        <string>I0</string>
+        <string>c/V</string>
        </property>
       </widget>
      </item>
@@ -220,7 +220,7 @@
      <item row="8" column="2">
       <widget class="QCheckBox" name="checkBox_NormTypeLT">
        <property name="text">
-        <string>LT</string>
+        <string>cps</string>
        </property>
       </widget>
      </item>
@@ -376,7 +376,7 @@
      <item row="6" column="2">
       <widget class="QCheckBox" name="checkBox_NormTypeI0LT">
        <property name="text">
-        <string>I0 * LT</string>
+        <string>cps/V</string>
        </property>
       </widget>
      </item>
@@ -456,7 +456,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Map normalization</string>
+        <string>Normalization to units</string>
        </property>
       </widget>
      </item>

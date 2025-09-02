@@ -332,9 +332,10 @@ class SingleWindow(QtWidgets.QWidget):
         else:
             if self.LastDetector != mode:
                 self.CurrentDetector = self.LastDetector
-                exec(f"self.Detectors{self.LastDetector}.blockSignals(True)")
-                exec(f"self.Detectors{self.LastDetector}.setChecked(True)")
-                exec(f"self.Detectors{self.LastDetector}.blockSignals(False)")
+                if self.LastDetector is not None:
+                    exec(f"self.Detectors{self.LastDetector}.blockSignals(True)")
+                    exec(f"self.Detectors{self.LastDetector}.setChecked(True)")
+                    exec(f"self.Detectors{self.LastDetector}.blockSignals(False)")
             else:
                 self.LastDetector = None
                 self.CurrentDetector = None
@@ -344,12 +345,16 @@ class SingleWindow(QtWidgets.QWidget):
             self.tabWidget.setTabEnabled(10, True)
             self.tabWidget.setTabEnabled(11, True)
             self.tabWidget.setTabEnabled(12, True)
+            self.radioButton_NormTypeI0LT.setEnabled(True)
+            self.radioButton_NormTypeLT.setEnabled(True)
         else:
             self.tabWidget.setTabEnabled(8, False)
             self.tabWidget.setTabEnabled(9, False)
             self.tabWidget.setTabEnabled(10, False)
             self.tabWidget.setTabEnabled(11, False)
             self.tabWidget.setTabEnabled(12, False)
+            self.radioButton_NormTypeI0LT.setEnabled(False)
+            self.radioButton_NormTypeLT.setEnabled(False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def NormTypeChanged(self, mode = None):
@@ -431,37 +436,46 @@ class SingleWindow(QtWidgets.QWidget):
             cMap = self.MapsConfigColormap.currentText()
 
             if startLoad:
-                if self.CurrentDetector == "SDD1": self.DetectorsSDD1.setChecked(True)
-                elif self.CurrentDetector == "SDD2": self.DetectorsSDD2.setChecked(True)
-                else: self.DetectorsSum.setChecked(True)
+                if self.CurrentDetector is not None:
+                    exec(f'self.Detectors{self.CurrentDetector}.setChecked(True)')
+                    exec(f'self.DetectorChanged(True, self.CurrentDetector)')
+                else:
+                    self.DetectorsSum.click()
 
-            if self.NormType is None: norm = None
+            clabel = "Counts [c"
+            if self.NormType is None: 
+                norm = None
+                clabel = clabel + "]"
             elif self.NormType == "I0":
                 lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
                 lt = [lt, lt, lt]
                 norm = [self.Data["I0"], lt]
+                clabel = clabel + "/V]"
             elif self.NormType == "LT":
                 i0 = numpy.ones(self.Data["I0"].shape)
                 norm = [i0, self.Data["LT"]]
-            else: norm = [self.Data["I0"], self.Data["LT"]]
+                clabel = clabel + "ps]"
+            else: 
+                norm = [self.Data["I0"], self.Data["LT"]]
+                clabel = clabel + "ps/V]"
 
             if self.CurrentDetector == "SDD1": det = 0
             elif self.CurrentDetector == "SDD2": det = 1
             else: det = 2
-            load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+            load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
             load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
             load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
             load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
             load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.PIN, "PIN", det, "PIN [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
-            load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
+            load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap, coefficient = 1e-3)
             load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.ICR, "ICR", det, "ICR [kcps]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.OCR, "OCR", det, "OCR [kcps]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.PlotStats1D(self, self.RC, "RC", "I [mA]", importLoad = importLoad)
             for i in range(14, self.tabWidget.count()):
-                load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+                load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
 
             if not self.Reload.isEnabled(): 
                 self.Reload.setEnabled(True)
@@ -553,20 +567,27 @@ class SingleWindow(QtWidgets.QWidget):
         spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
         cMap = self.MapsConfigColormap.currentText()
 
-        if self.NormType is None: norm = None
+        clabel = "Counts [c"
+        if self.NormType is None: 
+            norm = None
+            clabel = clabel + "]"
         elif self.NormType == "I0":
             lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [self.Data["I0"], lt]
+            clabel = clabel + "/V]"
         elif self.NormType == "LT":
             i0 = numpy.ones(self.Data["I0"].shape)
             norm = [i0, self.Data["LT"]]
-        else: norm = [self.Data["I0"], self.Data["LT"]]
+            clabel = clabel + "ps]"
+        else: 
+            norm = [self.Data["I0"], self.Data["LT"]]
+            clabel = clabel + "ps/V]"
 
         if self.CurrentDetector == "SDD1": det = 0
         elif self.CurrentDetector == "SDD2": det = 1
         else: det = 2
-        load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+        load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
         load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
         load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
         load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
@@ -575,13 +596,13 @@ class SingleWindow(QtWidgets.QWidget):
         load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
         load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.PIN, "PIN", det, "PIN [V]", Aspect = mapAspect, Cmap = cMap)
-        load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", Aspect = mapAspect, Cmap = cMap)
+        load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", Aspect = mapAspect, Cmap = cMap, coefficient = 1e-3)
         load_plots.MapStats2D(self, self.DT, "DT", det, "DT [%]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.ICR, "ICR", det, "ICR [kcps]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.OCR, "OCR", det, "OCR [kcps]", Aspect = mapAspect, Cmap = cMap)
         # load_plots.PlotStats1D(self, self.RC, "RC")
         for i in range(14, self.tabWidget.count()):
-            load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm)
+            load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MapsConfigValue_changed(self):
