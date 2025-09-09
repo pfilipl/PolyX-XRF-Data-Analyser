@@ -11,14 +11,20 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         axes.set_xlim(lim)
         X = numpy.linspace(lim[0], lim[1], len(axes.get_xticks()) - 2).astype(int)
         secAxes.set_xticks(X)
-        secAxes.set_xticklabels(numpy.round(newTicks[X], precision))
+        if not precision:
+            secAxes.set_xticklabels(numpy.rint(newTicks[X]).astype(int))
+        else:
+            secAxes.set_xticklabels(numpy.round(newTicks[X], precision))
     elif mode == "Y":
         lim = axes.get_ylim()
         lim = [min(lim[0], maximum - 1), max(0, lim[1])]
         axes.set_ylim(lim)
         Y = numpy.linspace(lim[0], lim[1], len(axes.get_yticks()) - 2).astype(int)
         secAxes.set_yticks(Y)
-        secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
+        if not precision:
+            secAxes.set_yticklabels(numpy.rint(newTicks[Y]).astype(int))
+        else:
+            secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
 def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "Counts [c]"):
     map = tab.Canvas
@@ -155,14 +161,21 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
         spectrum.Axes.set_yscale('log')
     spectrum.Axes.set_ylabel("Counts [c]")
 
+    # widget.Calib = None
+
     if widget.Calib is None:
-        spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
-        spectrum.Axes.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-        spectrum.Axes.set_xlabel("channel")
-        spectrum.Axes.format_coord = lambda x, y: f'x = {x:d} ch, y = {y:.3e}'
-    else:
-        spectrum.Axes.get_xaxis().set_visible(False)
         spectrum.Axes.get_yaxis().set_visible(True)
+        spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
+        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
+        spectrum.Axes2x.set_xlabel("Channel [ch]")
+        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicks(secAxes, spectrum.Axes, numpy.linspace(0, 4095, 4096), 4096, "X", 0))
+        spectrum.Axes.format_coord = lambda x, y: f'x = {x:.0f} ch, y = {y:.3e}'
+    else:
+        spectrum.Axes.get_xaxis().set_visible(True)
+        spectrum.Axes.get_yaxis().set_visible(True)
+        spectrum.Axes.get_xaxis().tick_top()
+        spectrum.Axes.get_xaxis().set_label_position('top')
+        spectrum.Axes.set_xlabel("Channel [ch]")
         spectrum.Axes.set_xlim([cEmin, cEmax])
         spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
         spectrum.Axes2x.set_xlabel("E [eV]")
