@@ -324,12 +324,12 @@ class BatchWindow(QtWidgets.QWidget):
                 fileContent += f"\nSpectraConfigAspectAuto\tChecked\tTrue"
             else: fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
 
-            fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
+            # fileContent += f"\n\nResultsPath\tText\t{self.ResultsPath.text()}"
 
-            fileContent += "\n\n# -----\n\n## Batch configuration\n# Element name\tProperty\tValue"            
+            # fileContent += "\n\n# -----\n\n## Batch configuration\n# Element name\tProperty\tValue"            
 
-            fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
-            fileContent += f'\nMapsNesting{"2" if self.MapsNesting2.isChecked() else "3"}\tChecked\tTrue'
+            # fileContent += f"\n\nExperimentPath\tText\t{self.ExperimentPath.text()}"
+            # fileContent += f'\nMapsNesting{"2" if self.MapsNesting2.isChecked() else "3"}\tChecked\tTrue'
 
             file.write(fileContent + "\n\n# -----\n\n")
             file.close()
@@ -398,6 +398,7 @@ class BatchWindow(QtWidgets.QWidget):
                             if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             if name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                             if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
+                            if name == "GenHDF5": hdf5 = self.OutputConfig[name]
                             if name == "GenCsvs": csvs = self.OutputConfig[name]
                             continue
                         if name[:4] == "Disp":
@@ -410,6 +411,9 @@ class BatchWindow(QtWidgets.QWidget):
                             exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, csvs = csvs)')
                             if name == "NormROIs" and wiatrowska:
                                 exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
+                        self.Progress.setValue(self.Progress.value() + 1)
+                    if hdf5:
+                        exec(f'analyse.HDF5(self, tempData, path, resultsPath)')
                         self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
 

@@ -238,16 +238,6 @@
        </property>
       </widget>
      </item>
-     <item row="11" column="1">
-      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>SliceQuant</string>
-       </property>
-      </widget>
-     </item>
      <item row="10" column="0">
       <widget class="QLabel" name="label_6">
        <property name="font">
@@ -597,6 +587,23 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item row="11" column="2">
+      <widget class="QCheckBox" name="checkBox_GenWiatrowska">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>SliceQuant</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QCheckBox" name="checkBox_GenHDF5">
+       <property name="text">
+        <string>PyMCA (HDF5)</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

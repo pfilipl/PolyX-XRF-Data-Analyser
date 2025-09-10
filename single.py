@@ -382,7 +382,7 @@ class SingleWindow(QtWidgets.QWidget):
             head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
         except:
             if path == pathlib.Path():
-                QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from empty path.")
+                if not importLoad: QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from empty path.")
             else:
                 QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
         else:
@@ -909,7 +909,7 @@ class SingleWindow(QtWidgets.QWidget):
                 fileContent += f"\nSpectraConfigAspectAuto\tChecked\tTrue"
             else: fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
 
-            fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
+            # fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
             if self.CurrentDetector is not None:
                 fileContent += f"\n\nDetectors{self.CurrentDetector}\tChecked\tTrue"
@@ -931,7 +931,7 @@ class SingleWindow(QtWidgets.QWidget):
                     fileContent += f"\nPointX\tValue\t{self.PointX.value()}"
                     fileContent += f"\nPointZ\tValue\t{self.PointZ.value()}"
 
-            fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
+            # fileContent += f'\n\nMapPath\tText\t{self.MapPath.text() if self.MapPath.text() else ""}'
 
             file.write(fileContent + "\n\n# -----\n\n")
             file.close()
@@ -985,6 +985,7 @@ class SingleWindow(QtWidgets.QWidget):
                         if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         if name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
                         if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
+                        if name == "GenHDF5": hdf5 = self.OutputConfig[name]
                         if name == "GenCsvs": csvs = self.OutputConfig[name]
                         continue
                     if name[:4] == "Disp":
@@ -997,6 +998,9 @@ class SingleWindow(QtWidgets.QWidget):
                         exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, csvs = csvs)')
                         if name == "NormROIs" and wiatrowska:
                             exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
+                    self.Progress.setValue(self.Progress.value() + 1)
+                if hdf5:
+                    exec(f'analyse.HDF5(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 

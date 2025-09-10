@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtCore, uic, QtGui
-import sys, os, numpy, itertools, subprocess, pathlib
+import sys, os, numpy, itertools, subprocess, pathlib, h5py
 import matplotlib.pyplot as plt
 
 import main, PDA
@@ -35,6 +35,7 @@ class Analyse(QtWidgets.QDialog):
                 "DispColorbars"     : True,
                 "DispAxes"          : True,
                 "GenCsvs"           : False,
+                "GenHDF5"           : False,
                 "GenWiatrowska"     : False,
                 "DiagRC"            : True,
                 "DiagSum"           : True,
@@ -532,6 +533,84 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     plt.close('all')
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxSpectrum", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxSpectrum", detector = detectors)
+
+def HDF5(Parent, Data, path, resultPath):
+    dataName = path.stem
+    outputPath = str(resultPath) + str(os.sep)
+    with h5py.File(outputPath + f"{dataName}.h5", "w") as file:
+        grp_header = file.create_group("header")
+        grp_header.create_dataset("TimeStep", data = Data["head"]["dt"])
+        grp_header.create_dataset("Boards", data = Data["head"]["boards"])
+        grp_header.create_dataset("BinsNo", data = Data["head"]["bins"])
+        
+        grp_roi = grp_header.create_group("ROI")
+        ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
+        ds_ROInames = Data["head"]["roi_table"][:, 0]
+        grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
+        grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+        
+        grp_beam = grp_header.create_group("beam")
+        grp_beam.create_dataset("MonoE", data = Data["head"]["monoE"])
+        ds_monoType = grp_beam.create_dataset("MonoType", shape = (1, ),dtype = h5py.string_dtype())
+        ds_monoType = Data["head"]["monotype"]
+        try:
+            grp_beam.create_dataset("TotalAttenuation", data = Data["head"]["TOTALatten"])
+            grp_beam.create_dataset("FrontEndAttenuation", data = Data["head"]["FEatten"])
+            grp_beam.create_dataset("BeamLineAttenuation", data = Data["head"]["BLatten"])
+        except:
+            grp_beam.attrs["attenuation"] = "no data"
+        try:
+            grp_beam.create_dataset("Slit1VetricalGap", data = Data["head"]["s1vg"])
+            grp_beam.create_dataset("Slit2VetricalGap", data = Data["head"]["s2vg"])
+            grp_beam.create_dataset("Slit3VetricalGap", data = Data["head"]["s3vg"])
+            grp_beam.create_dataset("Slit1HorizontalGap", data = Data["head"]["s1hg"])
+            grp_beam.create_dataset("Slit2HorizontalGap", data = Data["head"]["s2hg"])
+            grp_beam.create_dataset("Slit3HorizontalGap", data = Data["head"]["s3hg"])
+        except:
+            grp_beam.attrs["slits"] = "no data"
+        try:
+            ds_I0amp = grp_beam.create_dataset("I0amplification", shape = (1, ),dtype = h5py.string_dtype())
+            ds_I0amp = Data["head"]["pamps"]["pamp"]["sens"][0]
+            ds_PINamp = grp_beam.create_dataset("PINamplification", shape = (1, ),dtype = h5py.string_dtype())
+            ds_PINamp = Data["head"]["femto"]["gain"]
+        except:
+            grp_beam.attrs["I0andPINsignalAmplification"] = "no data"
+        
+        grp_position = grp_header.create_group("positions")      
+        grp_position.create_dataset("ZscanVel", data = Data["head"]["Zvelocity"])
+        grp_position.create_dataset("ZscanStart", data = Data["head"]["Zstartpos"])
+        grp_position.create_dataset("ZscanStep", data = Data["head"]["ZscanStep"])
+        grp_position.create_dataset("ZscanPositions", data = Data["head"]["Zpositions"])
+        grp_position.create_dataset("ZscanPoints", data = Data["head"]["Znpoints"])
+        grp_position.create_dataset("ZscanStop", data = Data["head"]["Zendpos"])
+        grp_position.create_dataset("XscanVel", data = Data["head"]["XscanVel"])
+        grp_position.create_dataset("XscanStop", data = Data["head"]["XscanStop"])
+        grp_position.create_dataset("XscanStep", data = Data["head"]["XscanStep"])
+        grp_position.create_dataset("XscanStart", data = Data["head"]["XscanStart"])
+        grp_position.create_dataset("XscanRange", data = Data["head"]["XscanRange"])
+        grp_position.create_dataset("XscanPulses", data = Data["head"]["XscanPulses"])
+        grp_position.create_dataset("XscanPositions", data = Data["head"]["Xpositions"])
+
+        grp_data = file.create_group("data")
+        grp_data.create_dataset("PINmap", data = Data["PIN"].transpose())
+        grp_data.create_dataset("I0map", data = Data["I0"].transpose())
+        grp_data.create_dataset("StorageRingCurrent", data = Data["RC"])
+        
+        grp_sdd1 = grp_data.create_group("SDD1")
+        grp_sdd1.create_dataset("SpectralData", data = Data["Data"][0].transpose(1, 0, 2))
+        grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
+        grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
+        grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose())
+        grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose())
+        grp_sdd1.create_dataset("DeadTime", data = Data["DT"][0].transpose())
+        
+        grp_sdd1 = grp_data.create_group("SDD2")
+        grp_sdd1.create_dataset("SpectralData", data = Data["Data"][1].transpose(1, 0, 2))
+        grp_sdd1.create_dataset("ICR", data = Data["ICR"][1].transpose())
+        grp_sdd1.create_dataset("OCR", data = Data["OCR"][1].transpose())
+        grp_sdd1.create_dataset("RealTime", data = Data["RT"][1].transpose())
+        grp_sdd1.create_dataset("LiveTime", data = Data["LT"][1].transpose())
+        grp_sdd1.create_dataset("DeadTime", data = Data["DT"][1].transpose())
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
