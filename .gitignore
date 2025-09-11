@@ -173,4 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 PolyX-Data-Analyser_Installer.exe
+PolyX-XRF-Data-Analyser_Installer.exe
 InstallForge.lnk

@@ -1,12 +1,13 @@
 from PyQt6 import QtWidgets, uic
-import sys, os, pathlib
+import sys, os, pathlib, matplotlib
 from scipy import io as sio, optimize as so
+matplotlib.use('QtAgg')
 
 import PDA
 
 try:
     from ctypes import windll
-    myappid = 'SOLARIS.PolyX.PXDA'
+    myappid = 'SOLARIS.PolyX.PXDA.0911'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError:
     pass
