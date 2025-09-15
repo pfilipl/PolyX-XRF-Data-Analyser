@@ -765,19 +765,49 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
         if log:
             ax1.set_yscale('log')
         ax1.set_ylabel("Counts [c]")
+
+        # if calib is None:
+        #     ax1.set_xlim([0, head["bins"][0, 0]])
+        #     ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
+        #     ax1.set_xlabel("channel")
+        # else:
+        #     ax1.set_xlim([cEmin, cEmax])
+        #     Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
+        #     E = []
+        #     for eval in Eval:
+        #         E.append((np.abs(calib - eval)).argmin())
+        #     ax1.set_xticks(E)
+        #     ax1.set_xticklabels(np.round(calib[E], 2))
+        #     ax1.set_xlabel("E [eV]")
+
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
-            ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-            ax1.set_xlabel("channel")
+            ax2 = ax1.secondary_xaxis('bottom')
+            ax2.set_xlabel("Channel [ch]")
+            if Disp["Grid"]: 
+                ax1.get_xaxis().set_visible(True)
+                if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+                ax1.grid(True)
         else:
+            if Disp["ChannelAxis"]:
+                ax1.get_xaxis().set_visible(True)
+                ax1.get_xaxis().tick_top()
+                ax1.get_xaxis().set_label_position('top')
+                ax1.set_xlabel("Channel [ch]")
+            else:
+                ax1.get_xaxis().set_visible(False)
             ax1.set_xlim([cEmin, cEmax])
-            Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
-            E = []
-            for eval in Eval:
-                E.append((np.abs(calib - eval)).argmin())
-            ax1.set_xticks(E)
-            ax1.set_xticklabels(np.round(calib[E], 2))
-            ax1.set_xlabel("E [eV]")
+            ax2 = ax1.secondary_xaxis('bottom')
+            X = np.linspace(cEmin, cEmax, len(ax1.get_xticks())).astype(int)
+            ax1.set_xticks(X)
+            ax2.set_xticks(X)
+            ax2.set_xticklabels(np.round(calib[X], 2))
+            ax2.set_xlabel("E [eV]")
+            if Disp["Grid"]: 
+                ax1.get_xaxis().set_visible(True)
+                if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+                ax1.grid(True)
+
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
@@ -960,19 +990,35 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
         if log:
             ax1.set_yscale('log')
         ax1.set_ylabel("Counts [c]")
+
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
-            ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-            ax1.set_xlabel("channel")
+            ax2 = ax1.secondary_xaxis('bottom')
+            ax2.set_xlabel("Channel [ch]")
+            if Disp["Grid"]: 
+                ax1.get_xaxis().set_visible(True)
+                if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+                ax1.grid(True)
         else:
+            if Disp["ChannelAxis"]:
+                ax1.get_xaxis().set_visible(True)
+                ax1.get_xaxis().tick_top()
+                ax1.get_xaxis().set_label_position('top')
+                ax1.set_xlabel("Channel [ch]")
+            else:
+                ax1.get_xaxis().set_visible(False)
             ax1.set_xlim([cEmin, cEmax])
-            Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
-            E = []
-            for eval in Eval:
-                E.append((np.abs(calib - eval)).argmin())
-            ax1.set_xticks(E)
-            ax1.set_xticklabels(np.round(calib[E], 2))
-            ax1.set_xlabel("E [eV]")
+            ax2 = ax1.secondary_xaxis('bottom')
+            X = np.linspace(cEmin, cEmax, len(ax1.get_xticks())).astype(int)
+            ax1.set_xticks(X)
+            ax2.set_xticks(X)
+            ax2.set_xticklabels(np.round(calib[X], 2))
+            ax2.set_xlabel("E [eV]")
+            if Disp["Grid"]: 
+                ax1.get_xaxis().set_visible(True)
+                if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+                ax1.grid(True)
+
         ax1.set_aspect(Aspect)
         Hist.append(hist)
         Fig.append(fig)
@@ -1006,19 +1052,35 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
     if log:
         ax1.set_yscale('log')
     ax1.set_ylabel("Counts [c]")
+    
     if Calib is None:
         ax1.set_xlim([0, head["bins"][0, 0]])
-        ax1.set_xticks(range(0, head["bins"][0, 0] + 1, math.floor(head["bins"][0, 0]/4)))
-        ax1.set_xlabel("channel")
+        ax2 = ax1.secondary_xaxis('bottom')
+        ax2.set_xlabel("Channel [ch]")
+        if Disp["Grid"]: 
+            ax1.get_xaxis().set_visible(True)
+            if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+            ax1.grid(True)
     else:
+        if Disp["ChannelAxis"]:
+            ax1.get_xaxis().set_visible(True)
+            ax1.get_xaxis().tick_top()
+            ax1.get_xaxis().set_label_position('top')
+            ax1.set_xlabel("Channel [ch]")
+        else:
+            ax1.get_xaxis().set_visible(False)
         ax1.set_xlim([cEmin, cEmax])
-        Eval = np.linspace(Emin * 1000, Emax * 1000, 7)
-        E = []
-        for eval in Eval:
-            E.append((np.abs(Calib - eval)).argmin())
-        ax1.set_xticks(E)
-        ax1.set_xticklabels(np.round(Calib[E], 2))
-        ax1.set_xlabel("E [eV]")
+        ax2 = ax1.secondary_xaxis('bottom')
+        X = np.linspace(cEmin, cEmax, len(ax1.get_xticks())).astype(int)
+        ax1.set_xticks(X)
+        ax2.set_xticks(X)
+        ax2.set_xticklabels(np.round(Calib[X], 2))
+        ax2.set_xlabel("E [eV]")
+        if Disp["Grid"]: 
+            ax1.get_xaxis().set_visible(True)
+            if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
+            ax1.grid(True)
+
     ax1.set_aspect(Aspect)
     Fig.append(fig)
     if not Disp["Axes"]:

@@ -143,7 +143,7 @@ class BatchWindow(QtWidgets.QWidget):
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
-            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [ML3.3/Be]\n"
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [SDD1/SDD2]\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)
@@ -353,7 +353,7 @@ class BatchWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 15) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 5 display setting + 2 generates
+                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 17) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
                     try:
@@ -361,11 +361,11 @@ class BatchWindow(QtWidgets.QWidget):
                     except:
                         if path == "":
                             QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from empty path.")
-                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 15))
+                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 17))
                             continue
                         else:
                             QtWidgets.QMessageBox.warning(self, "Map loading", f"It is impossible to load the map from path:\n{path}")
-                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 15))
+                            self.Progress.setMaximum(self.Progress.maximum() - (len(self.OutputConfig.keys()) - 17))
                             continue
                     else:
                         tempData = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
@@ -414,7 +414,7 @@ class BatchWindow(QtWidgets.QWidget):
                         self.Progress.setValue(self.Progress.value() + 1)
                     if hdf5:
                         exec(f'analyse.HDF5(self, tempData, path, resultsPath)')
-                        self.Progress.setValue(self.Progress.value() + 1)
+                    self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
 
                 dialog = QtWidgets.QMessageBox(self)

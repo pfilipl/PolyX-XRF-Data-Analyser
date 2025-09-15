@@ -72,12 +72,16 @@ class SingleWindow(QtWidgets.QWidget):
         self.SpectraConfigEnergyStop    = self.doubleSpinBox_SpectraConfigEnergyStop
         self.SpectraConfigAspectAuto    = self.pushButton_SpectraConfigAspectAuto
         self.SpectraConfigAspectValue   = self.doubleSpinBox_SpectraConfigAspectValue
+        self.SpectraConfigChannelAxis   = self.checkBox_SpectraConfigChannelAxis
+        self.SpectraConfigGrid          = self.checkBox_SpectraConfigGrid
 
         self.SpectraConfigEnergyAuto.toggled.connect(self.ConfigReload)
         self.SpectraConfigEnergyStart.valueChanged.connect(self.SpectraConfigEnergy_changed)
         self.SpectraConfigEnergyStop.valueChanged.connect(self.SpectraConfigEnergy_changed)
         self.SpectraConfigAspectAuto.toggled.connect(self.ConfigReload)
         self.SpectraConfigAspectValue.valueChanged.connect(self.SpectraConfigAspect_changed)
+        self.SpectraConfigChannelAxis.checkStateChanged.connect(self.ConfigReload)
+        self.SpectraConfigGrid.checkStateChanged.connect(self.ConfigReload)
 
         # Tabs
         self.TotalSignal        = self.tab_TotalSignal
@@ -463,10 +467,10 @@ class SingleWindow(QtWidgets.QWidget):
             elif self.CurrentDetector == "SDD2": det = 1
             else: det = 2
             load_plots.MapData(self, self.TotalSignal, det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
-            load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
-            load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
-            load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-            load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+            load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+            load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+            load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, startLoad = startLoad, importLoad = importLoad, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+            load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, startLoad = startLoad, importLoad = importLoad, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
             load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.PIN, "PIN", det, "PIN [V]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap)
             load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", importLoad = importLoad, Aspect = mapAspect, Cmap = cMap, coefficient = 1e-3)
@@ -588,12 +592,12 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.CurrentDetector == "SDD2": det = 1
         else: det = 2
         load_plots.MapData(self, self.TotalSignal, det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
-        load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect)
-        load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = True, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
-        load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect)
+        load_plots.SpectrumCheck(self, self.SumCheckSpectrum, numpy.sum, Emin = eMin, Emax = eMax, log = True, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+        load_plots.SpectrumCheck(self, self.MaxCheckSpectrum, numpy.max, Emin = eMin, Emax = eMax, log = False, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+        load_plots.Spectrum(self, self.SumSpectrum, numpy.sum, det, pos = None, roi = ROI, startLoad = True, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+        load_plots.Spectrum(self, self.MaxSpectrum, numpy.max, det, pos = None, roi = ROI, startLoad = True, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+        load_plots.Spectrum(self, self.ExtSumSpectrum, numpy.sum, det, pos = POS, roi = ROI, startLoad = False, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
+        load_plots.Spectrum(self, self.ExtMaxSpectrum, numpy.max, det, pos = POS, roi = ROI, startLoad = False, peaks = None, Emin = eMin, Emax = eMax, Aspect = spectraAspect, ChannelAxis = self.SpectraConfigChannelAxis.isChecked(), Grid = self.SpectraConfigGrid.isChecked())
         load_plots.MapStats2D(self, self.I0, "I0", det, "I0 [V]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.PIN, "PIN", det, "PIN [V]", Aspect = mapAspect, Cmap = cMap)
         load_plots.MapStats2D(self, self.LT, "LT", det, "LT [ms]", Aspect = mapAspect, Cmap = cMap, coefficient = 1e-3)
@@ -682,7 +686,7 @@ class SingleWindow(QtWidgets.QWidget):
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
-            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [ML3.3/Be]\n"
+            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [SDD1/SDD2]\n"
             for row in range(self.ROIs.rowCount()):
                 fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
             file.write(fileContent)
@@ -908,6 +912,10 @@ class SingleWindow(QtWidgets.QWidget):
             if self.SpectraConfigAspectAuto.isChecked():
                 fileContent += f"\nSpectraConfigAspectAuto\tChecked\tTrue"
             else: fileContent += f"\nSpectraConfigAspectValue\tValue\t{self.SpectraConfigAspectValue.value()}"
+            if self.SpectraConfigChannelAxis.isChecked():
+                fileContent += f"\nSpectraConfigChannelAxis\tChecked\tTrue"
+            if self.SpectraConfigGrid.isChecked():
+                fileContent += f"\nSpectraConfigGrid\tChecked\tTrue"
 
             # fileContent += f'\n\nResultsPath\tText\t{self.ResultsPath.text() if self.ResultsPath.text() else ""}'
 
@@ -949,7 +957,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 15) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 5 display setting + 2 generates
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 17) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -1001,7 +1009,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.Progress.setValue(self.Progress.value() + 1)
                 if hdf5:
                     exec(f'analyse.HDF5(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath)')
-                    self.Progress.setValue(self.Progress.value() + 1)
+                self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 
                 dialog = QtWidgets.QMessageBox(self)

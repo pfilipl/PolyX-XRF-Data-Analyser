@@ -34,6 +34,8 @@ class Analyse(QtWidgets.QDialog):
                 "DispTitles"        : True,
                 "DispColorbars"     : True,
                 "DispAxes"          : True,
+                "DispChannelAxis"   : False,
+                "DispGrid"          : False,
                 "GenCsvs"           : False,
                 "GenHDF5"           : False,
                 "GenWiatrowska"     : False,
