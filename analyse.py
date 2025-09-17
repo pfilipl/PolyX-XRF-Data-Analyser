@@ -546,15 +546,24 @@ def HDF5(Parent, Data, path, resultPath):
         grp_header.create_dataset("BinsNo", data = Data["head"]["bins"])
         
         grp_roi = grp_header.create_group("ROI")
-        ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
-        ds_ROInames = Data["head"]["roi_table"][:, 0]
-        grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
-        grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+        try:
+            ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_listbins"].shape[0], ), dtype = h5py.string_dtype())
+            ds_ROInames = Data["head"]["roi_listbins"][:, 1]
+            grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
+            grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
+        except:
+            ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
+            ds_ROInames = Data["head"]["roi_table"][:, 0]
+            grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
+            grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
         
         grp_beam = grp_header.create_group("beam")
-        grp_beam.create_dataset("MonoE", data = Data["head"]["monoE"])
-        ds_monoType = grp_beam.create_dataset("MonoType", shape = (1, ),dtype = h5py.string_dtype())
-        ds_monoType = Data["head"]["monotype"]
+        try:
+            grp_beam.create_dataset("MonoE", data = Data["head"]["monoE"])
+            ds_monoType = grp_beam.create_dataset("MonoType", shape = (1, ),dtype = h5py.string_dtype())
+            ds_monoType = Data["head"]["monotype"]
+        except:
+            grp_beam.attrs["monochromatization"] = "no data"
         try:
             grp_beam.create_dataset("TotalAttenuation", data = Data["head"]["TOTALatten"])
             grp_beam.create_dataset("FrontEndAttenuation", data = Data["head"]["FEatten"])
@@ -581,7 +590,10 @@ def HDF5(Parent, Data, path, resultPath):
         grp_position = grp_header.create_group("positions")      
         grp_position.create_dataset("ZscanVel", data = Data["head"]["Zvelocity"])
         grp_position.create_dataset("ZscanStart", data = Data["head"]["Zstartpos"])
-        grp_position.create_dataset("ZscanStep", data = Data["head"]["ZscanStep"])
+        try:
+            grp_position.create_dataset("ZscanStep", data = Data["head"]["ZscanStep"])
+        except:
+            grp_position.attrs["ZscanStep"] = "no data"
         grp_position.create_dataset("ZscanPositions", data = Data["head"]["Zpositions"])
         grp_position.create_dataset("ZscanPoints", data = Data["head"]["Znpoints"])
         grp_position.create_dataset("ZscanStop", data = Data["head"]["Zendpos"])

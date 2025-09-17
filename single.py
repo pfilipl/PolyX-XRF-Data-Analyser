@@ -395,7 +395,7 @@ class SingleWindow(QtWidgets.QWidget):
             try:
                 self.monoE = head["monoE"][0][0]
                 self.SpectraConfigEnergyStop.blockSignals(True)
-                self.SpectraConfigEnergyStop.setValue(self.monoE / 1000) # widma do energii mono
+                self.SpectraConfigEnergyStop.setValue(self.monoE / 1000 + 1) # widma do energii mono
                 self.SpectraConfigEnergyStop.blockSignals(False)
             except:
                 self.monoE = None
@@ -432,7 +432,7 @@ class SingleWindow(QtWidgets.QWidget):
             mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
             if self.Calib is not None:
                 eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-                eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
+                eMax = self.monoE / 1000 + 1 if self.SpectraConfigEnergyAuto.isChecked() and self.monoE is not None else self.SpectraConfigEnergyStop.value() # widma do energii mono
             else:
                 eMin = 0.0
                 eMax = None
@@ -546,7 +546,7 @@ class SingleWindow(QtWidgets.QWidget):
             info = f"map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} x {numpy.round(head["Zpositions"][0, -1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} x {len(head["Zpositions"][0, :])} px)"
             info += f"\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} x {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um"
             info += f"\ntime per pixel: \t {numpy.round(head["dt"][0, 0] * 1000, 3)} ms"
-            info += f"\ntotal acquisition time: \t {numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0], 3)} s"
+            info += f"\ntotal acquisition time: \t {numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0], 3)} s ({numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0] / 3600, 3)} h)"
             # info += f"\nmeasurement time: \t {} s"
             self.label_HelpDescription.setText(info)
             self.label_HelpDescription.show()
@@ -574,7 +574,7 @@ class SingleWindow(QtWidgets.QWidget):
         mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
         if self.Calib is not None:
             eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-            eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
+            eMax = self.monoE / 1000 + 1 if self.SpectraConfigEnergyAuto.isChecked() and self.monoE is not None else self.SpectraConfigEnergyStop.value() # widma do energii mono
         else:
             eMin = 0.0
             eMax = None
@@ -986,7 +986,7 @@ class SingleWindow(QtWidgets.QWidget):
                 mapAspect = 'auto' if self.MapsConfigAspectAuto.isChecked() else self.MapsConfigAspectValue.value()
                 if self.Calib is not None:
                     eMin = 0.0 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStart.value()
-                    eMax = self.monoE / 1000 if self.SpectraConfigEnergyAuto.isChecked() else self.SpectraConfigEnergyStop.value() # widma do energii mono
+                    eMax = self.monoE / 1000 + 1 if self.SpectraConfigEnergyAuto.isChecked() and self.monoE is not None else self.SpectraConfigEnergyStop.value() # widma do energii mono
                 else:
                     eMin = 0.0
                     eMax = None
