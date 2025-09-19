@@ -190,26 +190,26 @@ class BatchWindow(QtWidgets.QWidget):
         self.PathsList.clear()
         experimentPath = pathlib.Path(self.ExperimentPath.text())
         resultsPath = pathlib.Path(self.ResultsPath.text())
-        if experimentPath == resultsPath:
-            QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
-            self.ResultsPath.blockSignals(True)
-            self.ResultsPath.setText(str(pathlib.Path(self.ExperimentPath.text()).parent))
-            self.ResultsPath.blockSignals(False)
-        else:
-            for mainPath in experimentPath.iterdir():
-                if mainPath != resultsPath and mainPath.is_dir():
-                    if self.MapsNesting2.isChecked():
-                        self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}"))
-                        self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                        self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
-                        self.Paths.append(experimentPath / mainPath)
-                    elif self.MapsNesting3.isChecked():
-                        for path in mainPath.iterdir():
-                            if path != resultsPath and path.is_dir():
-                                self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
-                                self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
-                                self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
-                                self.Paths.append(experimentPath / mainPath / path)
+        # if experimentPath == resultsPath:
+        #     QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
+        #     self.ResultsPath.blockSignals(True)
+        #     self.ResultsPath.setText(str(pathlib.Path(self.ExperimentPath.text()).parent))
+        #     self.ResultsPath.blockSignals(False)
+        # else:
+        for mainPath in experimentPath.iterdir():
+            if mainPath != resultsPath and mainPath.is_dir():
+                if self.MapsNesting2.isChecked():
+                    self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}"))
+                    self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                    self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
+                    self.Paths.append(experimentPath / mainPath)
+                elif self.MapsNesting3.isChecked():
+                    for path in mainPath.iterdir():
+                        if path != resultsPath and path.is_dir():
+                            self.PathsList.insertItem(self.PathsList.currentRow() + 1, QtWidgets.QListWidgetItem(f"{str(mainPath).split(os.sep)[-1]}{os.sep}{str(path).split(os.sep)[-1]}"))
+                            self.PathsList.setCurrentRow(self.PathsList.currentRow() + 1)
+                            self.PathsList.currentItem().setCheckState(QtCore.Qt.CheckState.Checked)
+                            self.Paths.append(experimentPath / mainPath / path)
         if len(self.Paths): self.Analyse.setEnabled(True)
         else: self.Analyse.setEnabled(False)
 
@@ -219,7 +219,8 @@ class BatchWindow(QtWidgets.QWidget):
             self.ExperimentPath.blockSignals(True)
             self.ResultsPath.blockSignals(True)
             self.ExperimentPath.setText(path)
-            self.ResultsPath.setText(str(pathlib.Path(path).parent))
+            # self.ResultsPath.setText(str(pathlib.Path(path).parent))
+            self.ResultsPath.setText(str(pathlib.Path(path)))
             self.ExperimentPath.blockSignals(False)
             self.ResultsPath.blockSignals(False)
             self.LoadExperiment()
@@ -256,13 +257,13 @@ class BatchWindow(QtWidgets.QWidget):
 
     def ResultsPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.ResultsPath.text())
-        if path == self.ExperimentPath.text():
-            QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
-        else:
-            self.ResultsPath.blockSignals(True)
-            self.ResultsPath.setText(path)
-            self.ResultsPath.blockSignals(False)
-            # self.LoadExperiment()
+        # if path == self.ExperimentPath.text():
+        #     QtWidgets.QMessageBox.warning(self, "Batch", f"Results path must be different than Experiment path:\n{self.ExperimentPath.text()}")
+        # else:
+        self.ResultsPath.blockSignals(True)
+        self.ResultsPath.setText(path)
+        self.ResultsPath.blockSignals(False)
+        # self.LoadExperiment()
 
     def ImportConfig_clicked(self, checked, fileName):
         if fileName is None:

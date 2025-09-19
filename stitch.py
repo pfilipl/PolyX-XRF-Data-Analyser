@@ -203,9 +203,9 @@ class StitchWindow(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, "Stitch", f"It is impossible to save output files on an empty path.")
         else:
             QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-            if self.TopMap is not None and self.BottomMap is not None and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
+            if (self.TopMap is not None) and (self.BottomMap is not None) and self.TopMap.Head["XscanPulses"] != self.BottomMap.Head["XscanPulses"]:
                 QtWidgets.QMessageBox.warning(self, "Stitch", f'It is impossible to stitch maps of various X dimensions ({self.TopMap.Head["XscanPulses"][0][0]} vs {self.BottomMap.Head["XscanPulses"][0][0]}).')
-            elif self.TopMap is not None and self.BottomMap is None:
+            elif (self.TopMap is not None) and (self.BottomMap is None):
                 dataName = resultPath.stem
                 self.TopMap = MatData(pathlib.Path(self.TopMapPath.text()))
                 head = self.TopMap.Head.copy()
@@ -215,7 +215,7 @@ class StitchWindow(QtWidgets.QWidget):
                 scipy.io.savemat(f"{resultPath}/{dataName}_HEADER.mat", head)
                 for i in range(self.TopMap.NumberOfFiles - self.TopMapOffset.value()):
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", self.TopMap.Data[i])
-            elif self.BottomMap is not None and self.TopMap is None:
+            elif (self.BottomMap is not None) and self.TopMap is None:
                 dataName = resultPath.stem
                 self.BottomMap = MatData(pathlib.Path(self.BottomMapPath.text()))
                 head = self.BottomMap.Head.copy()
@@ -258,7 +258,7 @@ class StitchWindow(QtWidgets.QWidget):
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", data)
                 for i in range(self.BottomMapOffset.value(), self.BottomMap.NumberOfFiles):
                     data = self.BottomMap.Data[i].copy()
-                    if self.BottomMapOffset.value() + self.TopMap.NumberOfFiles - self.TopMapOffset.value() % 2 == 1:
+                    if (self.BottomMapOffset.value() + self.TopMap.NumberOfFiles + 1 - self.TopMapOffset.value()) % 2 == 1:
                         data["dane1line"][0, :, :]  = data["dane1line"][0, :, :][::-1]
                         data["dane1line"][1, :, :]  = data["dane1line"][1, :, :][::-1]
                         data["stats1line"][0, :, 2] = data["stats1line"][0, :, 2][::-1]

@@ -537,19 +537,19 @@ class SingleWindow(QtWidgets.QWidget):
             self.AreaZ1.blockSignals(False)
             self.AreaZ2.blockSignals(False)
 
-        if startLoad:
-            self.PointChanged = False
-            self.AreaChanged = False
+            if startLoad:
+                self.PointChanged = False
+                self.AreaChanged = False
 
-            self.label_Help.setText("Map info:")
-            self.label_Help.show()
-            info = f"map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} x {numpy.round(head["Zpositions"][0, -1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} x {len(head["Zpositions"][0, :])} px)"
-            info += f"\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} x {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um"
-            info += f"\ntime per pixel: \t {numpy.round(head["dt"][0, 0] * 1000, 3)} ms"
-            info += f"\ntotal acquisition time: \t {numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0], 3)} s ({numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0] / 3600, 3)} h)"
-            # info += f"\nmeasurement time: \t {} s"
-            self.label_HelpDescription.setText(info)
-            self.label_HelpDescription.show()
+                self.label_Help.setText("Map info:")
+                self.label_Help.show()
+                info = f"map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} x {numpy.round(head["Zpositions"][0, -1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} x {len(head["Zpositions"][0, :])} px)"
+                info += f"\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} x {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um"
+                info += f"\ntime per pixel: \t {numpy.round(head["dt"][0, 0] * 1000, 3)} ms"
+                info += f"\ntotal acquisition time: \t {numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0], 3)} s ({numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0] / 3600, 3)} h)"
+                # info += f"\nmeasurement time: \t {} s"
+                self.label_HelpDescription.setText(info)
+                self.label_HelpDescription.show()
 
         QtGui.QGuiApplication.restoreOverrideCursor()
 
