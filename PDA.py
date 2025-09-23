@@ -164,9 +164,11 @@ def data_load(path):
     I0 = []
     RC = []
     if isinstance(path, pathlib.Path):
-        number_of_files = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        # number_of_files = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        number_of_files = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:len(dataname)] == dataname and len(name.stem) == len(dataname) + 5)]) # "_0000"
     else:
-        number_of_files = len([name for name in os.listdir(path) if (os.path.isfile(os.path.join(path, name)) and os.path.splitext(name)[-1].lower() == ".mat" and os.path.splitext(name)[0][:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        # number_of_files = len([name for name in os.listdir(path) if (os.path.isfile(os.path.join(path, name)) and os.path.splitext(name)[-1].lower() == ".mat" and os.path.splitext(name)[0][:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        number_of_files = len([name for name in os.listdir(path) if (os.path.isfile(os.path.join(path, name)) and os.path.splitext(name)[-1].lower() == ".mat" and os.path.splitext(name)[0][:len(dataname)] == dataname and len(os.path.splitext(name)[0]) == len(dataname) + 5)]) # "_0000"
     if number_of_files > 0:
         for i in range(0, number_of_files):
             if isinstance(path, pathlib.Path):
@@ -187,21 +189,26 @@ def data_load(path):
             dt2 = (1 - ocr2 / icr2) * 100
             pin = mat["PIN_map"][i, :]
             i0 = mat["I0_map"][i, :]
-            Data1.append(data1) if i % 2 == 0 else Data1.append(data1[::-1])     # [z, x, c]
-            Data2.append(data2) if i % 2 == 0 else Data2.append(data2[::-1])     # [z, x, c]
-            ICR1.append(icr1) if i % 2 == 0 else ICR1.append(icr1[::-1])
-            ICR2.append(icr2) if i % 2 == 0 else ICR2.append(icr2[::-1])
-            OCR1.append(ocr1) if i % 2 == 0 else OCR1.append(ocr1[::-1])
-            OCR2.append(ocr2) if i % 2 == 0 else OCR2.append(ocr2[::-1])
-            RT1.append(rt1) if i % 2 == 0 else RT1.append(rt1[::-1])
-            RT2.append(rt2) if i % 2 == 0 else RT2.append(rt2[::-1])
-            LT1.append(lt1) if i % 2 == 0 else LT1.append(lt1[::-1])
-            LT2.append(lt2) if i % 2 == 0 else LT2.append(lt2[::-1])
-            DT1.append(dt1) if i % 2 == 0 else DT1.append(dt1[::-1])
-            DT2.append(dt2) if i % 2 == 0 else DT2.append(dt2[::-1])
-            PIN.append(pin) if i % 2 == 0 else PIN.append(pin[::-1])
-            I0.append(i0) if i % 2 == 0 else I0.append(i0[::-1])
-            RC.extend(mat["srcurrent"][0])
+
+            if i == 0 or data1.shape == Data1[-1].shape:
+                Data1.append(data1) if i % 2 == 0 else Data1.append(data1[::-1])     # [z, x, c]
+                Data2.append(data2) if i % 2 == 0 else Data2.append(data2[::-1])     # [z, x, c]
+                ICR1.append(icr1) if i % 2 == 0 else ICR1.append(icr1[::-1])
+                ICR2.append(icr2) if i % 2 == 0 else ICR2.append(icr2[::-1])
+                OCR1.append(ocr1) if i % 2 == 0 else OCR1.append(ocr1[::-1])
+                OCR2.append(ocr2) if i % 2 == 0 else OCR2.append(ocr2[::-1])
+                RT1.append(rt1) if i % 2 == 0 else RT1.append(rt1[::-1])
+                RT2.append(rt2) if i % 2 == 0 else RT2.append(rt2[::-1])
+                LT1.append(lt1) if i % 2 == 0 else LT1.append(lt1[::-1])
+                LT2.append(lt2) if i % 2 == 0 else LT2.append(lt2[::-1])
+                DT1.append(dt1) if i % 2 == 0 else DT1.append(dt1[::-1])
+                DT2.append(dt2) if i % 2 == 0 else DT2.append(dt2[::-1])
+                PIN.append(pin) if i % 2 == 0 else PIN.append(pin[::-1])
+                I0.append(i0) if i % 2 == 0 else I0.append(i0[::-1])
+                RC.extend(mat["srcurrent"][0])
+            else:
+                continue
+
         Data1 = np.array(Data1).transpose((1, 0, 2))    # [x, z, c]
         Data2 = np.array(Data2).transpose((1, 0, 2))    # [x, z, c]
         ICR1 = np.array(ICR1).transpose()
