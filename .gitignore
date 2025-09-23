@@ -175,3 +175,4 @@ cython_debug/
 PolyX-Data-Analyser_Installer.exe
 PolyX-XRF-Data-Analyser_Installer.exe
 InstallForge.lnk
+.vscode/settings.json
