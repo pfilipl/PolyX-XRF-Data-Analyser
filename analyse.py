@@ -185,16 +185,16 @@ NestingTypes = {
 }
 
 def generateOutputPath(path, resultPath, nestingType, outputType):
-    if nestingType   == "OtLMO" : outputPath = str(resultPath) + str(os.sep) + outputType + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "LOtMO" : outputPath = str(resultPath) + str(os.sep) + path.parents[0].stem + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "LMOtO" : outputPath = str(resultPath) + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
-    elif nestingType == "LMO"   : outputPath = str(resultPath) + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "OtMO"  : outputPath = str(resultPath) + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "MOtO"  : outputPath = str(resultPath) + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
-    elif nestingType == "MO"    : outputPath = str(resultPath) + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "OtO"   : outputPath = str(resultPath) + str(os.sep) + outputType + str(os.sep)
-    elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep)
-    elif nestingType == "W"     : outputPath = str(resultPath) + str(os.sep) + "SliceQuant" + str(os.sep) + path.stem + str(os.sep)
+    if nestingType   == "OtLMO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
+    elif nestingType == "LOtMO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
+    elif nestingType == "LMOtO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
+    elif nestingType == "LMO"   : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
+    elif nestingType == "OtMO"  : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
+    elif nestingType == "MOtO"  : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
+    elif nestingType == "MO"    : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + str(os.sep)
+    elif nestingType == "OtO"   : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep)
+    elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep)
+    elif nestingType == "W"     : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + "SliceQuant" + str(os.sep) + path.stem + str(os.sep)
     return outputPath
 
 def DiagRC(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):

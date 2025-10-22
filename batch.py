@@ -10,6 +10,10 @@ class BatchWindow(QtWidgets.QWidget):
         super(BatchWindow, self).__init__(parent)
         uic.loadUi(basedir / "batch.ui", self)
 
+        # Misc
+        self.PointChanged       = False
+        self.AreaChanged        = False
+        
         # Detectors
         self.DetectorsSDD1              = self.pushButton_DetectorsSDD1
         self.DetectorsSDD2              = self.pushButton_DetectorsSDD2
@@ -431,7 +435,7 @@ class BatchWindow(QtWidgets.QWidget):
                 if dialog.clickedButton() == button:
                 # dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
                 # if dialog == QtWidgets.QMessageBox.StandardButton.Open:
-                    analyse.OpenDirectory(resultsPath)
+                    analyse.OpenDirectory(pathlib.Path(str(resultsPath) + str(os.sep) + "PXDA_Export"))
 
     def ResetAll_clicked(self):
         if QtWidgets.QMessageBox.question(self, "Batch", f"Do you surely want to reset entire BATCH tab?") == QtWidgets.QMessageBox.StandardButton.Yes:

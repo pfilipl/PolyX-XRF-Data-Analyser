@@ -1039,7 +1039,7 @@ class SingleWindow(QtWidgets.QWidget):
                 if dialog.clickedButton() == button:
                 # dialog = QtWidgets.QMessageBox.information(self, "Analyse", f"Analysis completed!", QtWidgets.QMessageBox.StandardButton.Open | QtWidgets.QMessageBox.StandardButton.Ok, QtWidgets.QMessageBox.StandardButton.Ok)
                 # if dialog == QtWidgets.QMessageBox.StandardButton.Open:
-                    analyse.OpenDirectory(resultsPath)
+                    analyse.OpenDirectory(pathlib.Path(str(resultsPath) + str(os.sep) + "PXDA_Export"))
 
     def ResetAll_clicked(self):
         if QtWidgets.QMessageBox.question(self, "Single", f"Do you surely want to reset entire SINGLE tab?") == QtWidgets.QMessageBox.StandardButton.Yes:
