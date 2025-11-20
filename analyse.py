@@ -539,9 +539,10 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxSpectrum", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxSpectrum", detector = detectors)
 
-def HDF5(Parent, Data, path, resultPath):
+def HDF5(Parent, Data, path, resultPath, batch = False):
     dataName = path.stem
-    outputPath = str(resultPath) + str(os.sep)
+    outputPath = str(resultPath) + (f"{str(os.sep) + dataName + str(os.sep)}" if batch else str(os.sep)) + "PXDA_Export" + str(os.sep)
+    os.makedirs(outputPath, exist_ok = True)
     with h5py.File(outputPath + f"{dataName}.h5", "w") as file:
         grp_header = file.create_group("header")
         grp_header.create_dataset("TimeStep", data = Data["head"]["dt"])
@@ -620,14 +621,16 @@ def HDF5(Parent, Data, path, resultPath):
         grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose())
         grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose())
         grp_sdd1.create_dataset("DeadTime", data = Data["DT"][0].transpose())
+        grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][0].transpose()))
         
-        grp_sdd1 = grp_data.create_group("SDD2")
-        grp_sdd1.create_dataset("SpectralData", data = Data["Data"][1].transpose(1, 0, 2))
-        grp_sdd1.create_dataset("ICR", data = Data["ICR"][1].transpose())
-        grp_sdd1.create_dataset("OCR", data = Data["OCR"][1].transpose())
-        grp_sdd1.create_dataset("RealTime", data = Data["RT"][1].transpose())
-        grp_sdd1.create_dataset("LiveTime", data = Data["LT"][1].transpose())
-        grp_sdd1.create_dataset("DeadTime", data = Data["DT"][1].transpose())
+        grp_sdd2 = grp_data.create_group("SDD2")
+        grp_sdd2.create_dataset("SpectralData", data = Data["Data"][1].transpose(1, 0, 2))
+        grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
+        grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
+        grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose())
+        grp_sdd2.create_dataset("LiveTime", data = Data["LT"][1].transpose())
+        grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
+        grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][1].transpose()))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

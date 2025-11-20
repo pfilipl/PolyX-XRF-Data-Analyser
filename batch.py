@@ -418,7 +418,7 @@ class BatchWindow(QtWidgets.QWidget):
                                 exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                         self.Progress.setValue(self.Progress.value() + 1)
                     if hdf5:
-                        exec(f'analyse.HDF5(self, tempData, path, resultsPath)')
+                        exec(f'analyse.HDF5(self, tempData, path, resultsPath, True)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
 
