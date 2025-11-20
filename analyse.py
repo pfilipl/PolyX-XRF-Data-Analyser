@@ -25,7 +25,7 @@ class Analyse(QtWidgets.QDialog):
                 "DetectorsSDD2"     : detectorsSDD2,
                 "DetectorsSum"      : detectorsSum,
                 "Single"            : "Output type > Output",
-                "Batch"             : "Experiment/Load > Map > Output type > Output",
+                "Batch"             : "BatchMap > Output type > Output",
                 "NormTypeI0LT"      : True,
                 "NormTypeI0"        : False,
                 "NormTypeLT"        : False,
@@ -179,20 +179,23 @@ NestingTypes = {
     "Experiment/Load > Map > Output"                : "LMO",
     "Output type > Map > Output"                    : "OtMO",
     "Map > Output type > Output"                    : "MOtO",
+    "BatchMap > Output type > Output"               : "BOtO",
     "Map > Output"                                  : "MO",
     "Output type > Output"                          : "OtO",
     "Output"                                        : "O"
 }
 
 def generateOutputPath(path, resultPath, nestingType, outputType):
-    if nestingType   == "OtLMO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
+    if nestingType == "BOtO"  : outputPath = str(resultPath) + str(os.sep) + path.stem + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep)
+    elif nestingType == "OtO"   : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep)
+    
+    elif nestingType == "OtLMO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
     elif nestingType == "LOtMO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
     elif nestingType == "LMOtO" : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
     elif nestingType == "LMO"   : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.parents[0].stem + str(os.sep) + path.stem + str(os.sep)
     elif nestingType == "OtMO"  : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep) + path.stem + str(os.sep)
     elif nestingType == "MOtO"  : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + str(os.sep) + outputType + str(os.sep)
     elif nestingType == "MO"    : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + str(os.sep)
-    elif nestingType == "OtO"   : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + outputType + str(os.sep)
     elif nestingType == "O"     : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep)
     elif nestingType == "W"     : outputPath = str(resultPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + "SliceQuant" + str(os.sep) + path.stem + str(os.sep)
     return outputPath

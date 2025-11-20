@@ -571,7 +571,7 @@ class SingleWindow(QtWidgets.QWidget):
             elif self.LastChanged == "Point":
                 POS = PDA.real_pos([[self.PointX.value(), self.PointZ.value()]], head)
         else:
-            POS = [[0, 0], [1000, 1000]]
+            POS = [[0, 0], [10000, 10000]]
         
         vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
         vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()

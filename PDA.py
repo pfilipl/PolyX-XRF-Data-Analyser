@@ -492,7 +492,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
     Hist = []
     Fig = []
     if POS is None:
-        pos = [[0, 0], [1000, 1000]]
+        pos = [[0, 0], [10000, 10000]]
     else:
         pos = POS
     for d in (range(len(Data)) if detector is None else detector):
@@ -827,7 +827,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
     Hist = []
     Fig = []
     if POS is None:
-        pos = [[0, 0], [1000, 1000]]
+        pos = [[0, 0], [10000, 10000]]
     else:
         pos = POS
     for d in (range(len(Data)) if detector is None else detector):

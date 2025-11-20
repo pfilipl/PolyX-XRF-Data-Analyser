@@ -271,6 +271,9 @@
        </item>
        <item>
         <widget class="QComboBox" name="comboBox_Batch">
+         <property name="currentIndex">
+          <number>3</number>
+         </property>
          <item>
           <property name="text">
            <string>Experiment/Load &gt; Map &gt; Output type &gt; Output</string>
@@ -284,6 +287,11 @@
          <item>
           <property name="text">
            <string>Map &gt; Output type &gt; Output</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>BatchMap &gt; Output type &gt; Output</string>
           </property>
          </item>
          <item>

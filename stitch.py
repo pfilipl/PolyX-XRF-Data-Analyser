@@ -10,7 +10,8 @@ basedir = pathlib.Path(os.path.dirname(__file__))
 class MatData():
     def __init__(self, path, parent = None):
         self.Path = path
-        self.NumberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        # self.NumberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:5] != "PolyX")]) - 1 # 1 header + 2 snapshoty
+        self.NumberOfFiles = len([name for name in path.iterdir() if (name.is_file() and name.suffix == ".mat" and name.stem[:len(path.stem)] == path.stem and len(name.stem) == len(path.stem) + 5)]) # "_0000"
         self.Data = []
         if self.NumberOfFiles > 0:
             for i in range(0, self.NumberOfFiles):

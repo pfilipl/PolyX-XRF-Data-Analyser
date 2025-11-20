@@ -28,7 +28,7 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         else:
             secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [1000, 1000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "Counts [c]"):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "Counts [c]"):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -195,7 +195,7 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
     spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()
 
-def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 1000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False, Aspect = 'auto', ChannelAxis = False, Grid = False):
+def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000, 10000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False, Aspect = 'auto', ChannelAxis = False, Grid = False):
     spectrum = tab.Canvas
     head = widget.Data["head"]
     data = widget.Data["Data"][detector]
@@ -209,7 +209,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [1000, 
         else:
             cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
     if pos is None:
-        pos = [[0, 0], [1000, 1000]]
+        pos = [[0, 0], [10000, 10000]]
     if isinstance(pos, list):
         pos = numpy.array(pos)
     PDA.check_pos(pos, [data.shape[0], data.shape[1]])
