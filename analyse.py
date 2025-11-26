@@ -553,13 +553,13 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         try:
             ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_listbins"].shape[0], ), dtype = h5py.string_dtype())
             ds_ROInames = Data["head"]["roi_listbins"][:, 1]
-            grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
-            grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
+            ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
+            ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
         except:
             ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
             ds_ROInames = Data["head"]["roi_table"][:, 0]
-            grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
-            grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+            ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
+            ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
         
         grp_beam = grp_header.create_group("beam")
         try:
@@ -615,22 +615,28 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         grp_data.create_dataset("StorageRingCurrent", data = Data["RC"])
         
         grp_sdd1 = grp_data.create_group("SDD1")
-        grp_sdd1.create_dataset("SpectralData", data = Data["Data"][0].transpose(1, 0, 2))
+        grp_sdd1sd = grp_sdd1.create_group("SpectralData")
+        grp_sdd1sd.create_dataset("TotalSignal", data = Data["Data"][0].transpose(1, 0, 2))
+        for i in range(ds_ROInames.size):
+            grp_sdd1sd.create_dataset("ROI_" + ds_ROInames[i][0], data = Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2))
         grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
         grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
-        grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose())
-        grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose())
+        grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose() * 1e-6)
+        grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose() * 1e-6)
         grp_sdd1.create_dataset("DeadTime", data = Data["DT"][0].transpose())
-        grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][0].transpose()))
+        grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][0].transpose() * 1e-6))
         
         grp_sdd2 = grp_data.create_group("SDD2")
-        grp_sdd2.create_dataset("SpectralData", data = Data["Data"][1].transpose(1, 0, 2))
+        grp_sdd2sd = grp_sdd2.create_group("SpectralData")
+        grp_sdd2sd.create_dataset("TotalSignal", data = Data["Data"][1].transpose(1, 0, 2))
+        for i in range(ds_ROInames.size):
+            grp_sdd2sd.create_dataset("ROI_" + ds_ROInames[i][0], data = Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2))
         grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
         grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
-        grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose())
-        grp_sdd2.create_dataset("LiveTime", data = Data["LT"][1].transpose())
+        grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose() * 1e-6)
+        grp_sdd2.create_dataset("LiveTime", data = Data["LT"][1].transpose() * 1e-6)
         grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
-        grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][1].transpose()))
+        grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][1].transpose() * 1e-6))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
