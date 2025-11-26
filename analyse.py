@@ -616,9 +616,13 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         
         grp_sdd1 = grp_data.create_group("SDD1")
         grp_sdd1sd = grp_sdd1.create_group("SpectralData")
-        grp_sdd1sd.create_dataset("TotalSignal", data = Data["Data"][0].transpose(1, 0, 2))
+        grp_sdd1sd.create_dataset("Spectra", data = Data["Data"][0].transpose(1, 0, 2))
+        grp_sdd1sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
+        grp_sdd1sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
+        grp_sdd1rd = grp_sdd1.create_group("ROIsData")
+        grp_sdd1rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=2))
         for i in range(ds_ROInames.size):
-            grp_sdd1sd.create_dataset("ROI_" + ds_ROInames[i][0], data = Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2))
+            grp_sdd1rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
         grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
         grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
         grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose() * 1e-6)
@@ -628,9 +632,13 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         
         grp_sdd2 = grp_data.create_group("SDD2")
         grp_sdd2sd = grp_sdd2.create_group("SpectralData")
-        grp_sdd2sd.create_dataset("TotalSignal", data = Data["Data"][1].transpose(1, 0, 2))
+        grp_sdd2sd.create_dataset("Spectra", data = Data["Data"][1].transpose(1, 0, 2))
+        grp_sdd2sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
+        grp_sdd2sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
+        grp_sdd2rd = grp_sdd2.create_group("ROIsData")
+        grp_sdd2rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=2))
         for i in range(ds_ROInames.size):
-            grp_sdd2sd.create_dataset("ROI_" + ds_ROInames[i][0], data = Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2))
+            grp_sdd2rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
         grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
         grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
         grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose() * 1e-6)
