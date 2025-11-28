@@ -40,9 +40,9 @@ class SingleWindow(QtWidgets.QWidget):
         uic.loadUi(basedir / "single.ui", self)
 
         # Regions of interest (ROIs)
-        self.ROIs               = self.tableWidget_ROIs
-        self.ROIsDefault        = self.pushButton_ROIsDefault
-        self.RoiCount           = 0
+        self.ROIs                       = self.tableWidget_ROIs
+        self.ROIsDefault                = self.pushButton_ROIsDefault
+        self.RoiCount                   = 0
 
         self.ROIs.cellChanged.connect(self.ROIsChanged)
         self.pushButton_ROIsImport.clicked.connect(lambda checked, fileName = None: self.ROIsImport_clicked(checked, fileName))
@@ -84,43 +84,50 @@ class SingleWindow(QtWidgets.QWidget):
         self.SpectraConfigGrid.checkStateChanged.connect(self.ConfigReload)
 
         # Tabs
-        self.TotalSignal        = self.tab_TotalSignal
-        self.SumCheckSpectrum   = self.tab_SumCheckSpectrum
-        self.MaxCheckSpectrum   = self.tab_MaxCheckSpectrum
-        self.SumSpectrum        = self.tab_SumSpectrum
-        self.MaxSpectrum        = self.tab_MaxSpectrum
-        self.ExtSumSpectrum     = self.tab_ExtSumSpectrum
-        self.ExtMaxSpectrum     = self.tab_ExtMaxSpectrum
-        self.I0                 = self.tab_I0
-        self.PIN                = self.tab_PIN
-        self.LT                 = self.tab_LT
-        self.DT                 = self.tab_DT
-        self.ICR                 = self.tab_ICR
-        self.OCR                 = self.tab_OCR
-        self.RC                 = self.tab_RC
+        self.TotalSignal                = self.tab_TotalSignal
+        self.SumCheckSpectrum           = self.tab_SumCheckSpectrum
+        self.MaxCheckSpectrum           = self.tab_MaxCheckSpectrum
+        self.SumSpectrum                = self.tab_SumSpectrum
+        self.MaxSpectrum                = self.tab_MaxSpectrum
+        self.ExtSumSpectrum             = self.tab_ExtSumSpectrum
+        self.ExtMaxSpectrum             = self.tab_ExtMaxSpectrum
+        self.I0                         = self.tab_I0
+        self.PIN                        = self.tab_PIN
+        self.LT                         = self.tab_LT
+        self.DT                         = self.tab_DT
+        self.ICR                        = self.tab_ICR
+        self.OCR                        = self.tab_OCR
+        self.RC                         = self.tab_RC
 
-        self.Data               = None
-        self.LastPressedX       = None
-        self.LastPressedZ       = None
-        self.LastReleasedX      = None
-        self.LastReleasedZ      = None
-        self.LastMotionX        = None
-        self.LastMotionZ        = None
-        self.Rectangle          = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r')
-        self.HLine              = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.VLine              = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.SumLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.MaxLine            = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.SumCheckLine       = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.MaxCheckLine       = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.ExtSumLine         = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.ExtMaxLine         = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
-        self.SumText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
-        self.MaxText            = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxSpectrum.Canvas.Axes.get_xaxis_transform())
-        self.SumCheckText       = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumCheckSpectrum.Canvas.Axes.get_xaxis_transform())
-        self.MaxCheckText       = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxCheckSpectrum.Canvas.Axes.get_xaxis_transform())
-        self.ExtSumText         = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtSumSpectrum.Canvas.Axes.get_xaxis_transform())
-        self.ExtMaxText         = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtMaxSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.Data                       = None
+        self.LastPressedX               = None
+        self.LastPressedZ               = None
+        self.LastReleasedX              = None
+        self.LastReleasedZ              = None
+        self.LastMotionX                = None
+        self.LastMotionZ                = None
+        self.FLastPressedX              = None
+        self.FLastPressedZ              = None
+        self.FLastReleasedX             = None
+        self.FLastReleasedZ             = None
+        self.FLastMotionX               = None
+        self.FLastMotionZ               = None
+        self.Rectangle                  = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1, linestyle = '-', edgecolor = 'r')
+        self.FRectangle                 = matplotlib.patches.Rectangle((0, 0), 0, 0, linewidth = 1.5, linestyle = ':', edgecolor = 'r')
+        self.HLine                      = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.VLine                      = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.SumLine                    = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.MaxLine                    = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.SumCheckLine               = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.MaxCheckLine               = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.ExtSumLine                 = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.ExtMaxLine                 = matplotlib.lines.Line2D([0, 0], [0, 0], linewidth = 1, linestyle = '-', color = 'r')
+        self.SumText                    = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.MaxText                    = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.SumCheckText               = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.SumCheckSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.MaxCheckText               = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.MaxCheckSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.ExtSumText                 = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtSumSpectrum.Canvas.Axes.get_xaxis_transform())
+        self.ExtMaxText                 = matplotlib.text.Text(0, 0.95, "", color = 'r', verticalalignment = 'center', transform = self.ExtMaxSpectrum.Canvas.Axes.get_xaxis_transform())
     
         self.TotalSignal.Canvas.mpl_connect("button_press_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonPressed(event, canvas))
         self.TotalSignal.Canvas.mpl_connect("button_release_event", lambda event, canvas = self.TotalSignal.Canvas: self.MatplotlibButtonReleased(event, canvas))
@@ -141,22 +148,27 @@ class SingleWindow(QtWidgets.QWidget):
         self.tabWidget.setTabEnabled(12, False)
 
         # Spectrum from map region
-        self.MarkPoint          = self.pushButton_MarkPoint
-        self.PointX             = self.doubleSpinBox_PointX
-        self.PointZ             = self.doubleSpinBox_PointZ
-        self.PointEnabled       = False
-        self.PointChanged       = False
+        self.MarkPoint                  = self.pushButton_MarkPoint
+        self.PointX                     = self.doubleSpinBox_PointX
+        self.PointZ                     = self.doubleSpinBox_PointZ
+        self.PointEnabled               = False
+        self.PointChanged               = False
         
-        self.SelectArea         = self.pushButton_SelectArea
-        self.AreaX1             = self.doubleSpinBox_AreaX1
-        self.AreaZ1             = self.doubleSpinBox_AreaZ1
-        self.AreaX2             = self.doubleSpinBox_AreaX2
-        self.AreaZ2             = self.doubleSpinBox_AreaZ2
-        self.AreaEnabled        = False
-        self.AreaChanged        = False
+        self.SelectArea                 = self.pushButton_SelectArea
+        self.AreaX1                     = self.doubleSpinBox_AreaX1
+        self.AreaZ1                     = self.doubleSpinBox_AreaZ1
+        self.AreaX2                     = self.doubleSpinBox_AreaX2
+        self.AreaZ2                     = self.doubleSpinBox_AreaZ2
+        self.AreaEnabled                = False
+        self.AreaChanged                = False
+
+        self.MeasureMapRange            = self.pushButton_MeasureMapRange
+        self.MeasureMapRangeText        = self.label_MeasureMapRange
         
-        self.LastChanged        = "Area"
-        self.ClearSelection     = self.pushButton_ClearSelection
+        self.MeasureMapRangeText.hide()
+        
+        self.LastChanged                = "Area"
+        self.ClearSelection             = self.pushButton_ClearSelection
 
         self.PointX.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
         self.PointZ.valueChanged.connect(lambda value, mode = "Point": self.RegionChanged(value, mode))
@@ -168,42 +180,43 @@ class SingleWindow(QtWidgets.QWidget):
         self.MarkPoint.toggled.connect(self.MarkPoint_toggled)
         self.SelectArea.toggled.connect(self.SelectArea_toggled)
         self.ClearSelection.clicked.connect(self.ClearSelection_clicked)
+        self.MeasureMapRange.toggled.connect(self.MeasureMapRange_toggled)
 
         # Map path
-        self.MapPath            = self.lineEdit_MapPath
+        self.MapPath                    = self.lineEdit_MapPath
 
         self.MapPath.editingFinished.connect(self.LoadData)
         self.toolButton_MapPathSearch.clicked.connect(self.MapPathSearch_clicked)
 
         # Results
-        self.ResultsPath        = self.lineEdit_ResultsPath
+        self.ResultsPath                = self.lineEdit_ResultsPath
 
         self.toolButton_ResultsPathSearch.clicked.connect(self.ResultsPathSearch_clicked)
 
         # Detectors
-        self.DetectorsSDD1      = self.pushButton_DetectorsSDD1
-        self.DetectorsSDD2      = self.pushButton_DetectorsSDD2
-        self.DetectorsSum       = self.pushButton_DetectorsSum
-        self.LastDetector       = None
-        self.CurrentDetector    = None
+        self.DetectorsSDD1              = self.pushButton_DetectorsSDD1
+        self.DetectorsSDD2              = self.pushButton_DetectorsSDD2
+        self.DetectorsSum               = self.pushButton_DetectorsSum
+        self.LastDetector               = None
+        self.CurrentDetector            = None
 
         self.DetectorsSDD1.clicked.connect(lambda checked, mode = "SDD1": self.DetectorChanged(checked, mode))
         self.DetectorsSDD2.clicked.connect(lambda checked, mode = "SDD2": self.DetectorChanged(checked, mode))
         self.DetectorsSum.clicked.connect(lambda checked, mode = "Sum": self.DetectorChanged(checked, mode))
 
         # Energy calibration
-        self.Calib              = None
-        self.Sigma              = None
-        self.monoE              = None
-        self.monoType           = None
+        self.Calib                      = None
+        self.Sigma                      = None
+        self.monoE                      = None
+        self.monoType                   = None
 
-        self.CalibrationGain    = self.doubleSpinBox_CalibrationGain
-        self.CalibrationZero    = self.doubleSpinBox_CalibrationZero
-        self.CalibrationNoise   = self.doubleSpinBox_CalibrationNoise
-        self.CalibrationFano    = self.doubleSpinBox_CalibrationFano
+        self.CalibrationGain            = self.doubleSpinBox_CalibrationGain
+        self.CalibrationZero            = self.doubleSpinBox_CalibrationZero
+        self.CalibrationNoise           = self.doubleSpinBox_CalibrationNoise
+        self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
 
         # Normalization
-        self.NormType           = None
+        self.NormType                   = None
 
         self.radioButton_NormTypeNone.clicked.connect(lambda checked, mode = None: self.NormTypeChanged(mode))
         self.radioButton_NormTypeI0LT.clicked.connect(lambda checked, mode = "I0LT": self.NormTypeChanged(mode))
@@ -211,11 +224,11 @@ class SingleWindow(QtWidgets.QWidget):
         self.radioButton_NormTypeLT.clicked.connect(lambda checked, mode = "LT": self.NormTypeChanged(mode))
 
         # Process
-        self.Progress           = self.progressBar_Progress
-        self.Reload             = self.pushButton_Reload
-        self.AutoReload         = self.pushButton_AutoReload
-        self.Analyse            = self.pushButton_Analyse
-        self.OutputConfig       = None
+        self.Progress                   = self.progressBar_Progress
+        self.Reload                     = self.pushButton_Reload
+        self.AutoReload                 = self.pushButton_AutoReload
+        self.Analyse                    = self.pushButton_Analyse
+        self.OutputConfig               = None
 
         self.Reload.clicked.connect(self.Reload_clicked)
         self.pushButton_ImportConfig.clicked.connect(lambda clicked, fileName = None: self.ImportConfig_clicked(clicked, fileName))
@@ -223,8 +236,8 @@ class SingleWindow(QtWidgets.QWidget):
         self.Analyse.clicked.connect(self.Analyse_clicked)
 
         # Help
-        self.Help               = self.label_Help
-        self.HelpDescription    = self.label_HelpDescription
+        self.Help                       = self.label_Help
+        self.HelpDescription            = self.label_HelpDescription
         
         self.Help.hide()
         self.HelpDescription.hide()
@@ -255,6 +268,10 @@ class SingleWindow(QtWidgets.QWidget):
             line = self.ExtMaxLine
             text = self.ExtMaxText
         if event.inaxes == canvas.Axes:
+            if line.get_xdata() != [0, 0]:
+                line.remove()
+                if self.Calib is not None:
+                    text.remove()
             line.set(xdata = [event.xdata, event.xdata], ydata = [1e-10, 1e20])
             canvas.Axes.add_artist(line)
             if self.Calib is not None:
@@ -273,6 +290,8 @@ class SingleWindow(QtWidgets.QWidget):
                     self.VLine.set_visible(False)
                     self.Rectangle.set_facecolor('r')
                     self.Rectangle.set_xy((self.LastPressedX, self.LastPressedZ))
+                    if self.Rectangle.get_height() > 0.25:
+                        self.Rectangle.remove()
                     self.Rectangle.set_height(0.25)
                     self.Rectangle.set_width(0.25)
                     canvas.Axes.add_patch(self.Rectangle)
@@ -282,6 +301,9 @@ class SingleWindow(QtWidgets.QWidget):
                     self.VLine.set_visible(True)
                     h = 0.05 * (canvas.Axes.get_xlim()[1] - canvas.Axes.get_xlim()[0])
                     v = 0.05 * (canvas.Axes.get_ylim()[1] - canvas.Axes.get_ylim()[0])
+                    if self.HLine.get_xdata() != [0, 0]:
+                        self.HLine.remove()
+                        self.VLine.remove()
                     self.HLine.set(xdata = [self.LastPressedX - h, self.LastPressedX + h], ydata = [self.LastPressedZ, self.LastPressedZ])
                     self.VLine.set(xdata = [self.LastPressedX, self.LastPressedX], ydata = [self.LastPressedZ - v, self.LastPressedZ + v])
                     canvas.Axes.add_artist(self.HLine)
@@ -294,6 +316,31 @@ class SingleWindow(QtWidgets.QWidget):
                 self.MarkPoint.setChecked(False)
             if not self.SelectArea.isChecked():
                 if self.AutoReload.isChecked(): self.Reload_clicked()
+        elif self.MeasureMapRange.isChecked():
+            if event.inaxes == canvas.Axes:
+                self.FLastPressedX = event.xdata
+                self.FLastPressedZ = event.ydata
+                self.FLastReleasedX = None
+                self.FLastReleasedZ = None
+                self.FRectangle.set_visible(True)
+                self.FRectangle.set_facecolor('r')
+                self.FRectangle.set_xy((self.FLastPressedX, self.FLastPressedZ))
+                if self.FRectangle.get_height() > 0.25:
+                    self.FRectangle.remove()
+                self.FRectangle.set_height(0.25)
+                self.FRectangle.set_width(0.25)
+                canvas.Axes.add_patch(self.FRectangle)        
+                canvas.draw()
+                xmin = min(self.FLastPressedX, self.FLastPressedX)
+                xmax = max(self.FLastPressedX, self.FLastPressedX)
+                zmin = min(self.FLastPressedZ, self.FLastPressedZ)
+                zmax = max(self.FLastPressedZ, self.FLastPressedZ)
+                if self.Data is not None:
+                    text = f"xstart = {self.Data['head']['Xpositions'][0, round(xmin)]:2.3f} mm\n"
+                    text = text + f"xstop = {self.Data['head']['Xpositions'][0, round(xmax)]:2.3f} mm\n"
+                    text = text + f"zstart = {self.Data['head']['Zpositions'][0, round(zmin)]:2.3f} mm\n"
+                    text = text + f"zstop = {self.Data['head']['Zpositions'][0, round(zmax)]:2.3f} mm"
+                    self.MeasureMapRangeText.setText(text)
 
     def MatplotlibButtonReleased(self, event, canvas):
         if self.SelectArea.isChecked():
@@ -311,15 +358,52 @@ class SingleWindow(QtWidgets.QWidget):
             self.tabWidget.setTabEnabled(5, True)
             self.tabWidget.setTabEnabled(6, True)
             if self.AutoReload.isChecked(): self.Reload_clicked()
+        elif self.MeasureMapRange.isChecked():
+            if event.inaxes == canvas.Axes:
+                self.FLastReleasedX = event.xdata
+                self.FLastReleasedZ = event.ydata
+            else:
+                self.FLastReleasedX = self.FLastMotionX
+                self.FLastReleasedZ = self.FLastMotionZ
+                self.FLastMotionX = None
+                self.FLastMotionZ = None
+            xmin = min(self.FLastPressedX, self.FLastReleasedX)
+            xmax = max(self.FLastPressedX, self.FLastReleasedX)
+            zmin = min(self.FLastPressedZ, self.FLastReleasedZ)
+            zmax = max(self.FLastPressedZ, self.FLastReleasedZ)
+            if self.Data is not None:
+                text = f"xstart = {self.Data['head']['Xpositions'][0, round(xmin)]:2.3f} mm\n"
+                text = text + f"xstop = {self.Data['head']['Xpositions'][0, round(xmax)]:2.3f} mm\n"
+                text = text + f"zstart = {self.Data['head']['Zpositions'][0, round(zmin)]:2.3f} mm\n"
+                text = text + f"zstop = {self.Data['head']['Zpositions'][0, round(zmax)]:2.3f} mm"
+                self.MeasureMapRangeText.setText(text)
 
     def MatplotlibMouseMotion(self, event, canvas):
-        if self.SelectArea.isChecked() and self.LastPressedX is not None and self.LastPressedZ is not None:
+        if self.SelectArea.isChecked() and (self.LastPressedX is not None) and (self.LastPressedZ is not None):
             if event.inaxes == canvas.Axes:
                 self.LastMotionX = event.xdata
                 self.LastMotionZ = event.ydata
                 self.Rectangle.set_facecolor('none')
                 self.Rectangle.set_height(self.LastMotionZ - self.Rectangle.get_y())
                 self.Rectangle.set_width(self.LastMotionX - self.Rectangle.get_x())
+                canvas.draw()
+        elif self.MeasureMapRange.isChecked() and (self.FLastPressedX is not None) and (self.FLastPressedZ is not None) and (self.FLastReleasedX is None) and (self.FLastReleasedZ is None):
+            if event.inaxes == canvas.Axes:
+                self.FLastMotionX = event.xdata
+                self.FLastMotionZ = event.ydata
+                self.FRectangle.set_facecolor('none')
+                self.FRectangle.set_height(self.FLastMotionZ - self.FRectangle.get_y())
+                self.FRectangle.set_width(self.FLastMotionX - self.FRectangle.get_x())
+                xmin = min(self.FLastPressedX, self.FLastMotionX)
+                xmax = max(self.FLastPressedX, self.FLastMotionX)
+                zmin = min(self.FLastPressedZ, self.FLastMotionZ)
+                zmax = max(self.FLastPressedZ, self.FLastMotionZ)
+                if self.Data is not None:
+                    text = f"xstart = {self.Data['head']['Xpositions'][0, round(xmin)]:2.3f} mm\n"
+                    text = text + f"xstop = {self.Data['head']['Xpositions'][0, round(xmax)]:2.3f} mm\n"
+                    text = text + f"zstart = {self.Data['head']['Zpositions'][0, round(zmin)]:2.3f} mm\n"
+                    text = text + f"zstop = {self.Data['head']['Zpositions'][0, round(zmax)]:2.3f} mm"
+                    self.MeasureMapRangeText.setText(text)
                 canvas.draw()
 
     def DetectorChanged(self, checked, mode):
@@ -731,28 +815,30 @@ class SingleWindow(QtWidgets.QWidget):
 
     def MarkPoint_toggled(self, checked):
         head = self.Data["head"]
-        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        canvas = self.tabWidget.currentWidget().Canvas
+        canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
-            if self.LastPressedX is not None and self.LastPressedZ is not None:
+            if (self.LastPressedX is not None) and (self.LastPressedZ is not None):
                 self.PointX.setValue(head["Xpositions"][0, round(self.LastPressedX)])
                 self.PointZ.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
                 self.LastPressedX = None
                 self.LastPressedZ = None
-                # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+                canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
-            if self.SelectArea.isChecked(): 
+            if self.SelectArea.isChecked() or self.MeasureMapRange.isChecked(): 
                 self.SelectArea.blockSignals(True)
+                self.MeasureMapRange.blockSignals(True)
                 self.SelectArea.setChecked(False)
+                self.MeasureMapRange.setChecked(False)
                 self.SelectArea.blockSignals(False)
+                self.MeasureMapRange.blockSignals(False)
 
     def SelectArea_toggled(self, checked):
         head = self.Data["head"]
-        # QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
-        self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        canvas = self.tabWidget.currentWidget().Canvas
+        canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
         if not checked:
-            if self.LastPressedX is not None and self.LastPressedZ is not None and self.LastReleasedX is not None and self.LastReleasedZ is not None:
+            if (self.LastPressedX is not None) and (self.LastPressedZ is not None) and (self.LastReleasedX is not None) and (self.LastReleasedZ is not None):
                 self.AreaX1.setValue(head["Xpositions"][0, round(self.LastPressedX)])
                 self.AreaZ1.setValue(head["Zpositions"][0, round(self.LastPressedZ)])
                 self.AreaX2.setValue(head["Xpositions"][0, round(self.LastReleasedX)])
@@ -761,13 +847,15 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastPressedZ = None
                 self.LastReleasedX = None
                 self.LastReleasedZ = None
-                # QtGui.QGuiApplication.restoreOverrideCursor()
-                self.TotalSignal.Canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+                canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
         else:
-            if self.MarkPoint.isChecked(): 
+            if self.MarkPoint.isChecked() or self.MeasureMapRange.isChecked(): 
                 self.MarkPoint.blockSignals(True)
+                self.MeasureMapRange.blockSignals(True)
                 self.MarkPoint.setChecked(False)
+                self.MeasureMapRange.setChecked(False)
                 self.MarkPoint.blockSignals(False)
+                self.MeasureMapRange.blockSignals(False)
 
     def ClearSelection_clicked(self):
         head = self.Data["head"]
@@ -815,6 +903,25 @@ class SingleWindow(QtWidgets.QWidget):
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
+
+    def MeasureMapRange_toggled(self, checked):
+        canvas = self.tabWidget.currentWidget().Canvas
+        canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.CrossCursor))
+        if not checked:
+            if (self.FLastPressedX is not None) and (self.FLastPressedZ is not None) and (self.FLastReleasedX is not None) and (self.FLastReleasedZ is not None):
+                canvas.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.ArrowCursor))
+                self.MeasureMapRangeText.hide()
+                self.FRectangle.set_visible(False)
+                canvas.draw()
+        else:
+            self.MeasureMapRangeText.show()
+            if self.MarkPoint.isChecked() or self.SelectArea.isChecked(): 
+                self.MarkPoint.blockSignals(True)
+                self.SelectArea.blockSignals(True)
+                self.MarkPoint.setChecked(False)
+                self.SelectArea.setChecked(False)
+                self.SelectArea.blockSignals(False)
+                self.MarkPoint.blockSignals(False)
     
     def MapPathSearch_clicked(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Choose Map path", self.MapPath.text())
