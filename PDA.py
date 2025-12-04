@@ -1237,7 +1237,7 @@ def stack_Map(Map, head, title, Label = None, lightmode = False, Origin = "upper
     Fig.append(fig)
     return Fig
 
-def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False, Label = "c"):
+def print_stack_Map(Map, head, ROI, filename, detector = None, Norm = False, Label = "counts"):
     if detector is None:
         file = open(filename + ".csv", 'w')
         file.write("# X position [px]\tZ position [px]\tX position [mm]\tZ position [mm]")
