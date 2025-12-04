@@ -538,14 +538,14 @@ class SingleWindow(QtWidgets.QWidget):
                 lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
                 lt = [lt, lt, lt]
                 norm = [self.Data["I0"], lt]
-                clabel = clabel + "/V]"
+                clabel = clabel + "/V"
             elif self.NormType == "LT":
                 i0 = numpy.ones(self.Data["I0"].shape)
                 norm = [i0, self.Data["LT"]]
-                clabel = clabel + "/s]"
+                clabel = clabel + "/s"
             else: 
                 norm = [self.Data["I0"], self.Data["LT"]]
-                clabel = clabel + "/s/V]"
+                clabel = clabel + "/s/V"
 
             if self.CurrentDetector == "SDD1": det = 0
             elif self.CurrentDetector == "SDD2": det = 1
@@ -672,19 +672,19 @@ class SingleWindow(QtWidgets.QWidget):
         clabel = "counts"
         if self.NormType is None: 
             norm = None
-            clabel = clabel + "]"
+            clabel = clabel + ""
         elif self.NormType == "I0":
             lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [self.Data["I0"], lt]
-            clabel = clabel + "/V]"
+            clabel = clabel + "/V"
         elif self.NormType == "LT":
             i0 = numpy.ones(self.Data["I0"].shape)
             norm = [i0, self.Data["LT"]]
-            clabel = clabel + "/s]"
+            clabel = clabel + "/s"
         else: 
             norm = [self.Data["I0"], self.Data["LT"]]
-            clabel = clabel + "/s/V]"
+            clabel = clabel + "/s/V"
 
         if self.CurrentDetector == "SDD1": det = 0
         elif self.CurrentDetector == "SDD2": det = 1
