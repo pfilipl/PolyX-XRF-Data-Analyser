@@ -530,10 +530,10 @@ class SingleWindow(QtWidgets.QWidget):
                 else:
                     self.DetectorsSum.click()
 
-            clabel = "Counts [c"
+            clabel = "counts"
             if self.NormType is None: 
                 norm = None
-                clabel = clabel + "]"
+                clabel = clabel + ""
             elif self.NormType == "I0":
                 lt = numpy.ones(self.Data["LT"][0].shape) * 1e6
                 lt = [lt, lt, lt]
@@ -542,10 +542,10 @@ class SingleWindow(QtWidgets.QWidget):
             elif self.NormType == "LT":
                 i0 = numpy.ones(self.Data["I0"].shape)
                 norm = [i0, self.Data["LT"]]
-                clabel = clabel + "ps]"
+                clabel = clabel + "/s]"
             else: 
                 norm = [self.Data["I0"], self.Data["LT"]]
-                clabel = clabel + "ps/V]"
+                clabel = clabel + "/s/V]"
 
             if self.CurrentDetector == "SDD1": det = 0
             elif self.CurrentDetector == "SDD2": det = 1
@@ -669,7 +669,7 @@ class SingleWindow(QtWidgets.QWidget):
         spectraAspect = 'auto' if self.SpectraConfigAspectAuto.isChecked() else self.SpectraConfigAspectValue.value()
         cMap = self.MapsConfigColormap.currentText()
 
-        clabel = "Counts [c"
+        clabel = "counts"
         if self.NormType is None: 
             norm = None
             clabel = clabel + "]"
@@ -681,10 +681,10 @@ class SingleWindow(QtWidgets.QWidget):
         elif self.NormType == "LT":
             i0 = numpy.ones(self.Data["I0"].shape)
             norm = [i0, self.Data["LT"]]
-            clabel = clabel + "ps]"
+            clabel = clabel + "/s]"
         else: 
             norm = [self.Data["I0"], self.Data["LT"]]
-            clabel = clabel + "ps/V]"
+            clabel = clabel + "/s/V]"
 
         if self.CurrentDetector == "SDD1": det = 0
         elif self.CurrentDetector == "SDD2": det = 1
@@ -1078,7 +1078,7 @@ class SingleWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 17) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
+                self.Progress.setMaximum(len(self.OutputConfig.keys()) - 19) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 4 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
                 else:
@@ -1107,14 +1107,15 @@ class SingleWindow(QtWidgets.QWidget):
                 nestingType = None
                 display = {}
                 normType = []
+                hdf5 = False
                 for name in self.OutputConfig.keys():
                     if name[:2] in ["De", "Si", "Ba", "Ge"]:
                         if name == "DetectorsSDD1" and self.OutputConfig[name]: detectors.append(0)
                         if name == "DetectorsSDD2" and self.OutputConfig[name]: detectors.append(1)
                         if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                         if name == "Single": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
-                        if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
-                        if name == "GenHDF5": hdf5 = self.OutputConfig[name]
+                        # if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
+                        if name[:7] == "GenHDF5": hdf5 = hdf5 or self.OutputConfig[name]
                         if name == "GenCsvs": csvs = self.OutputConfig[name]
                         continue
                     if name[:4] == "Disp":
@@ -1125,11 +1126,11 @@ class SingleWindow(QtWidgets.QWidget):
                         continue
                     if self.OutputConfig[name]:
                         exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, csvs = csvs)')
-                        if name == "NormROIs" and wiatrowska:
-                            exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
+                        # if name == "NormROIs" and wiatrowska:
+                        #     exec(f'analyse.{name}(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 if hdf5:
-                    exec(f'analyse.HDF5(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath)')
+                    exec(f'analyse.HDF5(self, self.Data, pathlib.Path(self.MapPath.text()), resultsPath, ROI, str([self.OutputConfig["GenHDF5light"], self.OutputConfig["GenHDF5"], self.OutputConfig["GenHDF5full"], self.OutputConfig["GenHDF5fullOrigROIs"]]))')
                 self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
                 

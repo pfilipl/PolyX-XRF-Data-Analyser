@@ -28,7 +28,7 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         else:
             secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
-def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "Counts [c]"):
+def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "counts"):
     map = tab.Canvas
     head = widget.Data["head"]
     if detector == 2:
@@ -161,7 +161,7 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
     spectrum.Axes.legend()
     if log:
         spectrum.Axes.set_yscale('log')
-    spectrum.Axes.set_ylabel("Counts [c]")
+    spectrum.Axes.set_ylabel("counts")
     spectrum.Axes.get_yaxis().set_visible(True)
 
     if widget.Calib is None:
@@ -325,7 +325,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                     if xp > cEmin and xp < cEmax:
                         spectrum.Axes.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
 
-    spectrum.Axes.set_ylabel("Counts [c]")
+    spectrum.Axes.set_ylabel("counts")
     spectrum.Axes.get_yaxis().set_visible(True)
     
     if widget.Calib is None:

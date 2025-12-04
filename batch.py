@@ -358,7 +358,7 @@ class BatchWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 17) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
+                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 19) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 4 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
                     try:
@@ -396,14 +396,15 @@ class BatchWindow(QtWidgets.QWidget):
                     nestingType = None
                     display = {}
                     normType = []
+                    hdf5 = False
                     for name in self.OutputConfig.keys():
                         if name[:2] in ["De", "Si", "Ba", "Ge"]:
                             if name == "DetectorsSDD1" and self.OutputConfig[name]: detectors.append(0)
                             if name == "DetectorsSDD2" and self.OutputConfig[name]: detectors.append(1)
                             if name == "DetectorsSum" and self.OutputConfig[name]: detectors.append(2)
                             if name == "Batch": nestingType = analyse.NestingTypes[self.OutputConfig[name]]
-                            if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
-                            if name == "GenHDF5": hdf5 = self.OutputConfig[name]
+                            # if name == "GenWiatrowska": wiatrowska = self.OutputConfig[name]
+                            if name[:7] == "GenHDF5": hdf5 = hdf5 or self.OutputConfig[name]
                             if name == "GenCsvs": csvs = self.OutputConfig[name]
                             continue
                         if name[:4] == "Disp":
@@ -414,11 +415,11 @@ class BatchWindow(QtWidgets.QWidget):
                             continue
                         if self.OutputConfig[name]:
                             exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "{nestingType}", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = normType, disp = display, csvs = csvs)')
-                            if name == "NormROIs" and wiatrowska:
-                                exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
+                            # if name == "NormROIs" and wiatrowska:
+                            #     exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                         self.Progress.setValue(self.Progress.value() + 1)
                     if hdf5:
-                        exec(f'analyse.HDF5(self, tempData, path, resultsPath, True)')
+                        exec(f'analyse.HDF5(self, tempData, path, resultsPath, ROI, str([self.OutputConfig["GenHDF5light"], self.OutputConfig["GenHDF5"], self.OutputConfig["GenHDF5full"], self.OutputConfig["GenHDF5fullOrigROIs"]]), True)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
 

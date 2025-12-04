@@ -21,45 +21,48 @@ class Analyse(QtWidgets.QDialog):
 
         if outputConfig is None:
             self.Output = {
-                "DetectorsSDD1"     : detectorsSDD1,
-                "DetectorsSDD2"     : detectorsSDD2,
-                "DetectorsSum"      : detectorsSum,
-                "Single"            : "Output type > Output",
-                "Batch"             : "BatchMap > Output type > Output",
-                "NormTypeI0LT"      : True,
-                "NormTypeI0"        : False,
-                "NormTypeLT"        : False,
-                "DispSelected"      : True,
-                "DispSimpTitles"    : False,
-                "DispTitles"        : True,
-                "DispColorbars"     : True,
-                "DispAxes"          : True,
-                "DispChannelAxis"   : False,
-                "DispGrid"          : False,
-                "GenCsvs"           : False,
-                "GenHDF5"           : False,
-                "GenWiatrowska"     : False,
-                "DiagRC"            : True,
-                "DiagSum"           : True,
-                "DiagMax"           : True,
-                "DiagI0"            : True,
-                "DiagLT"            : True,
-                "DiagDT"            : True,
-                "DiagRT"            : False,
-                "DiagICR"           : False,
-                "DiagOCR"           : False,
-                "UNormPIN"          : True,
-                "UNormTotal"        : True,
-                "UNormROIs"         : True,
-                "UNormTabular"      : False,
-                "NormPIN"           : False,
-                "NormTotal"         : True,
-                "NormROIs"          : True,
-                "NormTabular"       : False,
-                "SpectraSumROIs"    : True,
-                "SpectraMaxROIs"    : False,
-                "SpectraSum"        : False,
-                "SpectraMax"        : False
+                "DetectorsSDD1"         : detectorsSDD1,
+                "DetectorsSDD2"         : detectorsSDD2,
+                "DetectorsSum"          : detectorsSum,
+                "Single"                : "Output type > Output",
+                "Batch"                 : "BatchMap > Output type > Output",
+                "NormTypeI0LT"          : True,
+                "NormTypeI0"            : False,
+                "NormTypeLT"            : False,
+                "DispSelected"          : True,
+                "DispSimpTitles"        : False,
+                "DispTitles"            : True,
+                "DispColorbars"         : True,
+                "DispAxes"              : True,
+                "DispChannelAxis"       : False,
+                "DispGrid"              : False,
+                "GenCsvs"               : False,
+                "GenHDF5light"          : False,
+                "GenHDF5"               : False,
+                "GenHDF5full"           : False,
+                "GenHDF5fullOrigROIs"   : False,
+                # "GenWiatrowska"         : False,
+                "DiagRC"                : True,
+                "DiagSum"               : True,
+                "DiagMax"               : True,
+                "DiagI0"                : True,
+                "DiagLT"                : True,
+                "DiagDT"                : True,
+                "DiagRT"                : False,
+                "DiagICR"               : False,
+                "DiagOCR"               : False,
+                "UNormPIN"              : True,
+                "UNormTotal"            : True,
+                "UNormROIs"             : True,
+                "UNormTabular"          : False,
+                "NormPIN"               : False,
+                "NormTotal"             : True,
+                "NormROIs"              : True,
+                "NormTabular"           : False,
+                "SpectraSumROIs"        : True,
+                "SpectraMaxROIs"        : False,
+                "SpectraSum"            : False,
+                "SpectraMax"            : False
             }
         else:
             self.Output = outputConfig
@@ -104,6 +107,10 @@ class Analyse(QtWidgets.QDialog):
         self.checkBox_NormTypeI0LT.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTypeI0.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTypeLT.toggled.connect(self.NormTypeChanged)
+        self.checkBox_GenHDF5light.toggled.connect(lambda checked, mode = "light": self.HDF5Changed(checked, mode))        
+        self.checkBox_GenHDF5.toggled.connect(lambda checked, mode = "": self.HDF5Changed(checked, mode))        
+        self.checkBox_GenHDF5full.toggled.connect(lambda checked, mode = "full": self.HDF5Changed(checked, mode))        
+        self.checkBox_GenHDF5fullOrigROIs.toggled.connect(lambda checked, mode = "fullOrigROIs": self.HDF5Changed(checked, mode))        
         self.checkBox_DispTitles.toggled.connect(lambda checked, mode = "Simp": self.TitlesChanged(checked, mode))        
         self.checkBox_DispSimpTitles.toggled.connect(lambda checked, mode = "": self.TitlesChanged(checked, mode))        
         self.buttonBox.clicked.connect(self.ButtonBox_clicked)
@@ -155,6 +162,11 @@ if self.checkBox_{name}.checkState() != QtCore.Qt.{state}:
             self.checkBox_NormTypeI0LT.blockSignals(True)
             self.checkBox_NormTypeI0LT.setChecked(True)
             self.checkBox_NormTypeI0LT.blockSignals(False)
+
+    def HDF5Changed(self, checked, mode):
+        for m in ["light", "", "full", "fullOrigROIs"]:
+            if m != mode:
+                exec(f"if checked and self.checkBox_GenHDF5{m}.isChecked(): self.checkBox_GenHDF5{m}.setChecked(False)")
 
     def TitlesChanged(self, checked, mode):
         exec(f"if checked and self.checkBox_Disp{mode}Titles.isChecked(): self.checkBox_Disp{mode}Titles.setChecked(False)")
@@ -398,15 +410,15 @@ def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
-            label = "c/V"
+            label = "counts/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-            label = "cps"
+            label = "counts/s"
         else: 
             norm = [I0, LT]
-            label = "cps/V"
-        clabel = f"Counts [{label}]"
+            label = "counts/s/V"
+        clabel = f"{label}"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
@@ -426,15 +438,15 @@ def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
-            label = "c/V"
+            label = "counts/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-            label = "cps"
+            label = "counts/s"
         else: 
             norm = [I0, LT]
-            label = "cps/V"
-        clabel = f"Counts [{label}]"
+            label = "counts/s/V"
+        clabel = f"{label}"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
@@ -459,15 +471,15 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
             lt = numpy.ones(LT[0].shape) * 1e6
             lt = [lt, lt, lt]
             norm = [I0, lt]
-            label = "c/V"
+            label = "counts/V"
         elif nt == "LT":
             i0 = numpy.ones(I0.shape)
             norm = [i0, LT]
-            label = "cps"
+            label = "counts/s"
         else: 
             norm = [I0, LT]
-            label = "cps/V"
-        clabel = f"Counts [{label}]"
+            label = "counts/s/V"
+        clabel = f"{label}"
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
@@ -539,75 +551,82 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxSpectrum", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxSpectrum", detector = detectors)
 
-def HDF5(Parent, Data, path, resultPath, batch = False):
+def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
+    mode = {
+        "[True, False, False, False]" : "light",
+        "[False, True, False, False]" : "standard",
+        "[False, False, True, False]" : "full",
+        "[False, False, False, True]" : "fullOrigROIs"
+    }
     dataName = path.stem
     outputPath = str(resultPath) + (f"{str(os.sep) + dataName + str(os.sep)}" if batch else str(os.sep)) + "PXDA_Export" + str(os.sep)
     os.makedirs(outputPath, exist_ok = True)
-    with h5py.File(outputPath + f"{dataName}.h5", "w") as file:
-        grp_header = file.create_group("header")
-        grp_header.create_dataset("TimeStep", data = Data["head"]["dt"])
-        grp_header.create_dataset("Boards", data = Data["head"]["boards"])
-        grp_header.create_dataset("BinsNo", data = Data["head"]["bins"])
+    with h5py.File(outputPath + f"{dataName}_H5{mode[modes]}.h5", "w") as file:
+        if mode[modes] != "light":
+            grp_header = file.create_group("header")
+            grp_header.create_dataset("TimeStep", data = Data["head"]["dt"])
+            grp_header.create_dataset("Boards", data = Data["head"]["boards"])
+            grp_header.create_dataset("BinsNo", data = Data["head"]["bins"])
         
-        grp_roi = grp_header.create_group("ROI")
-        try:
-            ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_listbins"].shape[0], ), dtype = h5py.string_dtype())
-            ds_ROInames = Data["head"]["roi_listbins"][:, 1]
-            ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
-            ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
-        except:
-            ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
-            ds_ROInames = Data["head"]["roi_table"][:, 0]
-            ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
-            ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+            grp_roi = grp_header.create_group("ROI")
+            try:
+                ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_listbins"].shape[0], ), dtype = h5py.string_dtype())
+                ds_ROInames = Data["head"]["roi_listbins"][:, 1]
+                ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
+                ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
+            except:
+                ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
+                ds_ROInames = Data["head"]["roi_table"][:, 0]
+                ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
+                ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
         
-        grp_beam = grp_header.create_group("beam")
-        try:
-            grp_beam.create_dataset("MonoE", data = Data["head"]["monoE"])
-            ds_monoType = grp_beam.create_dataset("MonoType", shape = (1, ),dtype = h5py.string_dtype())
-            ds_monoType = Data["head"]["monotype"]
-        except:
-            grp_beam.attrs["monochromatization"] = "no data"
-        try:
-            grp_beam.create_dataset("TotalAttenuation", data = Data["head"]["TOTALatten"])
-            grp_beam.create_dataset("FrontEndAttenuation", data = Data["head"]["FEatten"])
-            grp_beam.create_dataset("BeamLineAttenuation", data = Data["head"]["BLatten"])
-        except:
-            grp_beam.attrs["attenuation"] = "no data"
-        try:
-            grp_beam.create_dataset("Slit1VetricalGap", data = Data["head"]["s1vg"])
-            grp_beam.create_dataset("Slit2VetricalGap", data = Data["head"]["s2vg"])
-            grp_beam.create_dataset("Slit3VetricalGap", data = Data["head"]["s3vg"])
-            grp_beam.create_dataset("Slit1HorizontalGap", data = Data["head"]["s1hg"])
-            grp_beam.create_dataset("Slit2HorizontalGap", data = Data["head"]["s2hg"])
-            grp_beam.create_dataset("Slit3HorizontalGap", data = Data["head"]["s3hg"])
-        except:
-            grp_beam.attrs["slits"] = "no data"
-        try:
-            ds_I0amp = grp_beam.create_dataset("I0amplification", shape = (1, ),dtype = h5py.string_dtype())
-            ds_I0amp = Data["head"]["pamps"]["pamp"]["sens"][0]
-            ds_PINamp = grp_beam.create_dataset("PINamplification", shape = (1, ),dtype = h5py.string_dtype())
-            ds_PINamp = Data["head"]["femto"]["gain"]
-        except:
-            grp_beam.attrs["I0andPINsignalAmplification"] = "no data"
-        
-        grp_position = grp_header.create_group("positions")      
-        grp_position.create_dataset("ZscanVel", data = Data["head"]["Zvelocity"])
-        grp_position.create_dataset("ZscanStart", data = Data["head"]["Zstartpos"])
-        try:
-            grp_position.create_dataset("ZscanStep", data = Data["head"]["ZscanStep"])
-        except:
-            grp_position.attrs["ZscanStep"] = "no data"
-        grp_position.create_dataset("ZscanPositions", data = Data["head"]["Zpositions"])
-        grp_position.create_dataset("ZscanPoints", data = Data["head"]["Znpoints"])
-        grp_position.create_dataset("ZscanStop", data = Data["head"]["Zendpos"])
-        grp_position.create_dataset("XscanVel", data = Data["head"]["XscanVel"])
-        grp_position.create_dataset("XscanStop", data = Data["head"]["XscanStop"])
-        grp_position.create_dataset("XscanStep", data = Data["head"]["XscanStep"])
-        grp_position.create_dataset("XscanStart", data = Data["head"]["XscanStart"])
-        grp_position.create_dataset("XscanRange", data = Data["head"]["XscanRange"])
-        grp_position.create_dataset("XscanPulses", data = Data["head"]["XscanPulses"])
-        grp_position.create_dataset("XscanPositions", data = Data["head"]["Xpositions"])
+            grp_beam = grp_header.create_group("beam")
+            try:
+                grp_beam.create_dataset("MonoE", data = Data["head"]["monoE"])
+                ds_monoType = grp_beam.create_dataset("MonoType", shape = (1, ),dtype = h5py.string_dtype())
+                ds_monoType = Data["head"]["monotype"]
+            except:
+                grp_beam.attrs["monochromatization"] = "no data"
+            try:
+                grp_beam.create_dataset("TotalAttenuation", data = Data["head"]["TOTALatten"])
+                grp_beam.create_dataset("FrontEndAttenuation", data = Data["head"]["FEatten"])
+                grp_beam.create_dataset("BeamLineAttenuation", data = Data["head"]["BLatten"])
+            except:
+                grp_beam.attrs["attenuation"] = "no data"
+            try:
+                grp_beam.create_dataset("Slit1VetricalGap", data = Data["head"]["s1vg"])
+                grp_beam.create_dataset("Slit2VetricalGap", data = Data["head"]["s2vg"])
+                grp_beam.create_dataset("Slit3VetricalGap", data = Data["head"]["s3vg"])
+                grp_beam.create_dataset("Slit1HorizontalGap", data = Data["head"]["s1hg"])
+                grp_beam.create_dataset("Slit2HorizontalGap", data = Data["head"]["s2hg"])
+                grp_beam.create_dataset("Slit3HorizontalGap", data = Data["head"]["s3hg"])
+            except:
+                grp_beam.attrs["slits"] = "no data"
+            try:
+                ds_I0amp = grp_beam.create_dataset("I0amplification", shape = (1, ),dtype = h5py.string_dtype())
+                ds_I0amp = Data["head"]["pamps"]["pamp"]["sens"][0]
+                ds_PINamp = grp_beam.create_dataset("PINamplification", shape = (1, ),dtype = h5py.string_dtype())
+                ds_PINamp = Data["head"]["femto"]["gain"]
+            except:
+                grp_beam.attrs["I0andPINsignalAmplification"] = "no data"
+            
+            grp_position = grp_header.create_group("positions")      
+            grp_position.create_dataset("ZscanVel", data = Data["head"]["Zvelocity"])
+            grp_position.create_dataset("ZscanStart", data = Data["head"]["Zstartpos"])
+            try:
+                grp_position.create_dataset("ZscanStep", data = Data["head"]["ZscanStep"])
+            except:
+                grp_position.attrs["ZscanStep"] = "no data"
+            grp_position.create_dataset("ZscanPositions", data = Data["head"]["Zpositions"])
+            grp_position.create_dataset("ZscanPoints", data = Data["head"]["Znpoints"])
+            grp_position.create_dataset("ZscanStop", data = Data["head"]["Zendpos"])
+            grp_position.create_dataset("XscanVel", data = Data["head"]["XscanVel"])
+            grp_position.create_dataset("XscanStop", data = Data["head"]["XscanStop"])
+            grp_position.create_dataset("XscanStep", data = Data["head"]["XscanStep"])
+            grp_position.create_dataset("XscanStart", data = Data["head"]["XscanStart"])
+            grp_position.create_dataset("XscanRange", data = Data["head"]["XscanRange"])
+            grp_position.create_dataset("XscanPulses", data = Data["head"]["XscanPulses"])
+            grp_position.create_dataset("XscanPositions", data = Data["head"]["Xpositions"])
 
         grp_data = file.create_group("data")
         grp_data.create_dataset("PINmap", data = Data["PIN"].transpose())
@@ -617,15 +636,22 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         grp_sdd1 = grp_data.create_group("SDD1")
         grp_sdd1sd = grp_sdd1.create_group("SpectralData")
         grp_sdd1sd.create_dataset("Spectra", data = Data["Data"][0].transpose(1, 0, 2))
-        grp_sdd1sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
-        grp_sdd1sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
-        grp_sdd1rd = grp_sdd1.create_group("ROIsData")
-        grp_sdd1rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=2))
-        for i in range(ds_ROInames.size):
-            grp_sdd1rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
-        grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
-        grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
-        grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose() * 1e-6)
+
+        if mode[modes] != "light":
+            grp_sdd1sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sdd1sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sdd1rd = grp_sdd1.create_group("ROIsData")
+            grp_sdd1rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=2))
+            if mode[modes] == "full":
+                for i in range(len(ROI)):
+                    grp_sdd1rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][0][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
+            elif mode[modes] == "fullOrigROIs":
+                for i in range(ds_ROInames.size):
+                    grp_sdd1rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
+            grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
+            grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
+            grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose() * 1e-6)
+
         grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose() * 1e-6)
         grp_sdd1.create_dataset("DeadTime", data = Data["DT"][0].transpose())
         grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][0].transpose() * 1e-6))
@@ -633,15 +659,22 @@ def HDF5(Parent, Data, path, resultPath, batch = False):
         grp_sdd2 = grp_data.create_group("SDD2")
         grp_sdd2sd = grp_sdd2.create_group("SpectralData")
         grp_sdd2sd.create_dataset("Spectra", data = Data["Data"][1].transpose(1, 0, 2))
-        grp_sdd2sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
-        grp_sdd2sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
-        grp_sdd2rd = grp_sdd2.create_group("ROIsData")
-        grp_sdd2rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=2))
-        for i in range(ds_ROInames.size):
-            grp_sdd2rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
-        grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
-        grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
-        grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose() * 1e-6)
+
+        if mode[modes] != "light":
+            grp_sdd2sd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sdd2sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sdd2rd = grp_sdd2.create_group("ROIsData")
+            grp_sdd2rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=2))
+            if mode[modes] == "full":
+                for i in range(len(ROI)):
+                    grp_sdd2rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][1][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
+            elif mode[modes] == "fullOrigROIs":
+                for i in range(ds_ROInames.size):
+                    grp_sdd2rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
+            grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
+            grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
+            grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose() * 1e-6)
+
         grp_sdd2.create_dataset("LiveTime", data = Data["LT"][1].transpose() * 1e-6)
         grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
         grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][1].transpose() * 1e-6))

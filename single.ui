@@ -292,7 +292,7 @@ map</string>
           </sizepolicy>
          </property>
          <property name="text">
-          <string>c (raw data)</string>
+          <string>counts</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -308,7 +308,7 @@ map</string>
           </sizepolicy>
          </property>
          <property name="text">
-          <string>cps/V</string>
+          <string>counts/s/V</string>
          </property>
         </widget>
        </item>
@@ -318,7 +318,7 @@ map</string>
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>c/V</string>
+          <string>counts/V</string>
          </property>
         </widget>
        </item>
@@ -328,7 +328,7 @@ map</string>
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>cps</string>
+          <string>counts/s</string>
          </property>
         </widget>
        </item>
@@ -462,7 +462,7 @@ map</string>
         </font>
        </property>
        <property name="text">
-        <string>Maps normalization to units</string>
+        <string>Maps normalization units</string>
        </property>
       </widget>
      </item>

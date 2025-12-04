@@ -287,7 +287,7 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
             width = sigma_width
         ROI.append([name, idx - width, idx + width])
 
-def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, Clabel = "Counts [c]", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
+def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, Clabel = "counts", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
     Map = []
     Fig = []
     if not Disp["Selected"]: pos = None
@@ -773,7 +773,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             break
         if log:
             ax1.set_yscale('log')
-        ax1.set_ylabel("Counts [c]")
+        ax1.set_ylabel("counts")
 
         # if calib is None:
         #     ax1.set_xlim([0, head["bins"][0, 0]])
@@ -998,7 +998,7 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
             break
         if log:
             ax1.set_yscale('log')
-        ax1.set_ylabel("Counts [c]")
+        ax1.set_ylabel("counts")
 
         if calib is None:
             ax1.set_xlim([0, head["bins"][0, 0]])
@@ -1060,7 +1060,7 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
         ax1.set_title(f'{title.split(": ")[-1]}')
     if log:
         ax1.set_yscale('log')
-    ax1.set_ylabel("Counts [c]")
+    ax1.set_ylabel("counts")
     
     if Calib is None:
         ax1.set_xlim([0, head["bins"][0, 0]])
@@ -1118,7 +1118,7 @@ def print_Hist(Hist, filename, Name = None, detector = None, Calib = None):
                 file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
         file.write(f"# Channel")
         file.write(f"\t" if Calib is None else f"\tEnergy [eV]\t")
-        file.write(f"Counts [c]\n")
+        file.write(f"counts\n")
         ch = 1
         for c in Hist[h]:
             file.write(f"{ch:4d}")
