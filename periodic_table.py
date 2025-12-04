@@ -43,10 +43,10 @@ class HoverableButton(QtWidgets.QPushButton):
         try: Ke = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.K_SHELL)
         except: Ke = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementKedge").setText(f"{Ke:.3f}")
-        try: Le = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L1_SHELL)
+        try: Le = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L3_SHELL)
         except: Le = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementLedge").setText(f"{Le:.3f}")
-        try: Me = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.M1_SHELL)
+        try: Me = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.M5_SHELL)
         except: Me = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementMedge").setText(f"{Me:.3f}")
 
