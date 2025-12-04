@@ -37,8 +37,8 @@ class Analyse(QtWidgets.QDialog):
                 "DispChannelAxis"       : False,
                 "DispGrid"              : False,
                 "GenCsvs"               : False,
-                "GenHDF5light"          : False,
-                "GenHDF5"               : False,
+                # "GenHDF5light"          : False,
+                # "GenHDF5"               : False,
                 "GenHDF5full"           : False,
                 "GenHDF5fullOrigROIs"   : False,
                 # "GenWiatrowska"         : False,
@@ -107,8 +107,8 @@ class Analyse(QtWidgets.QDialog):
         self.checkBox_NormTypeI0LT.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTypeI0.toggled.connect(self.NormTypeChanged)
         self.checkBox_NormTypeLT.toggled.connect(self.NormTypeChanged)
-        self.checkBox_GenHDF5light.toggled.connect(lambda checked, mode = "light": self.HDF5Changed(checked, mode))        
-        self.checkBox_GenHDF5.toggled.connect(lambda checked, mode = "": self.HDF5Changed(checked, mode))        
+        # self.checkBox_GenHDF5light.toggled.connect(lambda checked, mode = "light": self.HDF5Changed(checked, mode))        
+        # self.checkBox_GenHDF5.toggled.connect(lambda checked, mode = "": self.HDF5Changed(checked, mode))        
         self.checkBox_GenHDF5full.toggled.connect(lambda checked, mode = "full": self.HDF5Changed(checked, mode))        
         self.checkBox_GenHDF5fullOrigROIs.toggled.connect(lambda checked, mode = "fullOrigROIs": self.HDF5Changed(checked, mode))        
         self.checkBox_DispTitles.toggled.connect(lambda checked, mode = "Simp": self.TitlesChanged(checked, mode))        
@@ -164,7 +164,8 @@ if self.checkBox_{name}.checkState() != QtCore.Qt.{state}:
             self.checkBox_NormTypeI0LT.blockSignals(False)
 
     def HDF5Changed(self, checked, mode):
-        for m in ["light", "", "full", "fullOrigROIs"]:
+        # for m in ["light", "", "full", "fullOrigROIs"]:
+        for m in ["full", "fullOrigROIs"]:
             if m != mode:
                 exec(f"if checked and self.checkBox_GenHDF5{m}.isChecked(): self.checkBox_GenHDF5{m}.setChecked(False)")
 
@@ -553,10 +554,12 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
 
 def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
     mode = {
-        "[True, False, False, False]" : "light",
-        "[False, True, False, False]" : "standard",
-        "[False, False, True, False]" : "full",
-        "[False, False, False, True]" : "fullOrigROIs"
+        # "[True, False, False, False]" : "light",
+        # "[False, True, False, False]" : "standard",
+        # "[False, False, True, False]" : "full",
+        # "[False, False, False, True]" : "fullOrigROIs"
+        "[True, False]" : "full",
+        "[False, True]" : "fullOrigROIs"
     }
     dataName = path.stem
     outputPath = str(resultPath) + (f"{str(os.sep) + dataName + str(os.sep)}" if batch else str(os.sep)) + "PXDA_Export" + str(os.sep)

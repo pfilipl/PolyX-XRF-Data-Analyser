@@ -358,7 +358,7 @@ class BatchWindow(QtWidgets.QWidget):
             if outputConfig.exec():
                 self.OutputConfig = outputConfig.Output
                 self.Progress.setValue(0)
-                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 19) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 4 generates
+                self.Progress.setMaximum((len(self.OutputConfig.keys()) - 17) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
                     try:
@@ -419,7 +419,8 @@ class BatchWindow(QtWidgets.QWidget):
                             #     exec(f'analyse.{name}(self, tempData, path, resultsPath, detectors, "W", roi = ROI, pos = POS, calib = self.Calib, vmin = vMin, vmax = vMax, maspect = mapAspect, emin = eMin, emax = eMax, saspect = spectraAspect, cmap = cMap, normtype = ["I0LT"], disp = display, csvs = csvs)')
                         self.Progress.setValue(self.Progress.value() + 1)
                     if hdf5:
-                        exec(f'analyse.HDF5(self, tempData, path, resultsPath, ROI, str([self.OutputConfig["GenHDF5light"], self.OutputConfig["GenHDF5"], self.OutputConfig["GenHDF5full"], self.OutputConfig["GenHDF5fullOrigROIs"]]), True)')
+                        # exec(f'analyse.HDF5(self, tempData, path, resultsPath, ROI, str([self.OutputConfig["GenHDF5light"], self.OutputConfig["GenHDF5"], self.OutputConfig["GenHDF5full"], self.OutputConfig["GenHDF5fullOrigROIs"]]), True)')
+                        exec(f'analyse.HDF5(self, tempData, path, resultsPath, ROI, str([self.OutputConfig["GenHDF5full"], self.OutputConfig["GenHDF5fullOrigROIs"]]), True)')
                     self.Progress.setValue(self.Progress.value() + 1)
                 QtGui.QGuiApplication.restoreOverrideCursor()
 
