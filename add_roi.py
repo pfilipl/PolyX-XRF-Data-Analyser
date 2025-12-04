@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, QtCore, uic
 import sys, os, numpy, xraylib, math, pathlib
 
-import main, single
+import main, single, PDA
 
 basedir = pathlib.Path(os.path.dirname(__file__))
 
@@ -218,7 +218,7 @@ class AddRoi(QtWidgets.QDialog):
         self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f'{name if name != "" else f"roi{self.RoiCount}"}'))
         self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(int(max(start, 1)))))
         self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(int(min(stop, 4096)))))
-        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.00)))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(PDA.SDD1toSDD2ratio)))
         self.CustomROIs.setCurrentCell(self.CustomROIs.currentRow() + 1, 0)
 
     def CustomDelete_clicked(self):

@@ -204,7 +204,7 @@ class PeriodicTable(QtWidgets.QWidget):
             ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{name}"))
             ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(max(roi[-1][1], 1))))
             ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(min(roi[-1][2], 4096))))
-            ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(1.00)))
+            ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(PDA.SDD1toSDD2ratio)))
             ROIs.setCurrentCell(ROIs.currentRow() + 1, 0)
         else:
             for item in ROIs.findItems(f"{self.Elements[Z - 1].text()}-{self.line}", QtCore.Qt.MatchFlag.MatchExactly):

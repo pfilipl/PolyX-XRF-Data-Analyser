@@ -48,6 +48,8 @@ for i in range(1, 107):
     Energies.append((xrl.AtomicNumberToSymbol(i), ka, kb, la, lb, m))
 Energies = np.array(Energies, dtype = [('symbol', 'U2'), ('Ka', 'f8'), ('Kb', 'f8'), ('La', 'f8'), ('Lb', 'f8'), ('M', 'f8')])
 
+SDD1toSDD2ratio = (1.2082)
+
 # ZAŁADOWANIE FUNKCJI
 
 # dzielenie spektrów prez siebie
