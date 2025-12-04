@@ -261,8 +261,10 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                 spectrum.Axes.add_patch(matplotlib.patches.Rectangle((roi[i][1], 0), roi[i][2] - roi[i][1], 1, facecolor = 'r', alpha = 0.2, transform = spectrum.Axes.get_xaxis_transform()))
                 if widget.Calib is not None:
                     if roi[i][1] + (roi[i][2] - roi[i][1]) / 2 > cEmin and roi[i][1] + (roi[i][2] - roi[i][1]) / 2 < cEmax:
+                        spectrum.Axes.add_artist(matplotlib.lines.Line2D([roi[i][1] + (roi[i][2] - roi[i][1]) / 2, roi[i][1] + (roi[i][2] - roi[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = spectrum.Axes.get_xaxis_transform()))
                         spectrum.Axes.text(roi[i][1] + (roi[i][2] - roi[i][1]) / 2, 0.7, roi[i][0], ha = 'center', rotation = 'vertical', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
                 else:
+                    spectrum.Axes.add_artist(matplotlib.lines.Line2D([roi[i][1] + (roi[i][2] - roi[i][1]) / 2, roi[i][1] + (roi[i][2] - roi[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = spectrum.Axes.get_xaxis_transform()))
                     spectrum.Axes.text(roi[i][1] + (roi[i][2] - roi[i][1]) / 2, 0.7, roi[i][0], ha = 'center', rotation = 'vertical', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
 
     if peaks is not None:

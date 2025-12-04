@@ -558,8 +558,10 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                                 ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
+                            ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                             ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
@@ -703,8 +705,10 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                                 ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
+                            ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                             ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
@@ -878,8 +882,10 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                                 ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
+                            ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                             ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
@@ -955,8 +961,10 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
                         ax1.add_patch(Rectangle((ROI[i][1], 0), ROI[i][2] - ROI[i][1], 1, facecolor = 'r', alpha = 0.2, transform = ax1.get_xaxis_transform()))
                         if calib is not None:
                             if ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 > cEmin and ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2 < cEmax:
+                                ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                                 ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
                         else:
+                            ax1.add_artist(lines.Line2D([ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = ax1.get_xaxis_transform()))
                             ax1.text(ROI[i][1] + (ROI[i][2] - ROI[i][1]) / 2, 0.7, ROI[i][0], ha = 'center', rotation = 'vertical', transform = ax1.get_xaxis_transform(), clip_on = True)
             if peaks is not None:
                 if isinstance(peaks, bool):
