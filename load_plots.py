@@ -42,8 +42,8 @@ def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoa
     if Norm is not None:
         I0 = Norm[0]
         LT = Norm[1]
-        sumSignal = sumSignal / I0 / (LT[detector] * 1e-6)
-
+        sumSignal = sumSignal / I0[detector] / (LT[detector] * 1e-6)
+        
     if map.ColorBar: map.ColorBar.remove()
     map.Axes.cla()
     imgMap = map.Axes.imshow(sumSignal.transpose(), origin = 'upper', cmap = Cmap, aspect = Aspect, vmin = Vmin, vmax = Vmax)

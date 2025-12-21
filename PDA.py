@@ -244,12 +244,13 @@ def data_load(path):
     # I0 = mat["I0_map"].transpose()      # [x, z]
 
     if number_of_files > 0:
-        Data = [Data1, Data2, Data1 + Data2]
+        Data = [Data1, Data2, Data1 + SDD1toSDD2ratio * Data2]
         ICR = [ICR1, ICR2, ICR1 + ICR2]    
         OCR = [OCR1, OCR2, OCR1 + OCR2]    
         RT = [RT1, RT2, RT1 + RT2]
         LT = [LT1, LT2, LT1 + LT2]
         DT = [DT1, DT2, np.max([DT1, DT2], axis = 0)]
+        I0 = [I0, I0, np.divide(np.multiply(I0, LT1) + np.multiply(I0, LT2), LT1 + LT2)]
         return [head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI]
     
     return [[], [], [], [], [], [], [], [], [], [], []]
@@ -321,7 +322,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 ax1 = fig.add_subplot()
                 sum_signal = np.sum(data[:, :, ROI[i][1]:ROI[i][2]], axis=2)
                 if normalize is not None:
-                    sum_signal = sum_signal / I0 / (LT[d] * 1e-6)
+                    sum_signal = sum_signal / I0[d] / (LT[d] * 1e-6)
                     # sum_signal = sum_signal / I0 / (LT[d] / 1e3)
                 # if normalized:
                 #     max_signal = np.max(sum_signal)
@@ -369,7 +370,7 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
             ax1 = fig.add_subplot()
             max_signal = np.max(data, axis=2)
             if normalize is not None:
-                max_signal = max_signal / I0 / (LT[d] * 1e-6)
+                max_signal = max_signal / I0[d] / (LT[d] * 1e-6)
                 # max_signal = max_signal / I0 / (LT[d] / 1e3)
             img = ax1.imshow(max_signal.transpose(), origin=Origin, cmap = Cmap, vmin = Vmin, vmax = Vmax)
             # img = ax1.imshow(max_signal.transpose(), cmap = Cmap, vmin = Vmin, vmax = Vmax)
@@ -516,7 +517,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             z0 = pos[0, 1]
             if normalize is not None:
                 # img = ax1.plot(data[x0, z0, :] / np.max(data[x0, z0, :]) / I0[x0, z0] / (LT[d][x0, z0] * 1e-6) )
-                sum_data = data[x0, z0, :] / I0[x0, z0] / (LT[d][x0, z0] * 1e-6)
+                sum_data = data[x0, z0, :] / I0[d][x0, z0] / (LT[d][x0, z0] * 1e-6)
             else:
                 # img = ax1.plot(data[x0, z0, :] / np.max(data[x0, z0, :]))
                 sum_data = data[x0, z0, :]
@@ -636,7 +637,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             if x1 > x0 and z1 > z0:
                 sum_data = data[x0:x1, z0:z1, :]
                 if normalize is not None:
-                    i0 = I0[x0:x1, z0:z1]
+                    i0 = I0[d][x0:x1, z0:z1]
                     lt = LT[d][x0:x1, z0:z1] * 1e-6
                     for ch in range(data.shape[2]):
                         sum_data[:, :, ch] = sum_data[:, :, ch] / i0 / lt
@@ -644,7 +645,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             elif x1 == x0 and z1 > z0:
                 sum_data = data[x0, z0:z1, :]
                 if normalize is not None:
-                    i0 = I0[x0, z0:z1]
+                    i0 = I0[d][x0, z0:z1]
                     lt = LT[d][x0, z0:z1] * 1e-6
                     for ch in range(data.shape[2]):
                         sum_data[:, ch] = sum_data[:, ch] / i0 / lt
@@ -652,7 +653,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             elif x1 > x0 and z1 == z0:
                 sum_data = data[x0:x1, z0, :]
                 if normalize is not None:
-                    i0 = I0[x0:x1, z0]
+                    i0 = I0[d][x0:x1, z0]
                     lt = LT[d][x0:x1, z0] * 1e-6
                     for ch in range(data.shape[2]):
                         sum_data[:, ch] = sum_data[:, ch] / i0 / lt
@@ -660,7 +661,7 @@ def Hist_plot(Data, head, title, POS = None, calib = None, detector = None, log 
             else:
                 sum_data = data[x0, z0, :]
                 if normalize is not None:
-                    i0 = I0[x0, z0]
+                    i0 = I0[d][x0, z0]
                     lt = LT[d][x0, z0] * 1e-6
                     sum_data = sum_data / i0 / lt
             # img = ax1.plot(sum_data / np.max(sum_data))
@@ -1197,7 +1198,7 @@ def print_Tiff(Map, filename, Name = None, detector = None):
             if detector is not None:
                 name = filename + f"_{detectors[detector[m]]}.tiff"
             else:
-                name = filename + f"_{m}.csv" if len(Map) > 1 else filename + ".tiff"
+                name = filename + f"_{m}.tiff" if len(Map) > 1 else filename + ".tiff"
         img = Image.fromarray(np.array(Map[m].transpose(), dtype = "float32"), mode = 'F')
         img.save(name)
 

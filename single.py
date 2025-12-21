@@ -433,16 +433,12 @@ class SingleWindow(QtWidgets.QWidget):
             self.tabWidget.setTabEnabled(10, True)
             self.tabWidget.setTabEnabled(11, True)
             self.tabWidget.setTabEnabled(12, True)
-            self.radioButton_NormTypeI0LT.setEnabled(True)
-            self.radioButton_NormTypeLT.setEnabled(True)
         else:
             self.tabWidget.setTabEnabled(8, False)
             self.tabWidget.setTabEnabled(9, False)
             self.tabWidget.setTabEnabled(10, False)
             self.tabWidget.setTabEnabled(11, False)
             self.tabWidget.setTabEnabled(12, False)
-            self.radioButton_NormTypeI0LT.setEnabled(False)
-            self.radioButton_NormTypeLT.setEnabled(False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def NormTypeChanged(self, mode = None):
@@ -540,7 +536,8 @@ class SingleWindow(QtWidgets.QWidget):
                 norm = [self.Data["I0"], lt]
                 clabel = clabel + "/V"
             elif self.NormType == "LT":
-                i0 = numpy.ones(self.Data["I0"].shape)
+                i0 = numpy.ones(self.Data["I0"][0].shape)
+                i0 = [i0, i0, i0]
                 norm = [i0, self.Data["LT"]]
                 clabel = clabel + "/s"
             else: 
@@ -679,7 +676,8 @@ class SingleWindow(QtWidgets.QWidget):
             norm = [self.Data["I0"], lt]
             clabel = clabel + "/V"
         elif self.NormType == "LT":
-            i0 = numpy.ones(self.Data["I0"].shape)
+            i0 = numpy.ones(self.Data["I0"][0].shape)
+            i0 = [i0, i0, i0]
             norm = [i0, self.Data["LT"]]
             clabel = clabel + "/s"
         else: 

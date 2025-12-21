@@ -147,8 +147,9 @@ if self.checkBox_{name}.checkState() != QtCore.Qt.{state}:
         self.checkBox_{tMode}.setCheckState(QtCore.Qt.CheckState.PartiallyChecked)
     flag = True
                     '''
+                    globaldict = globals()
                     localdict = locals()
-                    exec(exec_code, locals = localdict)
+                    exec(exec_code, globaldict, localdict)
                     flag = localdict['flag']
                     if flag:
                         break
@@ -251,7 +252,7 @@ def DiagI0(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO",
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "StatisticData")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(I0, head, f"{dataName}: Incident radiation", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "I0 [V]")
+    Map, Fig = PDA.Stats2D_plot(I0[0], head, f"{dataName}: Incident radiation", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "I0 [V]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_IonizationChamber0VoltageMap")
@@ -395,7 +396,7 @@ def NormPIN(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO"
     dataName = path.stem
     outputPath = generateOutputPath(path, resultPath, nestingType, "NormalizedI0")
     os.makedirs(outputPath, exist_ok = True)
-    Map, Fig = PDA.Stats2D_plot(PIN / I0, head, f"{dataName}: Transmission (normalized to I0)", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [-]")
+    Map, Fig = PDA.Stats2D_plot(PIN / I0[0], head, f"{dataName}: Transmission (normalized to I0)", Origin = origin, Aspect = maspect, Cmap = cmap, Disp = disp, clabel = "PIN [-]")
     plt.close('all')
     PDA.print_Tiff(Map, outputPath + f"{dataName}_NormalizedI0TransmissionMap")
     if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_NormalizedI0TransmissionMap")
@@ -413,7 +414,8 @@ def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
             norm = [I0, lt]
             label = "counts/V"
         elif nt == "LT":
-            i0 = numpy.ones(I0.shape)
+            i0 = numpy.ones(I0[0].shape)
+            i0 = [i0, i0, i0]
             norm = [i0, LT]
             label = "counts/s"
         else: 
@@ -423,7 +425,7 @@ def NormTotal(Parent, Data, path, resultPath, detectors = [2], nestingType = "Ot
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
         PDA.print_Tiff(Map, outputPath + f"{dataName}_Normalized{nt}TotalSignalMap", detector = detectors)
         if csvs: PDA.print_Map(Map, outputPath + f"{dataName}_Normalized{nt}TotalSignalMap", detector = detectors)
@@ -441,7 +443,8 @@ def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO
             norm = [I0, lt]
             label = "counts/V"
         elif nt == "LT":
-            i0 = numpy.ones(I0.shape)
+            i0 = numpy.ones(I0[0].shape)
+            i0 = [i0, i0, i0]
             norm = [i0, LT]
             label = "counts/s"
         else: 
@@ -451,7 +454,7 @@ def NormROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, pos = pos, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
         try: name = numpy.array(roi)[:, 0]
         except: 
@@ -474,7 +477,8 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
             norm = [I0, lt]
             label = "counts/V"
         elif nt == "LT":
-            i0 = numpy.ones(I0.shape)
+            i0 = numpy.ones(I0[0].shape)
+            i0 = [i0, i0, i0]
             norm = [i0, LT]
             label = "counts/s"
         else: 
@@ -484,7 +488,7 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
         dataName = path.stem
         outputPath = generateOutputPath(path, resultPath, nestingType, f"Normalized{nt}")
         os.makedirs(outputPath, exist_ok = True)
-        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
+        Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
         PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, Norm = True, Label = label)
 
@@ -633,7 +637,7 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
 
         grp_data = file.create_group("data")
         grp_data.create_dataset("PINmap", data = Data["PIN"].transpose())
-        grp_data.create_dataset("I0map", data = Data["I0"].transpose())
+        grp_data.create_dataset("I0map", data = Data["I0"][0].transpose())
         grp_data.create_dataset("StorageRingCurrent", data = Data["RC"])
         
         grp_sdd1 = grp_data.create_group("SDD1")
@@ -657,7 +661,7 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
 
         grp_sdd1.create_dataset("LiveTime", data = Data["LT"][0].transpose() * 1e-6)
         grp_sdd1.create_dataset("DeadTime", data = Data["DT"][0].transpose())
-        grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][0].transpose() * 1e-6))
+        grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][0].transpose(), Data["LT"][0].transpose() * 1e-6))
         
         grp_sdd2 = grp_data.create_group("SDD2")
         grp_sdd2sd = grp_sdd2.create_group("SpectralData")
@@ -680,7 +684,7 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
 
         grp_sdd2.create_dataset("LiveTime", data = Data["LT"][1].transpose() * 1e-6)
         grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
-        grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"].transpose(), Data["LT"][1].transpose() * 1e-6))
+        grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][1].transpose(), Data["LT"][1].transpose() * 1e-6))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
