@@ -259,7 +259,7 @@ class StitchWindow(QtWidgets.QWidget):
                     scipy.io.savemat(f"{resultPath}/{dataName}_{i+1:04}.mat", data)
                 for i in range(self.BottomMapOffset.value(), self.BottomMap.NumberOfFiles):
                     data = self.BottomMap.Data[i].copy()
-                    if (self.BottomMapOffset.value() + self.TopMap.NumberOfFiles + 1 - self.TopMapOffset.value()) % 2 == 1:
+                    if (self.BottomMapOffset.value() + self.TopMap.NumberOfFiles - self.TopMapOffset.value()) % 2 == 1:
                         data["dane1line"][0, :, :]  = data["dane1line"][0, :, :][::-1]
                         data["dane1line"][1, :, :]  = data["dane1line"][1, :, :][::-1]
                         data["stats1line"][0, :, 2] = data["stats1line"][0, :, 2][::-1]
@@ -272,9 +272,9 @@ class StitchWindow(QtWidgets.QWidget):
                         data["stats1line"][1, :, 1] = data["stats1line"][1, :, 1][::-1]
                         data["PIN_map"][i, :]       = data["PIN_map"][i, :][::-1]
                         data["I0_map"][i, :]        = data["I0_map"][i, :][::-1]
-                    data["PIN_map"] = numpy.concatenate((self.TopMap.Data[-1]["PIN_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["PIN_map"][self.BottomMapOffset.value():, :]))
-                    data["I0_map"] = numpy.concatenate((self.TopMap.Data[-1]["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["I0_map"][self.BottomMapOffset.value():, :]))
-                    scipy.io.savemat(f"{resultPath}/{dataName}_{i-self.BottomMapOffset.value()+self.TopMap.NumberOfFiles-self.TopMapOffset.value():04}.mat", data)
+                    data["PIN_map"] = numpy.concatenate((self.TopMap.Data[self.TopMap.NumberOfFiles - self.TopMapOffset.value() - 1]["PIN_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["PIN_map"][self.BottomMapOffset.value():, :]))
+                    data["I0_map"] = numpy.concatenate((self.TopMap.Data[self.TopMap.NumberOfFiles - self.TopMapOffset.value() - 1]["I0_map"][:self.TopMap.NumberOfFiles - self.TopMapOffset.value(), :], data["I0_map"][self.BottomMapOffset.value():, :]))
+                    scipy.io.savemat(f"{resultPath}/{dataName}_{i+1-self.BottomMapOffset.value()+self.TopMap.NumberOfFiles-self.TopMapOffset.value():04}.mat", data)
             QtGui.QGuiApplication.restoreOverrideCursor()
 
             dialog = QtWidgets.QMessageBox(self)
