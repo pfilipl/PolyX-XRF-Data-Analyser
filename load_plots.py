@@ -109,7 +109,7 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
     plot.draw()
 
 def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', coefficient = 1):
-    if detector != 2 or dataName == "I0": # do not draw statistic data for SDDSum
+    if detector != 2 or dataName in ["I0", "PIN"]: # do not draw statistic data for SDDSum
         map = tab.Canvas
         head = widget.Data["head"]
         Data = widget.Data[dataName]

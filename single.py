@@ -141,7 +141,6 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
-        self.tabWidget.setTabEnabled(8, False)
         self.tabWidget.setTabEnabled(9, False)
         self.tabWidget.setTabEnabled(10, False)
         self.tabWidget.setTabEnabled(11, False)
@@ -428,13 +427,11 @@ class SingleWindow(QtWidgets.QWidget):
                 self.LastDetector = None
                 self.CurrentDetector = None
         if self.CurrentDetector in ["SDD1", "SDD2"]:
-            self.tabWidget.setTabEnabled(8, True)
             self.tabWidget.setTabEnabled(9, True)
             self.tabWidget.setTabEnabled(10, True)
             self.tabWidget.setTabEnabled(11, True)
             self.tabWidget.setTabEnabled(12, True)
         else:
-            self.tabWidget.setTabEnabled(8, False)
             self.tabWidget.setTabEnabled(9, False)
             self.tabWidget.setTabEnabled(10, False)
             self.tabWidget.setTabEnabled(11, False)
