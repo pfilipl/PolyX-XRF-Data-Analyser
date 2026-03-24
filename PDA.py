@@ -249,7 +249,7 @@ def data_load(path):
         OCR = [OCR1, OCR2, OCR1 + OCR2]    
         RT = [RT1, RT2, RT1 + RT2]
         LT = [LT1, LT2, LT1 + LT2]
-        DT = [DT1, DT2, np.max([DT1, DT2], axis = 0)]
+        DT = [DT1, DT2, (np.ones(OCR1.shape) - (OCR1 + OCR2) / (ICR1 + ICR2)) * 100]
         I0 = [I0, I0, np.divide(np.multiply(I0, LT1) + np.multiply(I0, LT2), LT1 + LT2)]
         return [head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI]
     
