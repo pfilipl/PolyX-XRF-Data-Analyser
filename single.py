@@ -141,10 +141,6 @@ class SingleWindow(QtWidgets.QWidget):
 
         self.tabWidget.setTabEnabled(5, False)
         self.tabWidget.setTabEnabled(6, False)
-        self.tabWidget.setTabEnabled(9, False)
-        self.tabWidget.setTabEnabled(10, False)
-        self.tabWidget.setTabEnabled(11, False)
-        self.tabWidget.setTabEnabled(12, False)
 
         # Spectrum from map region
         self.MarkPoint                  = self.pushButton_MarkPoint
@@ -426,16 +422,6 @@ class SingleWindow(QtWidgets.QWidget):
             else:
                 self.LastDetector = None
                 self.CurrentDetector = None
-        if self.CurrentDetector in ["SDD1", "SDD2"]:
-            self.tabWidget.setTabEnabled(9, True)
-            self.tabWidget.setTabEnabled(10, True)
-            self.tabWidget.setTabEnabled(11, True)
-            self.tabWidget.setTabEnabled(12, True)
-        else:
-            self.tabWidget.setTabEnabled(9, False)
-            self.tabWidget.setTabEnabled(10, False)
-            self.tabWidget.setTabEnabled(11, False)
-            self.tabWidget.setTabEnabled(12, False)
         if self.AutoReload.isChecked(): self.Reload_clicked()
 
     def NormTypeChanged(self, mode = None):
