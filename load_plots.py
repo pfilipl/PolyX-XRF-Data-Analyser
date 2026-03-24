@@ -108,7 +108,7 @@ def PlotStats1D(widget, tab, dataName, ylabel = None, importLoad = False):
 
     plot.draw()
 
-def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', coefficient = 1):
+def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', coefficient = 1, Norm = None):
     if detector != 2 or dataName in ["I0", "PIN"]: # do not draw statistic data for SDDSum
         map = tab.Canvas
         head = widget.Data["head"]
@@ -118,6 +118,14 @@ def MapStats2D(widget, tab, dataName, detector = 2, clabel = None, importLoad = 
             data = Data[detector] * coefficient
         else:
             data = Data * coefficient
+
+        if dataName == "PIN":
+            if Norm is not None:
+                I0 = Norm[0]
+                data = data / I0[0]
+                clabel = clabel + " [-]"
+            else:
+                clabel = clabel + " [V]"
 
         if map.ColorBar: map.ColorBar.remove()
         map.Axes.cla()
