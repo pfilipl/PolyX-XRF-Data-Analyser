@@ -686,6 +686,29 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
         grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
         grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][1].transpose(), Data["LT"][1].transpose() * 1e-6))
 
+        grp_sddSum = grp_data.create_group("SDDSum")
+        grp_sddSumsd = grp_sddSum.create_group("SpectralData")
+        grp_sddSumsd.create_dataset("Spectra", data = Data["Data"][2].transpose(1, 0, 2))
+
+        if mode[modes] != "light":
+            grp_sddSumsd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][2].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sddSumsd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][2].transpose(1, 0, 2), axis=0), axis=0))
+            grp_sddSumrd = grp_sddSum.create_group("ROIsData")
+            grp_sddSumrd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][2].transpose(1, 0, 2), axis=2))
+            if mode[modes] == "full":
+                for i in range(len(ROI)):
+                    grp_sddSumrd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][2][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
+            elif mode[modes] == "fullOrigROIs":
+                for i in range(ds_ROInames.size):
+                    grp_sddSumrd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][2][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
+            grp_sddSum.create_dataset("ICR", data = Data["ICR"][2].transpose())
+            grp_sddSum.create_dataset("OCR", data = Data["OCR"][2].transpose())
+            grp_sddSum.create_dataset("RealTime", data = Data["RT"][2].transpose() * 1e-6)
+
+        grp_sddSum.create_dataset("LiveTime", data = Data["LT"][2].transpose() * 1e-6)
+        grp_sddSum.create_dataset("DeadTime", data = Data["DT"][2].transpose())
+        grp_sddSum.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][2].transpose(), Data["LT"][2].transpose() * 1e-6))
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = main.MainWindow()
