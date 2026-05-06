@@ -614,10 +614,10 @@ class SingleWindow(QtWidgets.QWidget):
                     self.label_Help.setText("Map info:")
                     self.label_Help.show()
                     info = f'map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} mm \u00d7 {numpy.round(head["Zpositions"][0, nof-1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} px \u00d7 {nof} px)'
-                    info += f'\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} um \u00d7 {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um'
-                    info += f'\ntime per pixel: \t {numpy.round(float(head["dt"][0, 0]) * 1000 / 2, 3)} ms'
-                    info += f'\nacquisition time: \t {f"{int(dat//3600)} h" if dat//3600>0 else ""} {f"{int(dat%3600/60)} min" if dat%3600//60>0 else ""} {dat%3600%60:0.2f} s'
-                    info += f'\nmeasurement time: \t {f"{int(dmt//3600)} h" if dmt//3600>0 else ""} {f"{int(dmt%3600/60)} min" if dmt%3600//60>0 else ""} {dmt%3600%60:0.2f} s'
+                    info += f'\npixel size: \t {numpy.round(float(head["Xpositions"][0, 1]) * 1000 - float(head["Xpositions"][0, 0]) * 1000, 3)} um \u00d7 {numpy.round(float(head["Zpositions"][0, 1]) * 1000 - float(head["Zpositions"][0, 0]) * 1000, 3)} um'
+                    info += f'\ntime per pixel: \t {numpy.round(float(head["dt"][0, 0]) * 1000, 3)} ms'
+                    info += f'\nacquisition time: \n\t theoretical: \t {f"{int(dat//3600)} h" if dat//3600>0 else ""} {f"{int(dat%3600/60)} min" if dat%3600//60>0 else ""} {dat%3600%60:0.2f} s'
+                    info += f'\n\t real: \t\t\t {f"{int(dmt//3600)} h" if dmt//3600>0 else ""} {f"{int(dmt%3600/60)} min" if dmt%3600//60>0 else ""} {dmt%3600%60:0.2f} s (+{dmt/dat*100-100:0.3f}%)'
                     self.label_HelpDescription.setText(info)
                     self.label_HelpDescription.show()
                 except:
