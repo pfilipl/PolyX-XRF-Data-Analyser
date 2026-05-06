@@ -192,6 +192,19 @@ def data_load(path):
             pin = mat["PIN_map"][i, :]
             i0 = mat["I0_map"][i, :]
 
+            data1[np.logical_not(np.isfinite(data1))] = 0
+            data2[np.logical_not(np.isfinite(data2))] = 0
+            icr1[np.logical_not(np.isfinite(icr1))] = 1
+            icr2[np.logical_not(np.isfinite(icr2))] = 1
+            ocr1[np.logical_not(np.isfinite(ocr1))] = 1
+            ocr2[np.logical_not(np.isfinite(ocr2))] = 1
+            rt1[rt1 <=0 ] = -1
+            rt2[rt2 <=0 ] = -1
+            lt1[lt1 <=0 ] = -1
+            lt2[lt2 <=0 ] = -1
+            pin[pin <= 0 ] = -1
+            i0[i0 <= 0 ] = -1
+
             if i == 0 or data1.shape == Data1[-1].shape:
                 Data1.append(data1) if i % 2 == 0 else Data1.append(data1[::-1])     # [z, x, c]
                 Data2.append(data2) if i % 2 == 0 else Data2.append(data2[::-1])     # [z, x, c]
