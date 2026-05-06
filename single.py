@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, os, xraylib, matplotlib, time, pathlib, numpy
+import sys, os, xraylib, matplotlib, time, pathlib, numpy, datetime
 import matplotlib.backends.backend_qtagg as backend
 matplotlib.use('QtAgg')
 
@@ -606,13 +606,18 @@ class SingleWindow(QtWidgets.QWidget):
                 self.AreaChanged = False
 
                 try:
+                    files = list(path.glob(f"{path.stem}*.mat"))
+                    nof = len(files) - 1
+                    dat = datetime.timedelta(seconds = len(head["Xpositions"][0, :]) * nof * float(head["dt"][0, 0])).total_seconds()
+                    dmt = (datetime.datetime.fromtimestamp(files[-2].stat().st_mtime) - datetime.datetime.fromtimestamp(files[-1].stat().st_mtime)).total_seconds()
+                    
                     self.label_Help.setText("Map info:")
                     self.label_Help.show()
-                    info = f'map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} x {numpy.round(head["Zpositions"][0, -1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} x {len(head["Zpositions"][0, :])} px)'
-                    info += f'\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} x {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um'
-                    info += f'\ntime per pixel: \t {numpy.round(head["dt"][0, 0] * 1000, 3)} ms'
-                    info += f'\ntotal acquisition time: \t {numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0], 3)} s ({numpy.round(len(head["Xpositions"][0, :]) * len(head["Zpositions"][0, :]) * head["dt"][0, 0] / 3600, 3)} h)'
-                    # info += f'\nmeasurement time: \t {} s'
+                    info = f'map size: \t {numpy.round(head["Xpositions"][0, -1] - head["Xpositions"][0, 0], 3)} mm \u00d7 {numpy.round(head["Zpositions"][0, nof-1] - head["Zpositions"][0, 0], 3)} mm ({len(head["Xpositions"][0, :])} px \u00d7 {nof} px)'
+                    info += f'\npixel size: \t {numpy.round(head["Xpositions"][0, 1] * 1000 - head["Xpositions"][0, 0] * 1000, 3)} um \u00d7 {numpy.round(head["Zpositions"][0, 1] * 1000 - head["Zpositions"][0, 0] * 1000, 3)} um'
+                    info += f'\ntime per pixel: \t {numpy.round(float(head["dt"][0, 0]) * 1000 / 2, 3)} ms'
+                    info += f'\nacquisition time: \t {f"{int(dat//3600)} h" if dat//3600>0 else ""} {f"{int(dat%3600/60)} min" if dat%3600//60>0 else ""} {dat%3600%60:0.2f} s'
+                    info += f'\nmeasurement time: \t {f"{int(dmt//3600)} h" if dmt//3600>0 else ""} {f"{int(dmt%3600/60)} min" if dmt%3600//60>0 else ""} {dmt%3600%60:0.2f} s'
                     self.label_HelpDescription.setText(info)
                     self.label_HelpDescription.show()
                 except:
