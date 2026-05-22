@@ -43,9 +43,12 @@ class HoverableButton(QtWidgets.QPushButton):
         try: Ke = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.K_SHELL)
         except: Ke = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementKedge").setText(f"{Ke:.3f}")
-        try: Le = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L3_SHELL)
-        except: Le = float("NaN")
-        self.parent().findChild(QtWidgets.QLabel, "label_ElementLedge").setText(f"{Le:.3f}")
+        try: L3e = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L3_SHELL)
+        except: L3e = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementL3edge").setText(f"{L3e:.3f}")
+        try: L2e = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.L2_SHELL)
+        except: L2e = float("NaN")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementL2edge").setText(f"{L2e:.3f}")
         try: Me = xraylib.EdgeEnergy(xraylib.SymbolToAtomicNumber(self.text()), xraylib.M5_SHELL)
         except: Me = float("NaN")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementMedge").setText(f"{Me:.3f}")
@@ -71,7 +74,8 @@ class HoverableButton(QtWidgets.QPushButton):
         self.parent().findChild(QtWidgets.QLabel, "label_ElementName").setText("")
 
         self.parent().findChild(QtWidgets.QLabel, "label_ElementKedge").setText("")
-        self.parent().findChild(QtWidgets.QLabel, "label_ElementLedge").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementL3edge").setText("")
+        self.parent().findChild(QtWidgets.QLabel, "label_ElementL2edge").setText("")
         self.parent().findChild(QtWidgets.QLabel, "label_ElementMedge").setText("")
 
         self.parent().findChild(QtWidgets.QLabel, "label_ElementKalpha").setText("")
@@ -87,8 +91,19 @@ class PeriodicTable(QtWidgets.QWidget):
 
         # Elements info
         self.ElementKedge       = self.label_ElementKedge
-        self.ElementLedge       = self.label_ElementLedge
+        self.ElementL3edge      = self.label_ElementL3edge
+        self.ElementL2edge      = self.label_ElementL2edge
         self.ElementMedge       = self.label_ElementMedge
+
+        self.KedgeLabel         = self.label_KedgeLabel
+        self.L3edgeLabel        = self.label_L3edgeLabel
+        self.L2edgeLabel        = self.label_L2edgeLabel
+        self.MedgeLabel         = self.label_MedgeLabel
+
+        self.KedgeUnit          = self.label_KedgeUnit
+        self.L3edgeUnit         = self.label_L3edgeUnit
+        self.L2edgeUnit         = self.label_L2edgeUnit
+        self.MedgeUnit          = self.label_MedgeUnit
 
         self.ElementKalpha      = self.label_ElementKalpha
         self.ElementKbeta       = self.label_ElementKbeta
@@ -129,22 +144,37 @@ class PeriodicTable(QtWidgets.QWidget):
     def setLine(self, line):
         self.line = line
         if self.line == "Ka":
+            self.ElementKedge.setEnabled(True)
+            self.KedgeLabel.setEnabled(True)
+            self.KedgeUnit.setEnabled(True)
             self.ElementKalpha.setEnabled(True)
             self.KalphaLabel.setEnabled(True)
             self.KalphaUnit.setEnabled(True)
         elif self.line == "Kb":
+            self.ElementKedge.setEnabled(True)
+            self.KedgeLabel.setEnabled(True)
+            self.KedgeUnit.setEnabled(True)
             self.ElementKbeta.setEnabled(True)
             self.KbetaLabel.setEnabled(True)
             self.KbetaUnit.setEnabled(True)
         elif self.line == "La":
+            self.ElementL3edge.setEnabled(True)
+            self.L3edgeLabel.setEnabled(True)
+            self.L3edgeUnit.setEnabled(True)
             self.ElementLalpha.setEnabled(True)
             self.LalphaLabel.setEnabled(True)
             self.LalphaUnit.setEnabled(True)
         elif self.line == "Lb":
+            self.ElementL2edge.setEnabled(True)
+            self.L2edgeLabel.setEnabled(True)
+            self.L2edgeUnit.setEnabled(True)
             self.ElementLbeta.setEnabled(True)
             self.LbetaLabel.setEnabled(True)
             self.LbetaUnit.setEnabled(True)
         elif self.line == "M":
+            self.ElementMedge.setEnabled(True)
+            self.MedgeLabel.setEnabled(True)
+            self.MedgeUnit.setEnabled(True)
             self.ElementM.setEnabled(True)
             self.MLabel.setEnabled(True)
             self.MUnit.setEnabled(True)

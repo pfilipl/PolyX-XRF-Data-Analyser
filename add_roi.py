@@ -139,27 +139,33 @@ class AddRoi(QtWidgets.QDialog):
             }
             if monoE is not None:
                 findLimitK = True
-                findLimitL = True
+                findLimitL3 = True
+                findLimitL2 = True
                 findLimitM = True
                 for Z in range(1, 119):
-                    try:
-                        if xraylib.EdgeEnergy(Z, xraylib.K_SHELL) > monoE / 1000 and findLimitK: 
-                            limitations["Ka"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
-                            limitations["Kb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
-                            findLimitK = False
-                    finally:    
-                        try:
-                            if xraylib.EdgeEnergy(Z, xraylib.L1_SHELL) > monoE / 1000 and findLimitL: 
-                                limitations["La"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
-                                limitations["Lb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
-                                findLimitL = False
-                        finally:
-                            try:
-                                if xraylib.EdgeEnergy(Z, xraylib.M1_SHELL) > monoE / 1000 and findLimitM: 
-                                    limitations["M"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
-                                    findLimitM = False
-                            except:
-                                continue
+                    try: Ke = xraylib.EdgeEnergy(Z, xraylib.K_SHELL)
+                    except: Ke = float("NaN")
+                    try: L3e = xraylib.EdgeEnergy(Z, xraylib.L3_SHELL)
+                    except: L3e = float("NaN")
+                    try: L2e = xraylib.EdgeEnergy(Z, xraylib.L2_SHELL)
+                    except: L2e = float("NaN")
+                    try: Me = xraylib.EdgeEnergy(Z, xraylib.M5_SHELL)
+                    except: Me = float("NaN")
+
+                    if findLimitK and Ke > monoE / 1000:
+                        limitations["Ka"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                        limitations["Kb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                        findLimitK = False
+                    if findLimitL3 and L3e > monoE / 1000: 
+                        limitations["La"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                        findLimitL3 = False
+                    if findLimitL2 and L2e > monoE / 1000: 
+                        limitations["Lb"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                        findLimitL2 = False
+                    if findLimitM and Me > monoE / 1000: 
+                        limitations["M"][1] = xraylib.AtomicNumberToSymbol(Z - 1)
+                        findLimitM = False
+
             self.Kalpha.setRangeByName(limitations["Ka"][0], limitations["Ka"][1])
             self.Kbeta.setRangeByName(limitations["Kb"][0], limitations["Kb"][1])
             self.Lalpha.setRangeByName(limitations["La"][0], limitations["La"][1])
