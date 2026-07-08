@@ -209,6 +209,10 @@ class SingleWindow(QtWidgets.QWidget):
         self.CalibrationZero            = self.doubleSpinBox_CalibrationZero
         self.CalibrationNoise           = self.doubleSpinBox_CalibrationNoise
         self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
+        self.CalibrationGain_2          = self.doubleSpinBox_CalibrationGain_2
+        self.CalibrationZero_2          = self.doubleSpinBox_CalibrationZero_2
+        self.CalibrationNoise_2         = self.doubleSpinBox_CalibrationNoise_2
+        self.CalibrationFano_2          = self.doubleSpinBox_CalibrationFano_2
 
         # Normalization
         self.NormType                   = None
@@ -270,7 +274,7 @@ class SingleWindow(QtWidgets.QWidget):
             line.set(xdata = [event.xdata, event.xdata], ydata = [1e-10, 1e20])
             canvas.Axes.add_artist(line)
             if self.Calib is not None:
-                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV ", horizontalalignment = 'right' if event.xdata > canvas.Axes.get_xlim()[1] * 0.8 else 'left')
+                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV (SDD1)\n E = {self.Calib[4096 + round(event.xdata)]:.3f} eV (SDD2)", horizontalalignment = 'right' if event.xdata > canvas.Axes.get_xlim()[1] * 0.8 else 'left')
                 canvas.Axes.add_artist(text)
             canvas.draw()
 
@@ -1033,6 +1037,10 @@ class SingleWindow(QtWidgets.QWidget):
             fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"
             fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
             fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
+            fileContent += f"\nCalibrationGain_2\tValue\t{self.CalibrationGain_2.value()}"
+            fileContent += f"\nCalibrationZero_2\tValue\t{self.CalibrationZero_2.value()}"
+            fileContent += f"\nCalibrationNoise_2\tValue\t{self.CalibrationNoise_2.value()}"
+            fileContent += f"\nCalibrationFano_2\tValue\t{self.CalibrationFano_2.value()}"
 
             fileContent += "\n\n# -----\n\n## Single configuration\n# Element name\tProperty\tValue"
 
@@ -1148,6 +1156,10 @@ class SingleWindow(QtWidgets.QWidget):
             parent.parent().parent().parent().Single.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().Single.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().Single.doubleSpinBox_CalibrationFano.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationGain_2.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationZero_2.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationNoise_2.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Single.doubleSpinBox_CalibrationFano_2.valueChanged.connect(lambda value, mode = "Single": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().setCalibration(None, "Batch")
 
 if __name__ == "__main__":

@@ -27,6 +27,10 @@ class BatchWindow(QtWidgets.QWidget):
         self.CalibrationZero            = self.doubleSpinBox_CalibrationZero
         self.CalibrationNoise           = self.doubleSpinBox_CalibrationNoise
         self.CalibrationFano            = self.doubleSpinBox_CalibrationFano
+        self.CalibrationGain_2          = self.doubleSpinBox_CalibrationGain_2
+        self.CalibrationZero_2          = self.doubleSpinBox_CalibrationZero_2
+        self.CalibrationNoise_2         = self.doubleSpinBox_CalibrationNoise_2
+        self.CalibrationFano_2          = self.doubleSpinBox_CalibrationFano_2
 
         # Maps configuration
         self.MapsConfigValuesAuto       = self.pushButton_MapsConfigValuesAuto
@@ -311,6 +315,10 @@ class BatchWindow(QtWidgets.QWidget):
             fileContent += f"\nCalibrationZero\tValue\t{self.CalibrationZero.value()}"
             fileContent += f"\nCalibrationNoise\tValue\t{self.CalibrationNoise.value()}"
             fileContent += f"\nCalibrationFano\tValue\t{self.CalibrationFano.value()}"
+            fileContent += f"\nCalibrationGain_2\tValue\t{self.CalibrationGain_2.value()}"
+            fileContent += f"\nCalibrationZero_2\tValue\t{self.CalibrationZero_2.value()}"
+            fileContent += f"\nCalibrationNoise_2\tValue\t{self.CalibrationNoise_2.value()}"
+            fileContent += f"\nCalibrationFano_2\tValue\t{self.CalibrationFano_2.value()}"
 
             fileContent += f"\n\nROIsDefault\tChecked\t{self.ROIsDefault.isChecked()}"
 
@@ -452,6 +460,10 @@ class BatchWindow(QtWidgets.QWidget):
             parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationZero.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationNoise.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationFano.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationGain_2.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationZero_2.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationNoise_2.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
+            parent.parent().parent().parent().Batch.doubleSpinBox_CalibrationFano_2.valueChanged.connect(lambda value, mode = "Batch": parent.parent().parent().parent().setCalibration(value, mode))
             parent.parent().parent().parent().setCalibration(None, "Single")
 
 if __name__ == "__main__":
