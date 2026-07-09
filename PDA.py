@@ -114,7 +114,7 @@ def real_pos(rpos, head):
 # <- a  - float,    stała kierunkowa kalibracji energetycznej [keV/ch]
 # <- b  - float,    stała swobodna kalibracji energetycznej [keV]
 # <- n  - float,    stała określająca zaszumienie spektrum [eV]
-# <- f  - float,    czynnik Fano [eV]
+# <- f  - float,    czynnik Fano [-]
 # ->    - ndarray,  tablica energii przypadających dla danego kanału [eV]
 # ->    - ndarray,  tablica dyspersji pików przypadających dla danego kanału [eV]
 def gen_calib(N, a, b, n, f):
@@ -270,7 +270,9 @@ def data_load(path):
 
 def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element = None, line = None, i_start = None, i_stop = None):
     if width is None and element is None and line is None and i_start is not None and i_stop is not None:
-        ROI.append([name, i_start, i_stop])
+        E_minus = np.mean([calib[max(0, idx-width)], calib[max(4096, 4096+idx_2-width_2)]])
+        E_plus = np.mean([calib[min(idx+width, 4095)], calib[min(4096+idx_2+width_2, 8191)]])
+        ROI.append([name, E_minus, E_plus, i_start, i_stop, i_start, i_stop])
     elif i_start is None and i_stop is None:
         if element is None:
             try: 
@@ -295,11 +297,18 @@ def add_ROI(ROI, name, calib = None, sigma = None, s = 1, width = None, element 
                 print("Unknown line symbol!")
     if line is not None:
         E = xrl.LineEnergy(element, line) * 1000
-        idx = (np.abs(calib - E)).argmin()
+        idx = (np.abs(calib[:4096] - E)).argmin()
+        idx_2 = (np.abs(calib[4096:] - E)).argmin()
         sigma_width = math.floor((s * sigma[idx]) / 2 + 1)
+        sigma_width_2 = math.floor((s * sigma[4096+idx_2]) / 2 + 1)
+        width_2 = width
         if width is None or width < sigma_width:
             width = sigma_width
-        ROI.append([name, idx - width, idx + width])
+        if width_2 is None or width_2 < sigma_width_2:
+            width_2 = sigma_width_2
+        E_minus = np.mean([calib[max(0, idx-width)], calib[max(4096, 4096+idx_2-width_2)]])
+        E_plus = np.mean([calib[min(idx+width, 4095)], calib[min(4096+idx_2+width_2, 8191)]])
+        ROI.append([name, E_minus, E_plus, idx - width, idx + width, idx_2 - width_2, idx_2 + width_2])
 
 def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', pos = None, Vmin = None, Vmax = None, Clabel = "counts", normalize = None, Origin = 'upper', Aspect = 'auto', Disp = None):
     Map = []

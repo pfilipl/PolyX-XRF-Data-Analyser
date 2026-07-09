@@ -54,6 +54,10 @@ class AddRoi(QtWidgets.QDialog):
         self.CustomWidth                = self.spinBox_CustomWidth
         self.CustomStart                = self.spinBox_CustomStart
         self.CustomStop                 = self.spinBox_CustomStop
+        self.CustomLine_2               = self.spinBox_CustomLine_2
+        self.CustomWidth_2              = self.spinBox_CustomWidth_2
+        self.CustomStart_2              = self.spinBox_CustomStart_2
+        self.CustomStop_2               = self.spinBox_CustomStop_2
 
         self.radioButton_CustomLine.toggled.connect(lambda checked: self.radioButton_CustomRange.setChecked(not(checked)))
         self.radioButton_CustomRange.toggled.connect(lambda checked: self.radioButton_CustomLine.setChecked(not(checked)))
@@ -64,11 +68,19 @@ class AddRoi(QtWidgets.QDialog):
         self.CustomWidth.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
         self.CustomStart.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
         self.CustomStop.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomLine_2.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomWidth_2.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomStart_2.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
+        self.CustomStop_2.valueChanged.connect(lambda value: self.radioButton_CustomChannel.setChecked(True))
 
         self.CustomLine.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
         self.CustomWidth.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
         self.CustomStart.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
         self.CustomStop.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
+        self.CustomLine_2.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
+        self.CustomWidth_2.valueChanged.connect(lambda value: self.radioButton_CustomLine.setChecked(True))
+        self.CustomStart_2.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
+        self.CustomStop_2.valueChanged.connect(lambda value: self.radioButton_CustomRange.setChecked(True))
 
         # - Regions of interest (ROIs)
         self.CustomROIs                 = self.tableWidget_CustomROIs
@@ -131,11 +143,16 @@ class AddRoi(QtWidgets.QDialog):
             self.M.setRoiCount(self.RoiCount)
 
             limitations = {
-                "Ka"    : ["B", "Rf"],
-                "Kb"    : ["Al", "Rf"],
-                "La"    : ["Sc", "Rf"],
-                "Lb"    : ["Al", "Cf"],
-                "M"     : ["Ce", "Rf"]
+                # "Ka"    : ["B", "Rf"],
+                # "Kb"    : ["Al", "Rf"],
+                # "La"    : ["Sc", "Rf"],
+                # "Lb"    : ["Al", "Cf"],
+                # "M"     : ["Ce", "Rf"]
+                "Ka"    : ["O", "Sr"],
+                "Kb"    : ["Al", "Sr"],
+                "La"    : ["Sc", "Th"],
+                "Lb"    : ["Al", "Po"],
+                "M"     : ["Ce", "Lr"]
             }
             if monoE is not None:
                 findLimitK = True
@@ -195,36 +212,69 @@ class AddRoi(QtWidgets.QDialog):
         if len(self.CustomROIs.findItems(name, QtCore.Qt.MatchFlag.MatchExactly)) > 0:
             name = f"{name}_{self.RoiCount}"
 
+        self.CustomROIs.insertRow(self.CustomROIs.currentRow() + 1)
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f'{name if name != "" else f"roi{self.RoiCount}"}'))
+
         # if self.LastCustom == "energy line":
         if self.radioButton_CustomEnergy.isChecked() and self.radioButton_CustomEnergyLine.isChecked():
-            idx = (numpy.abs(self.Calib - self.CustomEnergyLine.value() * 1000)).argmin()
+            idx = (numpy.abs(self.Calib[:4096] - self.CustomEnergyLine.value() * 1000)).argmin()
             sigma_width = math.floor((self.CustomEnergySigmaWidth.value() * self.Sigma[idx]) / 2 + 1)
-            idx_minus = (numpy.abs(self.Calib - (self.CustomEnergyLine.value() * 1000 - self.CustomEnergyWidth.value() * 1000 / 2))).argmin()
-            idx_plus = (numpy.abs(self.Calib - (self.CustomEnergyLine.value() * 1000 + self.CustomEnergyWidth.value() * 1000 / 2))).argmin()
+            idx_minus = (numpy.abs(self.Calib[:4096] - (self.CustomEnergyLine.value() * 1000 - self.CustomEnergyWidth.value() * 1000))).argmin()
+            idx_plus = (numpy.abs(self.Calib[:4096] - (self.CustomEnergyLine.value() * 1000 + self.CustomEnergyWidth.value() * 1000))).argmin()
+            idx_2 = (numpy.abs(self.Calib[4096:] - self.CustomEnergyLine.value() * 1000)).argmin()
+            sigma_width_2 = math.floor((self.CustomEnergySigmaWidth.value() * self.Sigma[4096+idx]) / 2 + 1)
+            idx_minus_2 = (numpy.abs(self.Calib[4096:] - (self.CustomEnergyLine.value() * 1000 - self.CustomEnergyWidth.value() * 1000))).argmin()
+            idx_plus_2 = (numpy.abs(self.Calib[4096:] - (self.CustomEnergyLine.value() * 1000 + self.CustomEnergyWidth.value() * 1000))).argmin()
             # width = max(sigma_width, idx - idx_minus, idx - idx_plus)
             width = sigma_width if self.radioButton_CustomEnergySigmaWidth.isChecked() else max(idx - idx_minus, idx - idx_plus)
             start = idx - width
             stop = idx + width
+            width_2 = sigma_width_2 if self.radioButton_CustomEnergySigmaWidth.isChecked() else max(idx_2 - idx_minus_2, idx_2 - idx_plus_2)
+            start_2 = idx_2 - width_2
+            stop_2 = idx_2 + width_2
+            if self.radioButton_CustomEnergySigmaWidth.isChecked():
+                E_minus = numpy.mean([self.Calib[start], self.Calib[4096+start_2]])
+                E_plus = numpy.mean([self.Calib[stop], self.Calib[4096+stop_2]])
+            else:
+                E_minus = (self.CustomEnergyLine.value() - self.CustomEnergyWidth.value()) * 1000
+                E_plus = (self.CustomEnergyLine.value() + self.CustomEnergyWidth.value()) * 1000
         # elif self.LastCustom == "energy range":
         elif self.radioButton_CustomEnergy.isChecked() and self.radioButton_CustomEnergyRange.isChecked():
-            start = (numpy.abs(self.Calib - self.CustomEnergyStart.value() * 1000)).argmin()
-            stop = (numpy.abs(self.Calib - self.CustomEnergyStop.value() * 1000)).argmin()
+            start = (numpy.abs(self.Calib[:4096] - self.CustomEnergyStart.value() * 1000)).argmin()
+            stop = (numpy.abs(self.Calib[:4096] - self.CustomEnergyStop.value() * 1000)).argmin()
+            start_2 = (numpy.abs(self.Calib[4096:] - self.CustomEnergyStart.value() * 1000)).argmin()
+            stop_2 = (numpy.abs(self.Calib[4096:] - self.CustomEnergyStop.value() * 1000)).argmin()
+            E_minus = self.CustomEnergyStart.value() * 1000
+            E_plus = self.CustomEnergyStop.value() * 1000
         # elif self.LastCustom == "channel line":
         elif self.radioButton_CustomChannel.isChecked() and self.radioButton_CustomLine.isChecked():
             idx = self.CustomLine.value()
             width = math.floor(self.CustomWidth.value() / 2)
             start = idx - width
             stop = idx + width
+            idx_2 = self.CustomLine_2.value()
+            width_2 = math.floor(self.CustomWidth_2.value() / 2)
+            start_2 = idx_2 - width_2
+            stop_2 = idx_2 + width_2
+            E_minus = numpy.mean([self.Calib[start], self.Calib[4096+start_2]])
+            E_plus = numpy.mean([self.Calib[stop], self.Calib[4096+stop_2]])
         # elif self.LastCustom == "channel range":
         elif self.radioButton_CustomChannel.isChecked() and self.radioButton_CustomRange.isChecked():
             start = self.CustomStart.value()
             stop = self.CustomStop.value()
+            start_2 = self.CustomStart_2.value()
+            stop_2 = self.CustomStop_2.value()
+            E_minus = numpy.mean([self.Calib[start], self.Calib[4096+start_2]])
+            E_plus = numpy.mean([self.Calib[stop], self.Calib[4096+stop_2]])
 
-        self.CustomROIs.insertRow(self.CustomROIs.currentRow() + 1)
-        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f'{name if name != "" else f"roi{self.RoiCount}"}'))
-        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(int(max(start, 1)))))
-        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(int(min(stop, 4096)))))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(int(E_minus))))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(int(E_plus))))
         self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(PDA.SDD1toSDD2ratio)))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(str(int(max(start, 1)))))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(str(int(min(stop, 4096)))))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(str(int(max(start_2, 1)))))
+        self.CustomROIs.setItem(self.CustomROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(str(int(min(stop_2, 4096)))))
+
         self.CustomROIs.setCurrentCell(self.CustomROIs.currentRow() + 1, 0)
 
     def CustomDelete_clicked(self):
@@ -281,6 +331,10 @@ class AddRoi(QtWidgets.QDialog):
                 table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 1).text()}"))
                 table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 2).text()}"))
                 table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 3).text()}"))
+                table.setItem(table.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 4).text()}"))
+                table.setItem(table.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 5).text()}"))
+                table.setItem(table.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 6).text()}"))
+                table.setItem(table.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{self.CustomROIs.item(row, 7).text()}"))
                 table.setCurrentCell(table.currentRow() + 1, 0)
                 if singleParent:
                     i = tabs.addTab(single.PreviewTab(tabs.parent(), int(self.CustomROIs.item(row, 1).text()), int(self.CustomROIs.item(row, 2).text()), float(self.CustomROIs.item(row, 3).text())), self.CustomROIs.item(row, 0).text())

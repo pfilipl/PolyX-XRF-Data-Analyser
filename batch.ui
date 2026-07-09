@@ -551,7 +551,7 @@
                <bool>true</bool>
               </property>
               <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>150</number>
+               <number>100</number>
               </attribute>
               <attribute name="horizontalHeaderStretchLastSection">
                <bool>true</bool>
@@ -563,17 +563,42 @@
               </column>
               <column>
                <property name="text">
-                <string>Start channel</string>
+                <string>Min energy [eV]</string>
                </property>
               </column>
               <column>
                <property name="text">
-                <string>Stop channel</string>
+                <string>Max energy [eV]</string>
                </property>
               </column>
               <column>
                <property name="text">
-                <string>Sum factor [SDD1/SDD2]</string>
+                <string>Sum factor
+(SDD1/SDD2)</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SDD1
+Min channel</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SDD1
+Max channel</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SDD2
+Min channel</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>SDD2
+Max channel</string>
                </property>
               </column>
              </widget>

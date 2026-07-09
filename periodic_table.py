@@ -232,9 +232,13 @@ class PeriodicTable(QtWidgets.QWidget):
             PDA.add_ROI(roi, f"{self.Elements[Z - 1].text()}-{self.line}", self.calib, self.sigma, sigmaWidth, Width)
             ROIs.insertRow(ROIs.currentRow() + 1)
             ROIs.setItem(ROIs.currentRow() + 1, 0, QtWidgets.QTableWidgetItem(f"{name}"))
-            ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(max(roi[-1][1], 1))))
-            ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(min(roi[-1][2], 4096))))
+            ROIs.setItem(ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(str(int(roi[-1][1]))))
+            ROIs.setItem(ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(str(int(roi[-1][2]))))
             ROIs.setItem(ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(str(PDA.SDD1toSDD2ratio)))
+            ROIs.setItem(ROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(str(max(roi[-1][3], 1))))
+            ROIs.setItem(ROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(str(min(roi[-1][4], 4096))))
+            ROIs.setItem(ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(str(max(roi[-1][5], 1))))
+            ROIs.setItem(ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(str(min(roi[-1][6], 4096)))) 
             ROIs.setCurrentCell(ROIs.currentRow() + 1, 0)
         else:
             for item in ROIs.findItems(f"{self.Elements[Z - 1].text()}-{self.line}", QtCore.Qt.MatchFlag.MatchExactly):

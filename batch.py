@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, os, time, pathlib
+import sys, os, time, pathlib, xraylib
 
 import main, add_roi, analyse, PDA
 
@@ -142,7 +142,20 @@ class BatchWindow(QtWidgets.QWidget):
             table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
             table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
             table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
+            table.setItem(table.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 4).text()}"))
+            table.setItem(table.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 5).text()}"))
+            table.setItem(table.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 6).text()}"))
+            table.setItem(table.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 7).text()}"))
             table.setCurrentCell(table.currentRow() + 1, 0)
+            try:
+                name = self.ROIs.item(row, 0).text().split("-")
+                if name[1] == "Ka": addroi.tab_Kalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
+                elif name[1] == "Kb": addroi.tab_Kbeta.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
+                elif name[1] == "La": addroi.tab_Lalpha.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
+                elif name[1] == "Lb": addroi.tab_Lbeta.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
+                elif name[1] == "M": addroi.tab_M.setElementChecked(xraylib.SymbolToAtomicNumber(name[0]), True)
+            except:
+                continue
         if addroi.exec():
             self.RoiCount = addroi.RoiCount
         

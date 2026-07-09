@@ -755,6 +755,10 @@ class SingleWindow(QtWidgets.QWidget):
             table.setItem(table.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 1).text()}"))
             table.setItem(table.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 2).text()}"))
             table.setItem(table.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 3).text()}"))
+            table.setItem(table.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 4).text()}"))
+            table.setItem(table.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 5).text()}"))
+            table.setItem(table.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 6).text()}"))
+            table.setItem(table.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{self.ROIs.item(row, 7).text()}"))
             table.setCurrentCell(table.currentRow() + 1, 0)
             try:
                 name = self.ROIs.item(row, 0).text().split("-")
