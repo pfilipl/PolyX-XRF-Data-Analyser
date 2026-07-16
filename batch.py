@@ -83,6 +83,7 @@ class BatchWindow(QtWidgets.QWidget):
         self.MapsNesting2.clicked.connect(self.LoadExperiment)
         self.MapsNesting3.clicked.connect(self.LoadExperiment)
         self.PathsList.itemChanged.connect(self.PathsList_itemChanged)
+        self.PathsList.itemClicked.connect(self.PathsList_itemClicked)
 
         # Results
         self.ResultsPath                = self.lineEdit_ResultsPath
@@ -210,6 +211,12 @@ class BatchWindow(QtWidgets.QWidget):
             if self.PathsList.item(row).checkState() == QtCore.Qt.CheckState.Unchecked:
                 continue
             self.Paths.append(experimentPath / self.PathsList.item(row).text())
+
+    def PathsList_itemClicked(self, item):
+        if item.checkState() == QtCore.Qt.CheckState.Checked:
+            item.setCheckState(QtCore.Qt.CheckState.Unchecked)
+        else:
+            item.setCheckState(QtCore.Qt.CheckState.Checked)
 
     def LoadExperiment(self):
         self.Paths = []
