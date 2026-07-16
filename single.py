@@ -21,7 +21,7 @@ class MatplotlibCanvas(backend.FigureCanvasQTAgg):
         super().__init__(self.Figure)
 
 class PreviewTab(QtWidgets.QWidget):
-    def __init__(self, parent = None, roiStart = 1, roiStop = 4096, roiFactor = 1.0):
+    def __init__(self, parent = None, roiStart = [0, 0], roiStop = [4096, 4096], roiFactor = PDA.SDD1toSDD2ratio):
         super(PreviewTab, self).__init__(parent)
         self.Canvas = MatplotlibCanvas(self)
         self.Toolbar = backend.NavigationToolbar2QT(self.Canvas, self)
@@ -446,7 +446,7 @@ class SingleWindow(QtWidgets.QWidget):
         while tabs.count() > 14:
             tabs.removeTab(14)
         for row in range(table.rowCount()):
-            i = tabs.addTab(PreviewTab(self, int(table.item(row, 1).text()), int(table.item(row, 2).text()), float(table.item(row, 3).text())), table.item(row, 0).text())
+            i = tabs.addTab(PreviewTab(self, [int(table.item(row, 4).text()), int(table.item(row, 6).text())], [int(table.item(row, 5).text()), int(table.item(row, 7).text())], float(table.item(row, 3).text())), table.item(row, 0).text())
             tabs.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonPressed(event, canvas))
             tabs.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibButtonReleased(event, canvas))
             tabs.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = tabs.widget(i).Canvas: self.parent().MatplotlibMouseMotion(event, canvas))
@@ -487,14 +487,18 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
                     if self.Calib is not None:
-                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[:4096] - roi[1])).argmin()}"))
-                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[:4096] - roi[2])).argmin()}"))
-                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[4096:] - roi[1])).argmin()}"))
-                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[4096:] - roi[2])).argmin()}"))
+                        roi.append((numpy.abs(self.Calib[:4096] - roi[1])).argmin())
+                        roi.append((numpy.abs(self.Calib[:4096] - roi[2])).argmin())
+                        roi.append((numpy.abs(self.Calib[4096:] - roi[1])).argmin())
+                        roi.append((numpy.abs(self.Calib[4096:] - roi[2])).argmin())
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{roi[4]}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{roi[5]}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{roi[6]}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{roi[7]}"))
                     else:
                         raise Exception("Calibration is not set!")
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
-                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2]), float(roi[3])), roi[0])
+                    i = self.tabWidget.addTab(PreviewTab(self, [int(roi[4]), int(roi[6])], [int(roi[5]), int(roi[7])], float(roi[3])), roi[0])
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))
@@ -773,7 +777,7 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{roi[6]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{roi[7]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
-                    i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2]), float(roi[3])), roi[0])
+                    i = self.tabWidget.addTab(PreviewTab(self, [int(roi[4]), int(roi[6])], [int(roi[5]), int(roi[7])], float(roi[3])), roi[0])
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_release_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonReleased(event, canvas))
                     self.tabWidget.widget(i).Canvas.mpl_connect("motion_notify_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibMouseMotion(event, canvas))

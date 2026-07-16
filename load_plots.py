@@ -31,14 +31,22 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
 def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "counts"):
     map = tab.Canvas
     head = widget.Data["head"]
-    if detector == 2:
-        data = widget.Data["Data"][0] + tab.RoiFactor * widget.Data["Data"][1]
-    else:
-        data = widget.Data["Data"][detector]
     roiStart = tab.RoiStart
     roiStop = tab.RoiStop
 
-    sumSignal = numpy.sum(data[:, :, roiStart:roiStop], axis=2)
+    match detector:
+        case 0:
+            data = widget.Data["Data"][detector]
+            sumSignal = numpy.sum(data[:, :, roiStart[0]:roiStop[0]], axis=2)
+        case 1:
+            data = widget.Data["Data"][detector]
+            sumSignal = numpy.sum(data[:, :, roiStart[1]:roiStop[1]], axis=2)
+        case 2:
+            data = widget.Data["Data"][0]
+            data_2 = widget.Data["Data"][1]
+            sumSignal = numpy.sum(data[:, :, roiStart[0]:roiStop[0]], axis=2) + tab.RoiFactor * numpy.sum(data_2[:, :, roiStart[1]:roiStop[1]], axis=2)
+        case _:
+            raise Exception("Wrong detector!")
     if Norm is not None:
         I0 = Norm[0]
         LT = Norm[1]
