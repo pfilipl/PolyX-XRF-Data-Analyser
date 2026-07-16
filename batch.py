@@ -66,6 +66,11 @@ class BatchWindow(QtWidgets.QWidget):
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
+        self.ROIs.setColumnHidden(4, True)
+        self.ROIs.setColumnHidden(5, True)
+        self.ROIs.setColumnHidden(6, True)
+        self.ROIs.setColumnHidden(7, True)
+
         # Experiment / Load
         self.ExperimentPath             = self.lineEdit_ExperimentPath
         self.MapsNesting2               = self.radioButton_MapsNesting2

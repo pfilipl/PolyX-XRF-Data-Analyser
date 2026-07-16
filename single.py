@@ -51,6 +51,11 @@ class SingleWindow(QtWidgets.QWidget):
         self.pushButton_ROIsDelete.clicked.connect(self.ROIsDelete_clicked)
         self.pushButton_ROIsDeleteAll.clicked.connect(self.ROIsDeleteAll_clicked)
 
+        self.ROIs.setColumnHidden(4, True)
+        self.ROIs.setColumnHidden(5, True)
+        self.ROIs.setColumnHidden(6, True)
+        self.ROIs.setColumnHidden(7, True)
+
         # Maps configuration
         self.MapsConfigValuesAuto       = self.pushButton_MapsConfigValuesAuto
         self.MapsConfigValuesStart      = self.doubleSpinBox_MapsConfigValuesStart
