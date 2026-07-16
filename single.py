@@ -486,6 +486,13 @@ class SingleWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{roi[1]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
+                    if self.Calib is not None:
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[:4096] - roi[1])).argmin()}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[:4096] - roi[2])).argmin()}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[4096:] - roi[1])).argmin()}"))
+                        self.ROIs.setItem(self.ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{(numpy.abs(self.Calib[4096:] - roi[2])).argmin()}"))
+                    else:
+                        raise Exception("Calibration is not set!")
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
                     i = self.tabWidget.addTab(PreviewTab(self, int(roi[1]), int(roi[2]), float(roi[3])), roi[0])
                     self.tabWidget.widget(i).Canvas.mpl_connect("button_press_event", lambda event, canvas = self.tabWidget.widget(i).Canvas: self.MatplotlibButtonPressed(event, canvas))
@@ -638,11 +645,31 @@ class SingleWindow(QtWidgets.QWidget):
     def ReloadData(self):
         QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
         head = self.Data["head"]
-        if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
+        if self.ROIsDefault.isChecked(): 
+            ROI = []
+            for roi in self.Data["ROI"]:
+                if self.Calib is not None:
+                    roi.append((numpy.abs(self.Calib[:4096] - roi[1])).argmin())
+                    roi.append((numpy.abs(self.Calib[:4096] - roi[2])).argmin())
+                    roi.append((numpy.abs(self.Calib[4096:] - roi[1])).argmin())
+                    roi.append((numpy.abs(self.Calib[4096:] - roi[2])).argmin())
+                else:
+                    raise Exception("Calibration is not set!")
+                ROI.append(roi)
         else:
             ROI = []
             for row in range(self.ROIs.rowCount()):
-                ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+                roi = [
+                        self.ROIs.item(row, 0).text(), 
+                        int(self.ROIs.item(row, 1).text()), 
+                        int(self.ROIs.item(row, 2).text()), 
+                        float(self.ROIs.item(row, 3).text()),
+                        int(self.ROIs.item(row, 4).text()), 
+                        int(self.ROIs.item(row, 5).text()), 
+                        int(self.ROIs.item(row, 6).text()), 
+                        int(self.ROIs.item(row, 7).text()), 
+                    ]
+                ROI.append(roi)
         if self.AreaChanged or self.PointChanged:
             if self.LastChanged == "Area":
                 POS = PDA.real_pos([[self.AreaX1.value(), self.AreaZ1.value()], [self.AreaX2.value(), self.AreaZ2.value()]], head)
@@ -1101,11 +1128,31 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setValue(0)
                 self.Progress.setMaximum(len(self.OutputConfig.keys()) - 17) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-                if self.ROIsDefault.isChecked(): ROI = self.Data["ROI"]
+                if self.ROIsDefault.isChecked():
+                    ROI = []
+                    for roi in self.Data["ROI"]:
+                        if self.Calib is not None:
+                            roi.append((numpy.abs(self.Calib[:4096] - roi[1])).argmin())
+                            roi.append((numpy.abs(self.Calib[:4096] - roi[2])).argmin())
+                            roi.append((numpy.abs(self.Calib[4096:] - roi[1])).argmin())
+                            roi.append((numpy.abs(self.Calib[4096:] - roi[2])).argmin())
+                        else:
+                            raise Exception("Calibration is not set!")
+                        ROI.append(roi)
                 else:
                     ROI = []
                     for row in range(self.ROIs.rowCount()):
-                        ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+                        roi = [
+                                self.ROIs.item(row, 0).text(), 
+                                int(self.ROIs.item(row, 1).text()), 
+                                int(self.ROIs.item(row, 2).text()), 
+                                float(self.ROIs.item(row, 3).text()),
+                                int(self.ROIs.item(row, 4).text()), 
+                                int(self.ROIs.item(row, 5).text()), 
+                                int(self.ROIs.item(row, 6).text()), 
+                                int(self.ROIs.item(row, 7).text()), 
+                            ]
+                        ROI.append(roi)
                 if self.AreaChanged or self.PointChanged:
                     if self.LastChanged == "Area":
                         POS = PDA.real_pos([[self.AreaX1.value(), self.AreaZ1.value()], [self.AreaX2.value(), self.AreaZ2.value()]], self.Data["head"])
