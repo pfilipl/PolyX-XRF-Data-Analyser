@@ -135,6 +135,10 @@ class BatchWindow(QtWidgets.QWidget):
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 1, QtWidgets.QTableWidgetItem(f"{roi[1]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 2, QtWidgets.QTableWidgetItem(f"{roi[2]}"))
                     self.ROIs.setItem(self.ROIs.currentRow() + 1, 3, QtWidgets.QTableWidgetItem(f"{roi[3]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 4, QtWidgets.QTableWidgetItem(f"{roi[4]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 5, QtWidgets.QTableWidgetItem(f"{roi[5]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 6, QtWidgets.QTableWidgetItem(f"{roi[6]}"))
+                    self.ROIs.setItem(self.ROIs.currentRow() + 1, 7, QtWidgets.QTableWidgetItem(f"{roi[7]}"))
                     self.ROIs.setCurrentCell(self.ROIs.currentRow() + 1, 0)
             file.close()
 
@@ -170,9 +174,23 @@ class BatchWindow(QtWidgets.QWidget):
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ROIs config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
             file = open(fileName, mode)
-            fileContent = "## ROIs\n# Name\t Start channel\t Stop channel\t Sum factor [SDD1/SDD2]\n"
+            fileContent = "## ROIs\n# Name"
+            fileContent += "\tMin energy [eV]"
+            fileContent += "\tMax energy [eV]"
+            fileContent += "\tSum factor (SDD1/SDD2)"
+            fileContent += "\tSDD1 Min channel"
+            fileContent += "\tSDD1 Max channel"
+            fileContent += "\tSDD2 Min channel"
+            fileContent += "\tSDD2 Max channel\n"
             for row in range(self.ROIs.rowCount()):
-                fileContent += f"\n{self.ROIs.item(row, 0).text()}\t{self.ROIs.item(row, 1).text()}\t{self.ROIs.item(row, 2).text()}\t{self.ROIs.item(row, 3).text()}"
+                fileContent += f"\n{self.ROIs.item(row, 0).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 1).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 2).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 3).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 4).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 5).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 6).text()}"
+                fileContent += f"\t{self.ROIs.item(row, 7).text()}"
             file.write(fileContent)
             file.close()
     
