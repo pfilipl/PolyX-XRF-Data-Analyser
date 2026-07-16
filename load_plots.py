@@ -256,11 +256,31 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
         if func == numpy.sum: spectrum.Axes.set_ylim([1, numpy.max(sumData) * 1.5])
         else: spectrum.Axes.set_ylim([0, numpy.max(sumData) * 1.05])
 
-    if roi is None and widget.ROIsDefault.isChecked(): roi = ROI
+    if roi is None and widget.ROIsDefault.isChecked(): 
+        roi = []
+        for r in ROI:
+            if widget.Calib is not None:
+                r.append((numpy.abs(widget.Calib[:4096] - r[1])).argmin())
+                r.append((numpy.abs(widget.Calib[:4096] - r[2])).argmin())
+                r.append((numpy.abs(widget.Calib[4096:] - r[1])).argmin())
+                r.append((numpy.abs(widget.Calib[4096:] - r[2])).argmin())
+            else:
+                raise Exception("Callibration is not set!")
+            roi.append(r)
     elif roi is None:
         roi = []
         for row in range(widget.ROIs.rowCount()):
-            roi.append([widget.ROIs.item(row, 0).text(), int(widget.ROIs.item(row, 1).text()), int(widget.ROIs.item(row, 2).text()), float(widget.ROIs.item(row, 3).text())])
+            temp = [
+                widget.ROIs.item(row, 0).text(), 
+                int(widget.ROIs.item(row, 1).text()), 
+                int(widget.ROIs.item(row, 2).text()), 
+                float(widget.ROIs.item(row, 3).text()),
+                int(widget.ROIs.item(row, 4).text()), 
+                int(widget.ROIs.item(row, 5).text()), 
+                int(widget.ROIs.item(row, 6).text()), 
+                int(widget.ROIs.item(row, 7).text()), 
+            ]
+            roi.append(temp)
 
     if roi is not None:
         for i in range(len(roi)):

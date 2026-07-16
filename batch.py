@@ -1,5 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore, uic
-import sys, os, time, pathlib, xraylib
+import sys, os, time, pathlib, xraylib, numpy
 
 import main, add_roi, analyse, PDA
 
@@ -426,11 +426,31 @@ class BatchWindow(QtWidgets.QWidget):
                     else:
                         tempData = {"head" : head, "Data" : Data, "ICR" : ICR, "OCR" : OCR, "RT" : RT, "LT" : LT, "DT" : DT, "PIN" : PIN, "I0" : I0, "RC" : RC, "ROI" : ROI}
                     
-                    if self.ROIsDefault.isChecked(): ROI = tempData["ROI"]
+                    if self.ROIsDefault.isChecked():
+                        ROI = []
+                        for roi in tempData["ROI"]:
+                            if self.Calib is not None:
+                                roi.append((numpy.abs(self.Calib[:4096] - roi[1])).argmin())
+                                roi.append((numpy.abs(self.Calib[:4096] - roi[2])).argmin())
+                                roi.append((numpy.abs(self.Calib[4096:] - roi[1])).argmin())
+                                roi.append((numpy.abs(self.Calib[4096:] - roi[2])).argmin())
+                            else:
+                                raise Exception("Calibration is not set!")
+                            ROI.append(roi)
                     else:
                         ROI = []
                         for row in range(self.ROIs.rowCount()):
-                            ROI.append([self.ROIs.item(row, 0).text(), int(self.ROIs.item(row, 1).text()), int(self.ROIs.item(row, 2).text()), float(self.ROIs.item(row, 3).text())])
+                            roi = [
+                                    self.ROIs.item(row, 0).text(), 
+                                    int(self.ROIs.item(row, 1).text()), 
+                                    int(self.ROIs.item(row, 2).text()), 
+                                    float(self.ROIs.item(row, 3).text()),
+                                    int(self.ROIs.item(row, 4).text()), 
+                                    int(self.ROIs.item(row, 5).text()), 
+                                    int(self.ROIs.item(row, 6).text()), 
+                                    int(self.ROIs.item(row, 7).text()), 
+                                ]
+                            ROI.append(roi)
                     POS = None
                     vMin = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStart.value()
                     vMax = None if self.MapsConfigValuesAuto.isChecked() else self.MapsConfigValuesStop.value()

@@ -29,8 +29,8 @@ class MainWindow(QtWidgets.QMainWindow):
         danteCalib = sio.loadmat(basedir / "_dante_Ecallibration_SDD1.mat") # path to _dante_Ecallibration_SDD1 file
         danteCalib_2 = sio.loadmat(basedir / "_dante_Ecallibration_SDD2.mat") # path to _dante_Ecallibration_SDD2 file
         danteCalibOpt, _ = so.curve_fit(lambda x, a, b: a * x + b, danteCalib['callibration_table'][:, 0], danteCalib['callibration_table'][:, 1])
-        danteCalibOpt_2, _ = so.curve_fit(lambda x, a, b: a * x + b, danteCalib_2['callibration_table'][:, 0], danteCalib_2['callibration_table'][:, 1])
-        # danteCalibOpt_2, _ = so.curve_fit(lambda x, a, b: a * x + b, danteCalib_2['callibration_table'][:, 0], danteCalib_2['callibration_table'][:, 1]*1.2+200)
+        # danteCalibOpt_2, _ = so.curve_fit(lambda x, a, b: a * x + b, danteCalib_2['callibration_table'][:, 0], danteCalib_2['callibration_table'][:, 1])
+        danteCalibOpt_2, _ = so.curve_fit(lambda x, a, b: a * x + b, danteCalib_2['callibration_table'][:, 0], danteCalib_2['callibration_table'][:, 1]*1.2+200)
         self.Single.doubleSpinBox_CalibrationGain.setValue(danteCalibOpt[0])
         self.Single.doubleSpinBox_CalibrationZero.setValue(danteCalibOpt[1])
         self.Single.doubleSpinBox_CalibrationNoise.setValue(140)
