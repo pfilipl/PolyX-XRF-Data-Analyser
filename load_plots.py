@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 import matplotlib.patches
-import sys, xraylib, matplotlib, numpy, scipy, math
+import sys, xraylib, matplotlib, numpy, scipy, math, copy
 
 import main, PDA
 
@@ -213,6 +213,8 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
         spectrum.Axes.set_xlabel("E [eV]")
         spectrum.Axes.get_xaxis().set_visible(True)
 
+        if Emax is None:
+            Emax = min(widget.Calib[4095]/1000, widget.Calib[-1]/1000)
         spectrum.Axes.set_xlim([Emin*1000, Emax*1000])
         spectrum.Axes2x = spectrum.Axes.secondary_xaxis('top')
         spectrum.Axes2x.set_xlabel("Channel [ch]")
@@ -231,16 +233,32 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
 def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000, 10000]], Emin = 0.0, Emax = None, roi = None, peaks = True, startLoad = True, importLoad = False, Aspect = 'auto', ChannelAxis = False, Grid = False):
     spectrum = tab.Canvas
     head = widget.Data["head"]
-    data = widget.Data["Data"][detector]
     ROI = widget.Data["ROI"]
     spectrum.Axes.cla()
+
+    match detector:
+        case 0 | 1:
+            data = widget.Data["Data"][detector]
+        case 2:
+            if widget.Calib is None:
+                data = widget.Data["Data"][detector]
+            else:
+                data = copy.deepcopy(widget.Data["Data"][0])
+                data_2 = widget.Data["Data"][1]
+                for ch in range(4096):
+                    chProjection = (numpy.abs(widget.Calib[:4096] - widget.Calib[4096+ch])).argmin()
+                    data[:, :, chProjection] = numpy.sum([data[:, :, chProjection], PDA.SDD1toSDD2ratio * data_2[:, :, ch]], axis=0)
+        case _:
+            raise Exception("Wrong detector!")
+
     if widget.Calib is not None:
-        cEmin = (numpy.abs(widget.Calib - Emin * 1000)).argmin() - 1
+        cEmin = (numpy.abs(widget.Calib[:4096] - Emin * 1000)).argmin() - 1
         if Emax is None:
-            Emax = widget.Calib[-1] / 1000
+            Emax = min(widget.Calib[4095], widget.Calib[-1]) / 1000
             cEmax = head["bins"][0, 0] - 1
         else:
-            cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
+            cEmax = (numpy.abs(widget.Calib[:4096] - Emax * 1000)).argmin() + 1
+
     if pos is None:
         pos = [[0, 0], [10000, 10000]]
     if isinstance(pos, list):
@@ -268,7 +286,11 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
         sumData = func(sumData, axis = 0)
     else:
         sumData = data[x0, z0, :]
-    imgSpectrum = spectrum.Axes.plot(sumData)
+
+    if widget.Calib is None:
+        imgSpectrum = spectrum.Axes.plot(sumData)
+    else:
+        imgSpectrum = spectrum.Axes.plot(widget.Calib[4096:] if detector == 1 else widget.Calib[:4096], sumData)
 
     if func == numpy.sum and not widget.PointChanged: spectrum.Axes.set_yscale('log')
     if (widget.AreaChanged or widget.PointChanged) and not (startLoad or importLoad):
@@ -313,7 +335,11 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
             if roi[i][0] != 'Total signal':
                 spectrum.Axes.add_patch(matplotlib.patches.Rectangle((roi[i][1], 0), roi[i][2] - roi[i][1], 1, facecolor = 'r', alpha = 0.2, transform = spectrum.Axes.get_xaxis_transform()))
                 if widget.Calib is not None:
-                    if roi[i][1] + (roi[i][2] - roi[i][1]) / 2 > cEmin and roi[i][1] + (roi[i][2] - roi[i][1]) / 2 < cEmax:
+                    if detector == 2:
+                        statement = roi[i][6] + (roi[i][7] - roi[i][6]) / 2 > cEmin and roi[i][6] + (roi[i][7] - roi[i][6]) / 2 < cEmax
+                    else:
+                        statement = roi[i][4] + (roi[i][5] - roi[i][4]) / 2 > cEmin and roi[i][4] + (roi[i][5] - roi[i][4]) / 2 < cEmax
+                    if statement:
                         spectrum.Axes.add_artist(matplotlib.lines.Line2D([roi[i][1] + (roi[i][2] - roi[i][1]) / 2, roi[i][1] + (roi[i][2] - roi[i][1]) / 2], [0, 1], linewidth=1.0, linestyle='-', color='r', transform = spectrum.Axes.get_xaxis_transform()))
                         spectrum.Axes.text(roi[i][1] + (roi[i][2] - roi[i][1]) / 2, 0.7, roi[i][0], ha = 'center', rotation = 'vertical', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
                 else:
@@ -326,25 +352,30 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                 xP = scipy.signal.find_peaks(sumData, height = 1e-5 * numpy.max(sumData), width = 10)
                 for xp in xP[0]:
                     if widget.Calib is not None:
-                        if ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib - 0)).argmin() + 50:
-                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C1'))
+                        if detector == 2:
+                            statement = ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib[4096:] - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib[4096:] - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib[4096:] - 0)).argmin() + 50
+                        else:
+                            statement = ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib[:4096] - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50
+                        if statement:
+                            xpE = widget.Calib[4096+xp] if detector == 2 else widget.Calib[xp]
+                            spectrum.Axes.add_artist(matplotlib.lines.Line2D([xpE, xpE], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C1'))
                             ts = False * numpy.ones((5, 1))
-                            kadifft = numpy.abs(PDA.Energies['Ka'] - widget.Calib[xp] / 1000)
-                            kbdifft = numpy.abs(PDA.Energies['Kb'] - widget.Calib[xp] / 1000)
-                            ladifft = numpy.abs(PDA.Energies['La'] - widget.Calib[xp] / 1000)
-                            lbdifft = numpy.abs(PDA.Energies['Lb'] - widget.Calib[xp] / 1000)
-                            mdifft  = numpy.abs(PDA.Energies['M']  - widget.Calib[xp] / 1000)
+                            kadifft = numpy.abs(PDA.Energies['Ka'] - xpE / 1000)
+                            kbdifft = numpy.abs(PDA.Energies['Kb'] - xpE / 1000)
+                            ladifft = numpy.abs(PDA.Energies['La'] - xpE / 1000)
+                            lbdifft = numpy.abs(PDA.Energies['Lb'] - xpE / 1000)
+                            mdifft  = numpy.abs(PDA.Energies['M']  - xpE / 1000)
                             ka = PDA.Energies['symbol'][kadifft.argmin()]
                             kb = PDA.Energies['symbol'][kbdifft.argmin()]
                             la = PDA.Energies['symbol'][ladifft.argmin()]
                             lb = PDA.Energies['symbol'][lbdifft.argmin()]
                             m  = PDA.Energies['symbol'][mdifft.argmin()]
                             ts[numpy.array([min(kadifft), min(kbdifft), min(ladifft), min(lbdifft), min(mdifft)]).argmin()] = True
-                            spectrum.Axes.text(xp, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
-                            spectrum.Axes.text(xp, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
-                            spectrum.Axes.text(xp, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
-                            spectrum.Axes.text(xp, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
-                            spectrum.Axes.text(xp, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                            spectrum.Axes.text(xpE, 0.05, ka, weight = 'bold' if ts[0] else 'normal', ha = 'right', rotation = 'vertical', color = 'C4', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                            spectrum.Axes.text(xpE, 0.12, kb, weight = 'bold' if ts[1] else 'normal', ha = 'right', rotation = 'vertical', color = 'C6', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                            spectrum.Axes.text(xpE, 0.20, la, weight = 'bold' if ts[2] else 'normal', ha = 'right', rotation = 'vertical', color = 'C5', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                            spectrum.Axes.text(xpE, 0.27, lb, weight = 'bold' if ts[3] else 'normal', ha = 'right', rotation = 'vertical', color = 'C7', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                            spectrum.Axes.text(xpE, 0.35, m,  weight = 'bold' if ts[4] else 'normal', ha = 'right', rotation = 'vertical', color = 'C8', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
                     else:
                         spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C2'))
                 if widget.Calib is not None:
@@ -375,13 +406,20 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                     else:
                         print("Unknown line symbol!")
                         continue
-                    xp = (numpy.abs(widget.Calib - xraylib.LineEnergy(element, line) * 1000)).argmin()
-                    spectrum.Axes.add_artist(matplotlib.lines.Line2D([xp, xp], [0, 0.5], 1.0, '-', 'red', transform = spectrum.Axes.get_xaxis_transform()))
+                    if detector == 2:
+                        xp = (numpy.abs(widget.Calib[4096:] - xraylib.LineEnergy(element, line) * 1000)).argmin()
+                        xpE = widget.Calib[4096+xp]
+                    else:
+                        xp = (numpy.abs(widget.Calib[:4096] - xraylib.LineEnergy(element, line) * 1000)).argmin()
+                        xpE = widget.Calib[xp]
+                    spectrum.Axes.add_artist(matplotlib.lines.Line2D([xpE, xpE], [0, 0.5], 1.0, '-', 'red', transform = spectrum.Axes.get_xaxis_transform()))
                     if xp > cEmin and xp < cEmax:
-                        spectrum.Axes.text(xp, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
+                        spectrum.Axes.text(xpE, 0.55, name, ha = 'center', rotation = 'vertical', color = 'red', transform = spectrum.Axes.get_xaxis_transform(), clip_on = True)
 
     spectrum.Axes.set_ylabel("counts")
     spectrum.Axes.get_yaxis().set_visible(True)
+    spectrum.Axes.set_xlabel("E [eV]")
+    spectrum.Axes.get_xaxis().set_visible(True)
     
     if widget.Calib is None:
         spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
@@ -394,22 +432,19 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
             spectrum.Axes.grid(True)
         spectrum.Axes.format_coord = lambda x, y: f'x = {x:.0f} ch, y = {y:.3e}'
     else:
+        if Emax is None:
+            Emax = min(widget.Calib[4095]/1000, widget.Calib[-1]/1000)
+        spectrum.Axes.set_xlim([Emin*1000, Emax*1000])
+        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('top')
+        spectrum.Axes2x.set_xlabel("Channel [ch]")
+        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib, 2))
         if ChannelAxis:
-            spectrum.Axes.get_xaxis().set_visible(True)
-            spectrum.Axes.get_xaxis().tick_top()
-            spectrum.Axes.get_xaxis().set_label_position('top')
-            spectrum.Axes.set_xlabel("Channel [ch]")
+            spectrum.Axes2x.get_xaxis().set_visible(True)
         else:
-            spectrum.Axes.get_xaxis().set_visible(False)
-        spectrum.Axes.set_xlim([cEmin, cEmax])
-        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
-        spectrum.Axes2x.set_xlabel("E [eV]")
-        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicks(secAxes, spectrum.Axes, widget.Calib, 4096, "X"))
+            spectrum.Axes2x.get_xaxis().set_visible(False)
         if Grid: 
-            spectrum.Axes.get_xaxis().set_visible(True)
-            if not ChannelAxis: spectrum.Axes.get_xaxis().set_ticklabels([])
             spectrum.Axes.grid(True)
-        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)]:.3f} eV, y = {y:.3e}'
+        spectrum.Axes.format_coord = lambda x, y: f'E = {x:.3f} eV, y = {y:.3e}'
 
     spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()
