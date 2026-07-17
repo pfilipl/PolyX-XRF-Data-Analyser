@@ -28,6 +28,24 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         else:
             secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
+def setTicksSpectrum(secAxes, axes, calib, detector):
+    lim = axes.get_xlim()
+    lim = [max(0, lim[0]), min(lim[1], min(calib[4095], calib[-1]))]
+    axes.set_xlim(lim)
+    X = numpy.linspace(lim[0], lim[1], len(axes.get_xticks()))
+    axes.set_xticks(X)
+    secAxes.set_xticks(X)
+    match detector:
+        case 0:
+            secX = [(numpy.abs(calib[:4096] - x)).argmin() for x in X]
+        case 1:
+            secX = [(numpy.abs(calib[4096:] - x)).argmin() for x in X]
+        case 2:
+            secX = [numpy.mean([(numpy.abs(calib[4096:] - x)).argmin(), (numpy.abs(calib[:4096] - x)).argmin()]) for x in X]
+        case _:
+            raise Exception("Wrong detector!")
+    secAxes.set_xticklabels(numpy.rint(x).astype("int") for x in secX)
+
 def MapData(widget, tab, detector = 2, pos = [[0, 0], [10000, 10000]], importLoad = False, Vmin = None, Vmax = None, Aspect = 'equal', Cmap = 'viridis', Norm = None, Clabel = "counts"):
     map = tab.Canvas
     head = widget.Data["head"]
@@ -161,25 +179,18 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
     spectrum = tab.Canvas
     head = widget.Data["head"]
     spectrum.Axes.cla()
-    if widget.Calib is not None:
-        cEmin = (numpy.abs(widget.Calib - Emin * 1000)).argmin() - 1
-        if Emax is None:
-            Emax = widget.Calib[-1] / 1000
-            cEmax = head["bins"][0, 0] - 1
-        else:
-            cEmax = (numpy.abs(widget.Calib - Emax * 1000)).argmin() + 1
-
-    for d in [0, 1]:
-        data = widget.Data["Data"][d]
-        spectrum.Axes.plot(func(func(data, axis = 0), axis = 0), label = f"{PDA.detectors[d]}")
-        spectrum.Axes.set_ylim([1 if log else 0, numpy.max([numpy.max(data) * 1.5 if log else numpy.max(data) * 1.05, spectrum.Axes.get_ylim()[1]], axis = 0)])
-    spectrum.Axes.legend()
-    if log:
-        spectrum.Axes.set_yscale('log')
-    spectrum.Axes.set_ylabel("counts")
-    spectrum.Axes.get_yaxis().set_visible(True)
-
+ 
     if widget.Calib is None:
+        for d in [0, 1]:
+            data = widget.Data["Data"][d]
+            spectrum.Axes.plot(func(func(data, axis = 0), axis = 0), label = f"{PDA.detectors[d]}")
+            spectrum.Axes.set_ylim([1 if log else 0, numpy.max([numpy.max(data) * 1.5 if log else numpy.max(data) * 1.05, spectrum.Axes.get_ylim()[1]], axis = 0)])
+        spectrum.Axes.legend()
+        if log:
+            spectrum.Axes.set_yscale('log')
+        spectrum.Axes.set_ylabel("counts")
+        spectrum.Axes.get_yaxis().set_visible(True)
+
         spectrum.Axes.set_xlim([0, head["bins"][0, 0]])
         spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
         spectrum.Axes2x.set_xlabel("Channel [ch]")
@@ -190,22 +201,29 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
             spectrum.Axes.grid(True)
         spectrum.Axes.format_coord = lambda x, y: f'x = {x:.0f} ch, y = {y:.3e}'
     else:
+        for d in [0, 1]:
+            data = widget.Data["Data"][d]
+            spectrum.Axes.plot(widget.Calib[:4096] if not d else widget.Calib[4096:], func(func(data, axis = 0), axis = 0), label = f"{PDA.detectors[d]}")
+            spectrum.Axes.set_ylim([1 if log else 0, numpy.max([numpy.max(data) * 1.5 if log else numpy.max(data) * 1.05, spectrum.Axes.get_ylim()[1]], axis = 0)])
+        spectrum.Axes.legend()
+        if log:
+            spectrum.Axes.set_yscale('log')
+        spectrum.Axes.set_ylabel("counts")
+        spectrum.Axes.get_yaxis().set_visible(True)
+        spectrum.Axes.set_xlabel("E [eV]")
+        spectrum.Axes.get_xaxis().set_visible(True)
+
+        spectrum.Axes.set_xlim([Emin*1000, Emax*1000])
+        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('top')
+        spectrum.Axes2x.set_xlabel("Channel [ch]")
+        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib, 2))
         if ChannelAxis:
-            spectrum.Axes.get_xaxis().set_visible(True)
-            spectrum.Axes.get_xaxis().tick_top()
-            spectrum.Axes.get_xaxis().set_label_position('top')
-            spectrum.Axes.set_xlabel("Channel [ch]")
+            spectrum.Axes2x.get_xaxis().set_visible(True)
         else:
-            spectrum.Axes.get_xaxis().set_visible(False)
-        spectrum.Axes.set_xlim([cEmin, cEmax])
-        spectrum.Axes2x = spectrum.Axes.secondary_xaxis('bottom')
-        spectrum.Axes2x.set_xlabel("E [eV]")
-        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicks(secAxes, spectrum.Axes, widget.Calib, 4096, "X"))
+            spectrum.Axes2x.get_xaxis().set_visible(False)
         if Grid: 
-            spectrum.Axes.get_xaxis().set_visible(True)
-            if not ChannelAxis: spectrum.Axes.get_xaxis().set_ticklabels([])
             spectrum.Axes.grid(True)
-        spectrum.Axes.format_coord = lambda x, y: f'E = {widget.Calib[round(x)]:.3f} eV, y = {y:.3e}'
+        spectrum.Axes.format_coord = lambda x, y: f'E = {x:.3f} eV, y = {y:.3e}'
 
     spectrum.Axes.set_aspect(Aspect)
     spectrum.draw()
