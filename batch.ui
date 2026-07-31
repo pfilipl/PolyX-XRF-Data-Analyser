@@ -1111,15 +1111,34 @@ Max channel</string>
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="toolButton_CallibrationSearch">
+             <widget class="QToolButton" name="toolButton_CalibrationDefault">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Default</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="toolButton_CalibrationLoad">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="mouseTracking">
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>...</string>
+               <string>Load</string>
               </property>
              </widget>
             </item>

@@ -32,6 +32,9 @@ class BatchWindow(QtWidgets.QWidget):
         self.CalibrationNoise_2         = self.doubleSpinBox_CalibrationNoise_2
         self.CalibrationFano_2          = self.doubleSpinBox_CalibrationFano_2
 
+        self.toolButton_CalibrationDefault.clicked.connect(self.defaultCalibration)
+        self.toolButton_CalibrationLoad.clicked.connect(self.loadCalibration)
+
         # Maps configuration
         self.MapsConfigValuesAuto       = self.pushButton_MapsConfigValuesAuto
         self.MapsConfigValuesStart      = self.doubleSpinBox_MapsConfigValuesStart
@@ -112,6 +115,37 @@ class BatchWindow(QtWidgets.QWidget):
     def setCalibration(self, calib, sigma):
         self.Calib = calib
         self.Sigma = sigma
+
+    def defaultCalibration(self):
+        self.parent().parent().parent().parent().setDefaultCalibration(self)
+
+    def loadCalibration(self):
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Load calibration", self.ExperimentPath.text(), "Text files(*.txt *.dat);; All files(*)")
+        if fileName:
+            with open(fileName, encoding="utf-8") as file:
+                for line in file:
+                    if line[0] != '\n':
+                        line = line.split()
+                    match line[0]:
+                        case "GAIN1:":
+                            self.doubleSpinBox_CalibrationGain.setValue(float(line[1]))
+                        case "GAIN2:":
+                            self.doubleSpinBox_CalibrationGain_2.setValue(float(line[1]))
+                        case "ZERO1:":
+                            self.doubleSpinBox_CalibrationZero.setValue(float(line[1]))
+                        case "ZERO2:":
+                            self.doubleSpinBox_CalibrationZero_2.setValue(float(line[1]))
+                        case "NOISE1:":
+                            self.doubleSpinBox_CalibrationNoise.setValue(float(line[1]))
+                        case "NOISE2:":
+                            self.doubleSpinBox_CalibrationNoise_2.setValue(float(line[1]))
+                        case "FANO1:":
+                            self.doubleSpinBox_CalibrationFano.setValue(float(line[1]))
+                        case "FANO2:":
+                            self.doubleSpinBox_CalibrationFano_2.setValue(float(line[1]))
+                            break
+                        case _:
+                            pass
 
     def MapsConfigColormapSearch_clicked(self):
         return

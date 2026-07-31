@@ -25,6 +25,322 @@
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <layout class="QGridLayout" name="gridLayout_3">
+     <item row="14" column="0" colspan="2">
+      <widget class="QPushButton" name="pushButton_ResetAll">
+       <property name="text">
+        <string>Reset all</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0" colspan="2">
+      <widget class="QLabel" name="label_HelpDescription">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>350</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus risus at porttitor sodales. Duis aliquet malesuada nisl in consequat. Ut tellus nibh, tempor eu nibh sed, lacinia dignissim augue. Vivamus id elit blandit, ultrices nulla vitae, ultricies sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam at nisi lacus. Phasellus rutrum augue non odio vehicula rhoncus. Quisque feugiat pulvinar velit eu cursus. Vestibulum mollis commodo felis quis suscipit.</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton_DetectorsSDD1">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>SDD1</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_DetectorsSDD2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>SDD2</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_DetectorsSum">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Sum</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="10" column="0" colspan="2">
+      <widget class="QPushButton" name="pushButton_Analyse">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>52</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Analyse</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QLabel" name="label_15">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Results</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QLabel" name="label_25">
+       <property name="font">
+        <font>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Maps normalization units</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <widget class="QRadioButton" name="radioButton_NormTypeNone">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>counts</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_NormTypeI0LT">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>counts/s/V</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_NormTypeI0">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>counts/V</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_NormTypeLT">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>counts/s</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="8" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QPushButton" name="pushButton_Reload">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>52</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+          </font>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Reload</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_AutoReload">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>52</height>
+          </size>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Auto
+reload</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="3" column="1" rowspan="2">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="4" column="2">
@@ -426,213 +742,40 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_CallibrationSearch">
+          <widget class="QToolButton" name="toolButton_CalibrationDefault">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Default</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButton_CalibrationLoad">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="mouseTracking">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>...</string>
+            <string>Load</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
       </layout>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <layout class="QGridLayout" name="gridLayout_6">
-       <property name="spacing">
-        <number>3</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_22">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Map</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit_MapPath">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Folder path...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" rowspan="2">
-        <widget class="QToolButton" name="toolButton_MapPathSearch">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>75</width>
-           <height>52</height>
-          </size>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Load
-map</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="5" column="0" colspan="2">
-      <widget class="QLabel" name="label_25">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Maps normalization units</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QLabel" name="label_15">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Results</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="0" colspan="2">
-      <widget class="QLabel" name="label_HelpDescription">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>350</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam cursus risus at porttitor sodales. Duis aliquet malesuada nisl in consequat. Ut tellus nibh, tempor eu nibh sed, lacinia dignissim augue. Vivamus id elit blandit, ultrices nulla vitae, ultricies sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aliquam at nisi lacus. Phasellus rutrum augue non odio vehicula rhoncus. Quisque feugiat pulvinar velit eu cursus. Vestibulum mollis commodo felis quis suscipit.</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="14" column="0" colspan="2">
-      <widget class="QPushButton" name="pushButton_ResetAll">
-       <property name="text">
-        <string>Reset all</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLineEdit" name="lineEdit_ResultsPath">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Folder path...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton_ResultsPathSearch">
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="12" column="0" colspan="2">
-      <widget class="QLabel" name="label_Help">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="font">
-        <font>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Help:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-       </property>
-      </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_9">
@@ -654,72 +797,6 @@ map</string>
         <string>Detectors</string>
        </property>
       </widget>
-     </item>
-     <item row="6" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <item>
-        <widget class="QRadioButton" name="radioButton_NormTypeNone">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>counts</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_NormTypeI0LT">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>counts/s/V</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_NormTypeI0">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>counts/V</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="radioButton_NormTypeLT">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>counts/s</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
      </item>
      <item row="9" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -751,43 +828,83 @@ map</string>
        </item>
       </layout>
      </item>
-     <item row="8" column="0" colspan="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item row="2" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QPushButton" name="pushButton_Reload">
-         <property name="enabled">
-          <bool>false</bool>
+        <widget class="QLineEdit" name="lineEdit_ResultsPath">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Folder path...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButton_ResultsPathSearch">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_6">
+       <property name="spacing">
+        <number>3</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="lineEdit_MapPath">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>52</height>
-          </size>
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Folder path...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_22">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
          <property name="font">
           <font>
-           <pointsize>15</pointsize>
+           <bold>true</bold>
           </font>
          </property>
          <property name="mouseTracking">
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>Reload</string>
+          <string>Map</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_AutoReload">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
+       <item row="0" column="1" rowspan="2">
+        <widget class="QToolButton" name="toolButton_MapPathSearch">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -796,19 +913,16 @@ map</string>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>75</width>
            <height>52</height>
           </size>
          </property>
-         <property name="acceptDrops">
-          <bool>false</bool>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="text">
-          <string>Auto
-reload</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
+          <string>Load
+map</string>
          </property>
         </widget>
        </item>
@@ -823,52 +937,6 @@ reload</string>
         <number>0</number>
        </property>
        <property name="textVisible">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0" colspan="2">
-      <widget class="QPushButton" name="pushButton_Analyse">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>52</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>15</pointsize>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="autoFillBackground">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Analyse</string>
-       </property>
-       <property name="checkable">
-        <bool>false</bool>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
         <bool>false</bool>
        </property>
       </widget>
@@ -889,75 +957,26 @@ reload</string>
        </property>
       </spacer>
      </item>
-     <item row="4" column="0">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPushButton" name="pushButton_DetectorsSDD1">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>SDD1</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_DetectorsSDD2">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>SDD2</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_DetectorsSum">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="mouseTracking">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Sum</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <item row="12" column="0" colspan="2">
+      <widget class="QLabel" name="label_Help">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="font">
+        <font>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Help:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -1861,7 +1880,7 @@ Max channel</string>
            <bool>true</bool>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>13</number>
           </property>
           <property name="documentMode">
            <bool>false</bool>
