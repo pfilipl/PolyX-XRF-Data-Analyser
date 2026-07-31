@@ -244,7 +244,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                 data = widget.Data["Data"][detector]
             else:
                 data = copy.deepcopy(widget.Data["Data"][0])
-                data_2 = widget.Data["Data"][1]
+                data_2 = copy.deepcopy(widget.Data["Data"][1])
                 for ch in range(4096):
                     chProjection = (numpy.abs(widget.Calib[:4096] - widget.Calib[4096+ch])).argmin()
                     data[:, :, chProjection] = numpy.sum([data[:, :, chProjection], PDA.SDD1toSDD2ratio * data_2[:, :, ch]], axis=0)
@@ -357,7 +357,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                         else:
                             statement = ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib[:4096] - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50
                         if statement:
-                            xpE = widget.Calib[4096+xp] if detector == 2 else widget.Calib[xp]
+                            xpE = widget.Calib[4096+xp] if detector == 1 else widget.Calib[xp]
                             spectrum.Axes.add_artist(matplotlib.lines.Line2D([xpE, xpE], [0, sumData[xp]], linewidth=1.0, linestyle='-', color='C1'))
                             ts = False * numpy.ones((5, 1))
                             kadifft = numpy.abs(PDA.Energies['Ka'] - xpE / 1000)
