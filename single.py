@@ -271,16 +271,10 @@ class SingleWindow(QtWidgets.QWidget):
         elif mode == "extmax":
             line = self.ExtMaxLine
             text = self.ExtMaxText
-        if event.inaxes == canvas.Axes:
-            if line.get_xdata() != [0, 0]:
-                line.remove()
-                if self.Calib is not None:
-                    text.remove()
+        if event.inaxes == canvas.Axes and canvas.Axes.get_navigate_mode() is None:
             line.set(xdata = [event.xdata, event.xdata], ydata = [1e-10, 1e20])
-            canvas.Axes.add_artist(line)
             if self.Calib is not None:
-                text.set(x = event.xdata, text = f" E = {self.Calib[round(event.xdata)]:.3f} eV (SDD1)\n E = {self.Calib[4096 + round(event.xdata)]:.3f} eV (SDD2)", horizontalalignment = 'right' if event.xdata > canvas.Axes.get_xlim()[1] * 0.8 else 'left')
-                canvas.Axes.add_artist(text)
+                text.set(x = event.xdata, text = f" E = {event.xdata:.3f} eV", horizontalalignment = 'right' if event.xdata > canvas.Axes.get_xlim()[1] * 0.8 else 'left')
             canvas.draw()
 
     def MatplotlibButtonPressed(self, event, canvas):
@@ -565,6 +559,19 @@ class SingleWindow(QtWidgets.QWidget):
             for i in range(14, self.tabWidget.count()):
                 load_plots.MapData(self, self.tabWidget.widget(i), det, importLoad = importLoad, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
 
+            self.SumSpectrum.Canvas.Axes.add_artist(self.SumLine)
+            self.MaxSpectrum.Canvas.Axes.add_artist(self.MaxLine)
+            self.SumCheckSpectrum.Canvas.Axes.add_artist(self.SumCheckLine)
+            self.MaxCheckSpectrum.Canvas.Axes.add_artist(self.MaxCheckLine)
+            self.ExtSumSpectrum.Canvas.Axes.add_artist(self.ExtSumLine)
+            self.ExtMaxSpectrum.Canvas.Axes.add_artist(self.ExtMaxLine)
+            self.SumSpectrum.Canvas.Axes.add_artist(self.SumText)
+            self.MaxSpectrum.Canvas.Axes.add_artist(self.MaxText)
+            self.SumCheckSpectrum.Canvas.Axes.add_artist(self.SumCheckText)
+            self.MaxCheckSpectrum.Canvas.Axes.add_artist(self.MaxCheckText)
+            self.ExtSumSpectrum.Canvas.Axes.add_artist(self.ExtSumText)
+            self.ExtMaxSpectrum.Canvas.Axes.add_artist(self.ExtMaxText)
+
             if not self.Reload.isEnabled(): 
                 self.Reload.setEnabled(True)
                 self.AutoReload.setEnabled(True)
@@ -731,6 +738,20 @@ class SingleWindow(QtWidgets.QWidget):
         # load_plots.PlotStats1D(self, self.RC, "RC")
         for i in range(14, self.tabWidget.count()):
             load_plots.MapData(self, self.tabWidget.widget(i), det, pos = POS, Vmin = vMin, Vmax = vMax, Aspect = mapAspect, Cmap = cMap, Norm = norm, Clabel = clabel)
+
+        self.SumSpectrum.Canvas.Axes.add_artist(self.SumLine)
+        self.MaxSpectrum.Canvas.Axes.add_artist(self.MaxLine)
+        self.SumCheckSpectrum.Canvas.Axes.add_artist(self.SumCheckLine)
+        self.MaxCheckSpectrum.Canvas.Axes.add_artist(self.MaxCheckLine)
+        self.ExtSumSpectrum.Canvas.Axes.add_artist(self.ExtSumLine)
+        self.ExtMaxSpectrum.Canvas.Axes.add_artist(self.ExtMaxLine)
+        self.SumSpectrum.Canvas.Axes.add_artist(self.SumText)
+        self.MaxSpectrum.Canvas.Axes.add_artist(self.MaxText)
+        self.SumCheckSpectrum.Canvas.Axes.add_artist(self.SumCheckText)
+        self.MaxCheckSpectrum.Canvas.Axes.add_artist(self.MaxCheckText)
+        self.ExtSumSpectrum.Canvas.Axes.add_artist(self.ExtSumText)
+        self.ExtMaxSpectrum.Canvas.Axes.add_artist(self.ExtMaxText)
+        
         QtGui.QGuiApplication.restoreOverrideCursor()
 
     def MapsConfigValue_changed(self):
