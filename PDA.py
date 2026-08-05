@@ -336,13 +336,16 @@ def Data_plot(Data, head, title, detector = None, ROI = None, Cmap = 'viridis', 
                 break
         if ROI != "max":
             if ROI is None or ROI == "sum":
-                ROI = [['Total signal', 1, head["bins"][0, 0], 1.0]]
+                ROI = [['Total signal', 0, 999, SDD1toSDD2ratio, 0, 4096, 0, 4096]]
             for i in range(len(ROI)):
                 if d == 2:
-                    data = Data[0] + ROI[i][3] * Data[1]
+                    data = Data[0].copy()
+                    data_2 = Data[1].copy()
+                    sum_signal = np.sum(data[:, :, ROI[i][4]:ROI[i][5]], axis=2) + ROI[i][3] * np.sum(data_2[:, :, ROI[i][6]:ROI[i][7]], axis=2)
+                else:
+                    sum_signal = np.sum(data[:, :, ROI[i][4+2*d]:ROI[i][5+2*d]], axis=2)
                 fig = plt.figure(layout = 'compressed')
                 ax1 = fig.add_subplot()
-                sum_signal = np.sum(data[:, :, ROI[i][1]:ROI[i][2]], axis=2)
                 if normalize is not None:
                     sum_signal = sum_signal / I0[d] / (LT[d] * 1e-6)
                     # sum_signal = sum_signal / I0 / (LT[d] / 1e3)

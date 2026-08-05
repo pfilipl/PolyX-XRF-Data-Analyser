@@ -490,7 +490,8 @@ def NormTabular(Parent, Data, path, resultPath, detectors = [2], nestingType = "
         os.makedirs(outputPath, exist_ok = True)
         Map, Fig = PDA.Data_plot(data, head, f"{dataName} (normalized to {nt})", detectors, ROI = roi, normalize = norm, Origin = origin, Aspect = maspect, Vmin = vmin, Vmax = vmax, Cmap = cmap, Disp = disp, Clabel = clabel)
         plt.close('all')
-        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, Norm = True, Label = label)
+        # PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors[:-1] if nt in ["LT", "I0LT"] and 2 in detectors else detectors, Norm = True, Label = label)
+        PDA.print_stack_Map(Map, head, roi, outputPath + f"{dataName}_Normalized{nt}ROIsSignalTabularData", detectors, Norm = True, Label = label)
 
 def SpectraSumROIs(Parent, Data, path, resultPath, detectors = [2], nestingType = "OtO", origin = "upper", aspect = "auto", roi = None, pos = None, calib = None, vmin = None, vmax = None, maspect = "equal", emin = 0.0, emax = None, saspect = "auto", cmap = "viridis", normtype = [], disp = None, csvs = False):
     head = Data["head"]
