@@ -15,7 +15,7 @@ import matplotlib.scale as scale
 import xraylib as xrl
 from PIL import Image
 
-import main
+import main, load_plots
 
 detectors = {
     0 : "SDD1",
@@ -1073,30 +1073,23 @@ def Hist_max_plot(Data, head, title, calib = None, detector = None, log = False,
 def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np.sum, Aspect = 'auto', Disp = None, Calib = None, Emin = 0.0, Emax = None):
     Hist = []
     Fig = []
-    if Calib is not None:
-        cEmin = (np.abs(Calib - Emin * 1000)).argmin() - 1
-        if Emax is None:
-            Emax = Calib[-1] / 1000
-            cEmax = head["bins"][0, 0] - 1
-        else:
-            cEmax = (np.abs(Calib - Emax * 1000)).argmin() + 1
     fig = plt.figure(layout = 'compressed')
     ax1 = fig.add_subplot()
-    for d in (range(len(Data)) if detector is None else detector):
-        data = func(func(Data[d], axis = 0), axis = 0)
-        ax1.plot(data, label = f"{detectors[d]}")
-        ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
-        Hist.append(data)
-    ax1.legend()
-    if Disp["Titles"]:
-        ax1.set_title(f"{title}")
-    elif Disp["SimpTitles"]:
-        ax1.set_title(f'{title.split(": ")[-1]}')
-    if log:
-        ax1.set_yscale('log')
-    ax1.set_ylabel("counts")
-    
     if Calib is None:
+        for d in (range(len(Data)) if detector is None else detector):
+            data = func(func(Data[d], axis = 0), axis = 0)
+            ax1.plot(data, label = f"{detectors[d]}")
+            ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
+            Hist.append([d, data])
+        ax1.legend()
+        if Disp["Titles"]:
+            ax1.set_title(f"{title}")
+        elif Disp["SimpTitles"]:
+            ax1.set_title(f'{title.split(": ")[-1]}')
+        if log:
+            ax1.set_yscale('log')
+        ax1.set_ylabel("counts")
+    
         ax1.set_xlim([0, head["bins"][0, 0]])
         ax2 = ax1.secondary_xaxis('bottom')
         ax2.set_xlabel("Channel [ch]")
@@ -1105,23 +1098,35 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
             if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
             ax1.grid(True)
     else:
+        for d in (range(len(Data)) if detector is None else detector):
+            data = func(func(Data[d], axis = 0), axis = 0)
+            ax1.plot(Calib[:4096] if not d else Calib[4096:], data, label = f"{detectors[d]}")
+            ax1.set_ylim([1 if log else 0, np.max([np.max(data) * 1.5 if log else np.max(data) * 1.05, ax1.get_ylim()[1]], axis = 0)])
+            Hist.append([d, data])
+        ax1.legend()
+        if Disp["Titles"]:
+            ax1.set_title(f"{title}")
+        elif Disp["SimpTitles"]:
+            ax1.set_title(f'{title.split(": ")[-1]}')
+        if log:
+            ax1.set_yscale('log')
+        ax1.set_ylabel("counts")
+
+        ax1.get_yaxis().set_visible(True)
+        ax1.set_xlabel("E [eV]")
+        ax1.get_xaxis().set_visible(True)
+        ax1.set_xlim([Emin*1000, Emax*1000])
+
+        ax2 = ax1.secondary_xaxis('top')
+        ax2.set_xlabel("Channel [ch]")
+        ax2.callbacks.connect("xlim_changed", lambda secAxes: load_plots.setTicksSpectrum(secAxes, ax1, Calib, 2))
+
         if Disp["ChannelAxis"]:
-            ax1.get_xaxis().set_visible(True)
-            ax1.get_xaxis().tick_top()
-            ax1.get_xaxis().set_label_position('top')
-            ax1.set_xlabel("Channel [ch]")
+            ax2.get_xaxis().set_visible(True)
         else:
-            ax1.get_xaxis().set_visible(False)
-        ax1.set_xlim([cEmin, cEmax])
-        ax2 = ax1.secondary_xaxis('bottom')
-        X = np.linspace(cEmin, cEmax, len(ax1.get_xticks())).astype(int)
-        ax1.set_xticks(X)
-        ax2.set_xticks(X)
-        ax2.set_xticklabels(np.round(Calib[X], 2))
-        ax2.set_xlabel("E [eV]")
+            ax2.get_xaxis().set_visible(False)
+        
         if Disp["Grid"]: 
-            ax1.get_xaxis().set_visible(True)
-            if not Disp["ChannelAxis"]: ax1.get_xaxis().set_ticklabels([])
             ax1.grid(True)
 
     ax1.set_aspect(Aspect)
@@ -1134,7 +1139,7 @@ def Hist_check_plot(Data, head, title, detector = [0, 1], log = False, func = np
 def print_Hist(Hist, filename, Name = None, detector = None, Calib = None):
     for h in range(len(Hist)):
         if Name is not None: 
-            if len(Hist) > len(Name):
+            if len(Hist[h][1]) > len(Name):
                 if detector is not None:
                     file = open(filename + f"_{detectors[detector[h // len(Name)]]}_{Name[h % len(Name)]}.csv", "w")
                 else:
@@ -1149,14 +1154,14 @@ def print_Hist(Hist, filename, Name = None, detector = None, Calib = None):
                 file = open(filename + f"_{detectors[h]}.csv", "w")
                 # file = open(filename + f"_{detectors[detector[h]]}.csv", "w")
             else:
-                file = open(filename + f"_{h}.csv" if len(Hist) > 1 else filename + ".csv", "w")
+                file = open(filename + f"_{h}.csv" if len(Hist[h][1]) > 1 else filename + ".csv", "w")
         file.write(f"# Channel")
         file.write(f"\t" if Calib is None else f"\tEnergy [eV]\t")
         file.write(f"counts\n")
         ch = 1
-        for c in Hist[h]:
+        for c in Hist[h][1]:
             file.write(f"{ch:4d}")
-            file.write(f"\t" if Calib is None else f"\t{Calib[ch - 1]: 10.3f}\t")
+            file.write(f"\t" if Calib is None else f"\t{Calib[ch-1] if not Hist[h][0] else Calib[4096+ch-1]: 10.3f}\t")
             file.write(f"{c}\n")
             ch += 1
         file.close()
