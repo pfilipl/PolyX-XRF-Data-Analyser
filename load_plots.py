@@ -28,7 +28,7 @@ def setTicks(secAxes, axes, newTicks, maximum, mode, precision = 2):
         else:
             secAxes.set_yticklabels(numpy.round(newTicks[Y], precision))
 
-def setTicksSpectrum(secAxes, axes, calib, detector):
+def setTicksSpectrum(secAxes, axes, calib, detector = 0):
     lim = axes.get_xlim()
     lim = [max(0, lim[0]), min(lim[1], min(calib[4095], calib[-1]))]
     axes.set_xlim(lim)
@@ -36,12 +36,12 @@ def setTicksSpectrum(secAxes, axes, calib, detector):
     axes.set_xticks(X)
     secAxes.set_xticks(X)
     match detector:
-        case 0:
+        case 0 | 2:
             secX = [(numpy.abs(calib[:4096] - x)).argmin() for x in X]
         case 1:
             secX = [(numpy.abs(calib[4096:] - x)).argmin() for x in X]
-        case 2:
-            secX = [numpy.mean([(numpy.abs(calib[4096:] - x)).argmin(), (numpy.abs(calib[:4096] - x)).argmin()]) for x in X]
+        # case 2:
+        #     secX = [numpy.mean([(numpy.abs(calib[4096:] - x)).argmin(), (numpy.abs(calib[:4096] - x)).argmin()]) for x in X]
         case _:
             raise Exception("Wrong detector!")
     secAxes.set_xticklabels(numpy.rint(x).astype("int") for x in secX)
@@ -218,7 +218,7 @@ def SpectrumCheck(widget, tab, func = numpy.sum, Emin = 0.0, Emax = None, log = 
         spectrum.Axes.set_xlim([Emin*1000, Emax*1000])
         spectrum.Axes2x = spectrum.Axes.secondary_xaxis('top')
         spectrum.Axes2x.set_xlabel("Channel [ch]")
-        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib, 2))
+        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib))
         if ChannelAxis:
             spectrum.Axes2x.get_xaxis().set_visible(True)
         else:
@@ -335,7 +335,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
             if roi[i][0] != 'Total signal':
                 spectrum.Axes.add_patch(matplotlib.patches.Rectangle((roi[i][1], 0), roi[i][2] - roi[i][1], 1, facecolor = 'r', alpha = 0.2, transform = spectrum.Axes.get_xaxis_transform()))
                 if widget.Calib is not None:
-                    if detector == 2:
+                    if detector == 1:
                         statement = roi[i][6] + (roi[i][7] - roi[i][6]) / 2 > cEmin and roi[i][6] + (roi[i][7] - roi[i][6]) / 2 < cEmax
                     else:
                         statement = roi[i][4] + (roi[i][5] - roi[i][4]) / 2 > cEmin and roi[i][4] + (roi[i][5] - roi[i][4]) / 2 < cEmax
@@ -352,7 +352,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                 xP = scipy.signal.find_peaks(sumData, height = 1e-5 * numpy.max(sumData), width = 10)
                 for xp in xP[0]:
                     if widget.Calib is not None:
-                        if detector == 2:
+                        if detector == 1:
                             statement = ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib[4096:] - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib[4096:] - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib[4096:] - 0)).argmin() + 50
                         else:
                             statement = ((widget.monoE is not None) and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50 and xp < (numpy.abs(widget.Calib[:4096] - widget.monoE)).argmin()) or widget.monoE is None and xp > (numpy.abs(widget.Calib[:4096] - 0)).argmin() + 50
@@ -406,7 +406,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
                     else:
                         print("Unknown line symbol!")
                         continue
-                    if detector == 2:
+                    if detector == 1:
                         xp = (numpy.abs(widget.Calib[4096:] - xraylib.LineEnergy(element, line) * 1000)).argmin()
                         xpE = widget.Calib[4096+xp]
                     else:
@@ -437,7 +437,7 @@ def Spectrum(widget, tab, func = numpy.sum, detector = 2, pos = [[0, 0], [10000,
         spectrum.Axes.set_xlim([Emin*1000, Emax*1000])
         spectrum.Axes2x = spectrum.Axes.secondary_xaxis('top')
         spectrum.Axes2x.set_xlabel("Channel [ch]")
-        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib, 2))
+        spectrum.Axes2x.callbacks.connect("xlim_changed", lambda secAxes: setTicksSpectrum(secAxes, spectrum.Axes, widget.Calib, detector))
         if ChannelAxis:
             spectrum.Axes2x.get_xaxis().set_visible(True)
         else:
