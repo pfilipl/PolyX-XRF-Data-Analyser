@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets, QtCore, uic, QtGui
 import sys, os, numpy, itertools, subprocess, pathlib, h5py
 import matplotlib.pyplot as plt
+import copy
 
 import main, PDA
 
@@ -557,7 +558,7 @@ def SpectraMax(Parent, Data, path, resultPath, detectors = [2], nestingType = "O
     PDA.print_Hist(Hist, outputPath + f"{dataName}_MaxSpectrum", detector = detectors, Calib = calib)
     PDA.print_Fig(Fig, outputPath + f"{dataName}_MaxSpectrum", detector = detectors)
 
-def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
+def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False, Calib = None):
     mode = {
         # "[True, False, False, False]" : "light",
         # "[False, True, False, False]" : "standard",
@@ -580,13 +581,27 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
             try:
                 ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_listbins"].shape[0], ), dtype = h5py.string_dtype())
                 ds_ROInames = Data["head"]["roi_listbins"][:, 1]
-                ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
-                ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
+                # ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_listbins"][:, 2].astype(int))
+                # ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_listbins"][:, 3].astype(int))
+                ds_ROIstartenergy = grp_roi.create_dataset("ROIstartEnergy", data = Data["head"]["roi_listbins"][:, 2].astype(int))
+                ds_ROIstopenergy = grp_roi.create_dataset("ROIstopEnergy", data = Data["head"]["roi_listbins"][:, 3].astype(int))
             except:
                 ds_ROInames = grp_roi.create_dataset("ROInames", shape = (Data["head"]["roi_table"].shape[0], ), dtype = h5py.string_dtype())
                 ds_ROInames = Data["head"]["roi_table"][:, 0]
-                ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
-                ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+                # ds_ROIstartchannel = grp_roi.create_dataset("ROIstartChannel", data = Data["head"]["roi_table"][:, 1].astype(int))
+                # ds_ROIstopchannel = grp_roi.create_dataset("ROIstopChannel", data = Data["head"]["roi_table"][:, 2].astype(int))
+                ds_ROIstartenergy = grp_roi.create_dataset("ROIstartEnergy", data = Data["head"]["roi_table"][:, 1].astype(int))
+                ds_ROIstopenergy = grp_roi.create_dataset("ROIstopEnergy", data = Data["head"]["roi_table"][:, 2].astype(int))
+            if mode[modes] == "fullOrigROIs":
+                ROI = []
+                for i in range(len(ds_ROInames)):
+                    r = [ds_ROInames[i][0], ds_ROIstartenergy[i], ds_ROIstopenergy[i], PDA.SDD1toSDD2ratio]
+                    if Calib is not None:
+                        r.append((numpy.abs(Calib[:4096] - r[1])).argmin())
+                        r.append((numpy.abs(Calib[:4096] - r[2])).argmin())
+                        r.append((numpy.abs(Calib[4096:] - r[1])).argmin())
+                        r.append((numpy.abs(Calib[4096:] - r[2])).argmin())
+                    ROI.append(r)
         
             grp_beam = grp_header.create_group("beam")
             try:
@@ -642,6 +657,7 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
         grp_data.create_dataset("StorageRingCurrent", data = Data["RC"])
         
         grp_sdd1 = grp_data.create_group("SDD1")
+        grp_sdd1.create_dataset("Calibration", data = Calib[:4096])
         grp_sdd1sd = grp_sdd1.create_group("SpectralData")
         grp_sdd1sd.create_dataset("Spectra", data = Data["Data"][0].transpose(1, 0, 2))
 
@@ -650,12 +666,9 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
             grp_sdd1sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][0].transpose(1, 0, 2), axis=0), axis=0))
             grp_sdd1rd = grp_sdd1.create_group("ROIsData")
             grp_sdd1rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][0].transpose(1, 0, 2), axis=2))
-            if mode[modes] == "full":
+            if Calib is not None:
                 for i in range(len(ROI)):
-                    grp_sdd1rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][0][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
-            elif mode[modes] == "fullOrigROIs":
-                for i in range(ds_ROInames.size):
-                    grp_sdd1rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][0][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
+                    grp_sdd1rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][0][:, :, ROI[i][4]:ROI[i][5]].transpose(1, 0, 2), axis=2))
             grp_sdd1.create_dataset("ICR", data = Data["ICR"][0].transpose())
             grp_sdd1.create_dataset("OCR", data = Data["OCR"][0].transpose())
             grp_sdd1.create_dataset("RealTime", data = Data["RT"][0].transpose() * 1e-6)
@@ -665,6 +678,7 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
         grp_sdd1.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][0].transpose(), Data["LT"][0].transpose() * 1e-6))
         
         grp_sdd2 = grp_data.create_group("SDD2")
+        grp_sdd2.create_dataset("Calibration", data = Calib[4096:])
         grp_sdd2sd = grp_sdd2.create_group("SpectralData")
         grp_sdd2sd.create_dataset("Spectra", data = Data["Data"][1].transpose(1, 0, 2))
 
@@ -673,12 +687,9 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
             grp_sdd2sd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][1].transpose(1, 0, 2), axis=0), axis=0))
             grp_sdd2rd = grp_sdd2.create_group("ROIsData")
             grp_sdd2rd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][1].transpose(1, 0, 2), axis=2))
-            if mode[modes] == "full":
+            if Calib is not None:
                 for i in range(len(ROI)):
-                    grp_sdd2rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][1][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
-            elif mode[modes] == "fullOrigROIs":
-                for i in range(ds_ROInames.size):
-                    grp_sdd2rd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][1][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
+                    grp_sdd2rd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][1][:, :, ROI[i][6]:ROI[i][7]].transpose(1, 0, 2), axis=2))
             grp_sdd2.create_dataset("ICR", data = Data["ICR"][1].transpose())
             grp_sdd2.create_dataset("OCR", data = Data["OCR"][1].transpose())
             grp_sdd2.create_dataset("RealTime", data = Data["RT"][1].transpose() * 1e-6)
@@ -687,28 +698,32 @@ def HDF5(Parent, Data, path, resultPath, ROI, modes, batch = False):
         grp_sdd2.create_dataset("DeadTime", data = Data["DT"][1].transpose())
         grp_sdd2.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][1].transpose(), Data["LT"][1].transpose() * 1e-6))
 
-        grp_sddSum = grp_data.create_group("SDDSum")
-        grp_sddSumsd = grp_sddSum.create_group("SpectralData")
-        grp_sddSumsd.create_dataset("Spectra", data = Data["Data"][2].transpose(1, 0, 2))
+        if Calib is not None:
+            data = copy.deepcopy(Data["Data"][0])
+            data_2 = copy.deepcopy(Data["Data"][1])
+            for ch in range(4096):
+                chProjection = (numpy.abs(Calib[:4096] - Calib[4096+ch])).argmin()
+                data[:, :, chProjection] = numpy.sum([data[:, :, chProjection], PDA.SDD1toSDD2ratio * data_2[:, :, ch]], axis=0)
 
-        if mode[modes] != "light":
-            grp_sddSumsd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(Data["Data"][2].transpose(1, 0, 2), axis=0), axis=0))
-            grp_sddSumsd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(Data["Data"][2].transpose(1, 0, 2), axis=0), axis=0))
-            grp_sddSumrd = grp_sddSum.create_group("ROIsData")
-            grp_sddSumrd.create_dataset("TotalSignal", data = numpy.sum(Data["Data"][2].transpose(1, 0, 2), axis=2))
-            if mode[modes] == "full":
+            grp_sddSum = grp_data.create_group("SDDSum")
+            grp_sddSum.create_dataset("Calibration", data = Calib[:4096])
+            grp_sddSumsd = grp_sddSum.create_group("SpectralData")
+            grp_sddSumsd.create_dataset("Spectra", data = data.transpose(1, 0, 2))
+
+            if mode[modes] != "light":
+                grp_sddSumsd.create_dataset("SumSpectrum", data = numpy.sum(numpy.sum(data.transpose(1, 0, 2), axis=0), axis=0))
+                grp_sddSumsd.create_dataset("MaxSpectrum", data = numpy.max(numpy.max(data.transpose(1, 0, 2), axis=0), axis=0))
+                grp_sddSumrd = grp_sddSum.create_group("ROIsData")
+                grp_sddSumrd.create_dataset("TotalSignal", data = numpy.sum(data.transpose(1, 0, 2), axis=2))
                 for i in range(len(ROI)):
-                    grp_sddSumrd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][2][:, :, ROI[i][1]:ROI[i][2]].transpose(1, 0, 2), axis=2))
-            elif mode[modes] == "fullOrigROIs":
-                for i in range(ds_ROInames.size):
-                    grp_sddSumrd.create_dataset("ROI_" + ds_ROInames[i][0], data = numpy.sum(Data["Data"][2][:, :, ds_ROIstartchannel[i]:ds_ROIstopchannel[i]].transpose(1, 0, 2), axis=2))
-            grp_sddSum.create_dataset("ICR", data = Data["ICR"][2].transpose())
-            grp_sddSum.create_dataset("OCR", data = Data["OCR"][2].transpose())
-            grp_sddSum.create_dataset("RealTime", data = Data["RT"][2].transpose() * 1e-6)
+                    grp_sddSumrd.create_dataset("ROI_" + ROI[i][0], data = numpy.sum(Data["Data"][0][:, :, ROI[i][4]:ROI[i][5]].transpose(1, 0, 2), axis=2) + ROI[i][3] * numpy.sum(Data["Data"][1][:, :, ROI[i][6]:ROI[i][7]].transpose(1, 0, 2), axis=2))
+                grp_sddSum.create_dataset("ICR", data = Data["ICR"][2].transpose())
+                grp_sddSum.create_dataset("OCR", data = Data["OCR"][2].transpose())
+                grp_sddSum.create_dataset("RealTime", data = Data["RT"][2].transpose() * 1e-6)
 
-        grp_sddSum.create_dataset("LiveTime", data = Data["LT"][2].transpose() * 1e-6)
-        grp_sddSum.create_dataset("DeadTime", data = Data["DT"][2].transpose())
-        grp_sddSum.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][2].transpose(), Data["LT"][2].transpose() * 1e-6))
+            grp_sddSum.create_dataset("LiveTime", data = Data["LT"][2].transpose() * 1e-6)
+            grp_sddSum.create_dataset("DeadTime", data = Data["DT"][2].transpose())
+            grp_sddSum.create_dataset("I0xLiveTime", data = numpy.multiply(Data["I0"][2].transpose(), Data["LT"][2].transpose() * 1e-6))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
