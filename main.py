@@ -7,7 +7,7 @@ import PDA
 
 try:
     from ctypes import windll
-    myappid = 'SOLARIS.PolyX.PXDA.0.260324'
+    myappid = 'SOLARIS.PolyX.PXDA.0.260807'
     windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError:
     pass
