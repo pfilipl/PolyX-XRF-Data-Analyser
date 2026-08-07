@@ -1189,7 +1189,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setValue(0)
                 self.Progress.setMaximum(len(self.OutputConfig.keys()) - 17) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
-                self.SaveConfig_clicked(None, str(resultsPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + pathlib.Path(self.MapPath.text()).stem + "_SINGLE.PXDAconfig")
+                self.SaveConfig_clicked(None, str(resultsPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + pathlib.Path(self.MapPath.text()).stem + f"_SINGLE_{time.strftime("%Y-%m-%d_%H-%M-%S")}.PXDAconfig")
                 if self.ROIsDefault.isChecked():
                     ROI = []
                     for roi in self.Data["ROI"]:

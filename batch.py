@@ -448,7 +448,7 @@ class BatchWindow(QtWidgets.QWidget):
                 self.Progress.setMaximum((len(self.OutputConfig.keys()) - 17) * len(self.Paths)) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
                 for path in self.Paths:
-                    self.SaveConfig_clicked(None, str(resultsPath) + str(os.sep) + path.stem + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + "_BATCH.PXDAconfig")
+                    self.SaveConfig_clicked(None, str(resultsPath) + str(os.sep) + path.stem + str(os.sep) + "PXDA_Export" + str(os.sep) + path.stem + f"_BATCH_{time.strftime("%Y-%m-%d_%H-%M-%S")}.PXDAconfig")
                     try:
                         head, Data, ICR, OCR, RT, LT, DT, PIN, I0, RC, ROI = PDA.data_load(path)
                     except:
