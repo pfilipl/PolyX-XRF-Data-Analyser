@@ -1117,6 +1117,8 @@ class SingleWindow(QtWidgets.QWidget):
         if fileName is None:
             fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save Single config", self.ResultsPath.text(), "PXDA Files(*.PXDAconfig);; Text files(*.dat *.txt);; All files(*)")
         if fileName:
+            pathlib.Path(fileName).parent.mkdir(parents=True, exist_ok=True)
+            pathlib.Path(fileName).touch(exist_ok=True)
             file = open(fileName, 'w')
             fileContent = "## General configuration\n# Element name\tProperty\tValue"
 
@@ -1187,6 +1189,7 @@ class SingleWindow(QtWidgets.QWidget):
                 self.Progress.setValue(0)
                 self.Progress.setMaximum(len(self.OutputConfig.keys()) - 17) # 3 detectors buttons + 2 nesting combos + 3 normalization types + 7 display setting + 2 generates
                 QtGui.QGuiApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.CursorShape.WaitCursor))
+                self.SaveConfig_clicked(None, str(resultsPath) + str(os.sep) + "PXDA_Export" + str(os.sep) + pathlib.Path(self.MapPath.text()).stem + "_SINGLE.PXDAconfig")
                 if self.ROIsDefault.isChecked():
                     ROI = []
                     for roi in self.Data["ROI"]:
